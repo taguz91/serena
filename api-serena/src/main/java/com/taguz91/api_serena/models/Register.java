@@ -30,10 +30,8 @@ public class Register extends BaseEntity implements Serializable {
 
     @Id
     private String id;
-    private Student student;
-    private Classroom classroom;
-    private Date registrationDate;
 
+    private Date registrationDate;
 }
 
 

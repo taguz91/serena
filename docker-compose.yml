@@ -6,4 +6,6 @@ services:
     ports:
       - 9696:5432
     environment:
-      POSTGRES_PASSWORD: serna-bd-app
+      POSTGRES_PASSWORD: serena-bd-app
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql

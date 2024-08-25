@@ -33,7 +33,4 @@ public class Student extends BaseEntity implements Serializable {
     private String name;
 
     private String email;
-
-    private List<StudentRecord> studentRecords;
-
 }

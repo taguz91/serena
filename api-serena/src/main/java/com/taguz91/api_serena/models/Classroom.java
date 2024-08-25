@@ -32,6 +32,4 @@ public class Classroom extends BaseEntity implements Serializable {
     private String id;
     private String name;
     private int capacity;
-    private Subject subject;
-    private List<Student> students;
 }

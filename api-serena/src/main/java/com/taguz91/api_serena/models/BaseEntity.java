@@ -8,7 +8,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.time.LocalDateTime;
 
 @MappedSuperclass
-@Inheritance(strategy = InheritanceType.JOINED)
 public class BaseEntity {
 
     @Column(name = "created_at", columnDefinition = "TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP", nullable = false)

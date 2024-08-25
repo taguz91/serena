@@ -29,7 +29,5 @@ public class ClassSummary extends BaseEntity implements Serializable {
 
     @Id
     private String id;
-    private ClassRecord classRecord;
     private String summaryText;
-
 }

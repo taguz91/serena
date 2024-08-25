@@ -30,7 +30,4 @@ public class ClassReport extends BaseEntity implements Serializable {
 
     @Id
     private String id;
-    private Classroom classroom;
-    private List<StudentReport> studentReports;
-
 }

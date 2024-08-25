@@ -34,6 +34,12 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((auth) -> auth
+            .requestMatchers("/").permitAll()
+            .requestMatchers("/api").permitAll()
+            .requestMatchers("/api/v1/login").permitAll()
+            .requestMatchers("/v3/api-docs/**").permitAll()
+            .requestMatchers("/swagger-ui/**").permitAll()
+            .requestMatchers("/swagger-ui.html").permitAll()
             .anyRequest().authenticated()
         );
 
@@ -42,15 +48,15 @@ public class WebSecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers(
-                "/api/v1/login",
-                "/swagger-ui.html",
-                "/swagger-ui/**",
-                "/v3/api-docs/**"
-        );
-    }
+//    @Bean
+//    public WebSecurityCustomizer webSecurityCustomizer() {
+//        return (web) -> web.ignoring().requestMatchers(
+//                "/api/v1/login",
+//                "/swagger-ui.html",
+//                "/swagger-ui/**",
+//                "/v3/api-docs/**"
+//        );
+//    }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

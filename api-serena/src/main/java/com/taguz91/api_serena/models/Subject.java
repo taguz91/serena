@@ -2,7 +2,6 @@ package com.taguz91.api_serena.models;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -31,6 +30,4 @@ public class Subject extends BaseEntity implements Serializable {
     private String id;
     private String name;
     private String code;
-    private Teacher teacher;
-    private List<Classroom> classrooms;
 }

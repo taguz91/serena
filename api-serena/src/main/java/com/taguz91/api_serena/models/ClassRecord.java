@@ -31,8 +31,7 @@ public class ClassRecord extends BaseEntity implements Serializable {
 
     @Id
     private String id;
-    private Classroom classroom;
     private Date classDate;
     private String topicCovered;
-    private List<ClassSummary> summaries;
+
 }

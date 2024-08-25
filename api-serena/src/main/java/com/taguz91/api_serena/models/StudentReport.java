@@ -29,8 +29,4 @@ public class StudentReport extends BaseEntity implements Serializable {
 
     @Id
     private String id;
-
-    private Student student;
-    private AcademicPeriod academicPeriod;
-    private List<Subject> subjects;
 }
