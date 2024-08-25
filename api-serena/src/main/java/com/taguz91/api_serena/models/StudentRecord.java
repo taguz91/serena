@@ -23,7 +23,7 @@ import lombok.experimental.Accessors;
 @Table(name = "teachers")
 @Accessors(chain = true)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Teacher extends BaseEntity implements Serializable {
+public class StudentRecord extends BaseEntity implements Serializable {
     @Serial
     private static final long serialVersionUID = -4115808525376597079L;
 

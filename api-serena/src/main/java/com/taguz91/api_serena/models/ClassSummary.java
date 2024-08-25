@@ -2,10 +2,8 @@ package com.taguz91.api_serena.models;
 
 import java.io.Serializable;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -20,23 +18,16 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "teachers")
+@Table(name = "classsummarys")
 @Accessors(chain = true)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Teacher extends BaseEntity implements Serializable {
+public class ClassSummary extends BaseEntity implements Serializable {
     @Serial
     private static final long serialVersionUID = -4115808525376597079L;
 
     @Id
     private String id;
+    private ClassRecord classRecord;
+    private String summaryText;
 
-    private String name;
-
-    private String email;
-
-    @JsonIgnore
-    private String password;
-
-    @Column(nullable = true, length = 255)
-    private String token;
 }
