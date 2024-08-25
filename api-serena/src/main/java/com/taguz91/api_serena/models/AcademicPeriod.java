@@ -1,8 +1,8 @@
 
 package com.taguz91.api_serena.models;
 
+import java.io.Serial;
 import java.io.Serializable;
-import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -20,7 +20,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "academicperiods")
+@Table(name = "academic_periods")
 @Accessors(chain = true)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class AcademicPeriod extends BaseEntity implements Serializable {
@@ -30,8 +30,5 @@ public class AcademicPeriod extends BaseEntity implements Serializable {
     @Id
     private String id;
     private String name;
-    private Date startDate;
-    private Date endDate;
-    private boolean isActive;
-
+    private String reference;
 }

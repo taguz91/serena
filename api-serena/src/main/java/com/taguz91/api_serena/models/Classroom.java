@@ -1,5 +1,6 @@
 package com.taguz91.api_serena.models;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -23,6 +24,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Classroom extends BaseEntity implements Serializable {
+
     @Serial
     private static final long serialVersionUID = -4115808525376597079L;
 

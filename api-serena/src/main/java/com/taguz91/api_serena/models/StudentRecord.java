@@ -1,11 +1,10 @@
 package com.taguz91.api_serena.models;
 
+import java.io.Serial;
 import java.io.Serializable;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -34,9 +33,4 @@ public class StudentRecord extends BaseEntity implements Serializable {
 
     private String email;
 
-    @JsonIgnore
-    private String password;
-
-    @Column(nullable = true, length = 255)
-    private String token;
 }

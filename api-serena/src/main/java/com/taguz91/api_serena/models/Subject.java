@@ -1,5 +1,6 @@
 package com.taguz91.api_serena.models;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -32,6 +33,4 @@ public class Subject extends BaseEntity implements Serializable {
     private String code;
     private Teacher teacher;
     private List<Classroom> classrooms;
-
-
 }

@@ -1,5 +1,6 @@
 package com.taguz91.api_serena.models;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -19,7 +20,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "studentreports")
+@Table(name = "students_reports")
 @Accessors(chain = true)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class StudentReport extends BaseEntity implements Serializable {

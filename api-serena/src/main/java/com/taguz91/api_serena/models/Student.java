@@ -1,5 +1,6 @@
 package com.taguz91.api_serena.models;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
