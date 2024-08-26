@@ -56,7 +56,6 @@ Entities
   - start_emotion
   - end_emotion
 - Class report
-  - date
   - start_emotion
   - end_emotion
   - Register

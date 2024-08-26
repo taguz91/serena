@@ -42,7 +42,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         });
 
         filterChain.doFilter(request, response);
-
     }
 
     private Optional<String> getTokenString(String header) {
