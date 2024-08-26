@@ -2,14 +2,12 @@ package com.taguz91.api_serena.models;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -32,6 +30,9 @@ public class Teacher extends BaseEntity implements Serializable {
     @Id
     private String id;
 
+    @Column(nullable = true)
+    private String reference;
+
     private String name;
 
     private String email;
@@ -41,4 +42,7 @@ public class Teacher extends BaseEntity implements Serializable {
 
     @Column(nullable = true, length = 255)
     private String token;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "teacher")
+    private List<Classroom> classrooms;
 }

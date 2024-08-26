@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -30,7 +31,12 @@ public class Student extends BaseEntity implements Serializable {
     @Id
     private String id;
 
+    private String identification;
+
     private String name;
 
-    private String email;
+    private String gender;
+
+    @Column(nullable = true)
+    private String reference;
 }

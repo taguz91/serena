@@ -2,13 +2,13 @@ package com.taguz91.api_serena.models;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -30,4 +30,16 @@ public class ClassReport extends BaseEntity implements Serializable {
 
     @Id
     private String id;
+
+    private String startEmotion;
+
+    private String endEmotion;
+
+    @JsonManagedReference(value = "rf_class_report_register")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Register register;
+
+    @JsonManagedReference(value = "rf_class_report_student")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Student student;
 }

@@ -2,12 +2,12 @@ package com.taguz91.api_serena.models;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -29,5 +29,16 @@ public class ClassSummary extends BaseEntity implements Serializable {
 
     @Id
     private String id;
-    private String summaryText;
+
+    private LocalDateTime summaryText;
+
+    private String avg_emotion;
+
+    private String min_emotion;
+
+    private String max_emotion;
+
+    @JsonManagedReference(value = "rf_class_summary_classroom")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Classroom classroom;
 }

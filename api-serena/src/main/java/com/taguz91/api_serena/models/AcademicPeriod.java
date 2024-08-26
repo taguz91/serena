@@ -3,12 +3,11 @@ package com.taguz91.api_serena.models;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -29,6 +28,18 @@ public class AcademicPeriod extends BaseEntity implements Serializable {
 
     @Id
     private String id;
+
     private String name;
+
+    @Column(nullable = true)
     private String reference;
+
+    private Boolean isActive;
+
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            mappedBy = "academicPeriod",
+            fetch = FetchType.LAZY
+    )
+    private List<Classroom> classrooms;
 }

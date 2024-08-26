@@ -6,9 +6,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -30,6 +29,23 @@ public class Classroom extends BaseEntity implements Serializable {
 
     @Id
     private String id;
-    private String name;
-    private int capacity;
+
+    @JsonManagedReference(value = "rf_classroom_academic_period")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private AcademicPeriod academicPeriod;
+
+    @JsonManagedReference(value = "rf_classroom_teacher")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Teacher teacher;
+
+    @JsonManagedReference(value = "rf_classroom_subject")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Subject subject;
+
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            mappedBy = "classroom",
+            fetch = FetchType.LAZY
+    )
+    private List<Register> registers;
 }
