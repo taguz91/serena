@@ -12,7 +12,7 @@
         <LoginForm />
 
         <div
-          class="bg-blue-100 opacity-40 w-3/5 h-full p-8 flex flex-col items-center justify-center"
+          class="bg-blue-100 opacity-40 w-3/5 h-full p-8 flex flex-col items-center justify-center rounded-r-lg"
         >
           <p class="text-center text-lg">
             "La educación es el arma más poderosa que puedes usar para cambiar el mundo."

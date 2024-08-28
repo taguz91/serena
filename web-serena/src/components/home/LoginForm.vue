@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white w-full py-10 px-14">
+  <div class="bg-white w-full py-10 px-14 rounded-l-lg">
     <p class="text-xl font-bold text-center mb-1">Ingresar</p>
     <p class="text-slate-500 mb-6 text-center mx-2">
       Ingresa tu correo y contraseña para continuar, si no tienes cuenta puedes crear

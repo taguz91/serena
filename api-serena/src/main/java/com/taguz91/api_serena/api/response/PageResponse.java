@@ -6,12 +6,12 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 @Data
-public class PageResponse {
+public class PageResponse<T> {
 
-    private List<?> data;
+    private List<T> data;
     private PageMetadata meta;
 
-    public PageResponse(Page<?> page) {
+    public PageResponse(Page<T> page) {
         this.data = page.getContent();
         this.meta = new PageMetadata(
                 page.getNumber(),
