@@ -1,8 +1,5 @@
 <template>
-  <NPageHeader
-    title="Periodos Académicos"
-    subtitle="Revisar, crear, editar y eliminar periodos académicos"
-  >
+  <NPageHeader title="Materias" subtitle="Revisar, crear, editar y eliminar materias">
     <template #extra>
       <NSpace>
         <NButton type="primary" @click="showModal">
@@ -25,15 +22,7 @@
 
 <script setup lang="ts">
 import { Pencil, Plus, Trash } from '@vicons/tabler'
-import {
-  NBadge,
-  NButton,
-  NDataTable,
-  NIcon,
-  NPageHeader,
-  NSpace,
-  type DataTableColumns
-} from 'naive-ui'
+import { NButton, NDataTable, NIcon, NPageHeader, NSpace, type DataTableColumns } from 'naive-ui'
 import { h, onMounted, ref } from 'vue'
 import FormView from './FormView.vue'
 
@@ -43,32 +32,16 @@ const showModal = () => {
   show.value = true
 }
 
-interface AcademicPeriod {
+interface Subject {
   name: string
-  isActive: boolean
-  reference: string
 }
 
-const data = ref<AcademicPeriod[]>([])
+const data = ref<Subject[]>([])
 
-const columns: DataTableColumns<AcademicPeriod> = [
+const columns: DataTableColumns<Subject> = [
   {
     title: 'Nombre',
     key: 'name'
-  },
-  {
-    title: 'Estado',
-    key: 'isActive',
-    render(row) {
-      return h(
-        NBadge,
-        {
-          type: row.isActive ? 'success' : 'info',
-          value: row.isActive ? 'Activo' : 'Inactivo'
-        },
-        {}
-      )
-    }
   },
   {
     title: 'Acciones',
@@ -112,29 +85,34 @@ onMounted(() => {
   setTimeout(() => {
     data.value = [
       {
-        name: '2021-2022',
-        isActive: true,
-        reference: '2021-2022'
+        name: 'Matemáticas'
       },
       {
-        name: '2022-2023',
-        isActive: false,
-        reference: '2022-2023'
+        name: 'Lenguaje'
       },
       {
-        name: '2023-2024',
-        isActive: false,
-        reference: '2023-2024'
+        name: 'Ciencias'
       },
       {
-        name: '2024-2025',
-        isActive: false,
-        reference: '2024-2025'
+        name: 'Historia'
       },
       {
-        name: '2025-2026',
-        isActive: false,
-        reference: '2025-2026'
+        name: 'Geografía'
+      },
+      {
+        name: 'Educación Física'
+      },
+      {
+        name: 'Artes'
+      },
+      {
+        name: 'Música'
+      },
+      {
+        name: 'Religión'
+      },
+      {
+        name: 'Inglés'
       }
     ]
   }, 1000)

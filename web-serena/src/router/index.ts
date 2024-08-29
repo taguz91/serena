@@ -56,6 +56,13 @@ const router = createRouter({
           path: 'academic-periods',
           name: 'academic-periods',
           component: () => import('../views/admin/academic-period/ListView.vue')
+        },
+
+        // subjects
+        {
+          path: 'subjects',
+          name: 'subjects',
+          component: () => import('../views/admin/subject/ListView.vue')
         }
       ]
     }
