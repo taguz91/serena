@@ -24,7 +24,7 @@
 import { h, type Component } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
 
-import { Calendar, Home, LayoutBoard } from '@vicons/tabler'
+import { Calendar, Home, LayoutBoard, User } from '@vicons/tabler'
 import { NIcon, NMenu, NModalProvider, type MenuOption } from 'naive-ui'
 import AppIcon from '../shared/AppIcon.vue'
 import TopNav from '../shared/TopNav.vue'
@@ -53,6 +53,11 @@ const menuOptions: MenuOption[] = [
     icon: renderIcon(Home)
   },
   {
+    key: 'spacer-administrar',
+    label: 'Administrar',
+    disabled: true
+  },
+  {
     key: 'academic-period',
     label: renderLink('academic-periods', 'Periodos Académicos'),
     icon: renderIcon(Calendar)
@@ -61,6 +66,16 @@ const menuOptions: MenuOption[] = [
     key: 'subjects',
     label: renderLink('subjects', 'Materias'),
     icon: renderIcon(LayoutBoard)
+  },
+  {
+    key: 'spacer',
+    label: 'Sincronización',
+    disabled: true
+  },
+  {
+    key: 'students',
+    label: renderLink('students', 'Estudiantes'),
+    icon: renderIcon(User)
   }
 ]
 </script>
