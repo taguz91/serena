@@ -39,6 +39,25 @@ const router = createRouter({
           component: () => import('../views/app/RegisterView.vue')
         }
       ]
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      children: [
+        {
+          path: '',
+          name: 'admin-home',
+          component: () => import('../views/admin/DashboardView.vue')
+        },
+
+        // academic-periods
+
+        {
+          path: 'academic-periods',
+          name: 'academic-periods',
+          component: () => import('../views/admin/academic-period/ListView.vue')
+        }
+      ]
     }
   ]
 })
