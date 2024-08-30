@@ -24,7 +24,7 @@
 import { h, type Component } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
 
-import { Calendar, Home, LayoutBoard, School, User, Users } from '@vicons/tabler'
+import { Calendar, Home, LayoutBoard, ListCheck, School, User, Users } from '@vicons/tabler'
 import { NIcon, NMenu, NModalProvider, type MenuOption } from 'naive-ui'
 import AppIcon from '../shared/AppIcon.vue'
 import TopNav from '../shared/TopNav.vue'
@@ -80,13 +80,23 @@ const menuOptions: MenuOption[] = [
   },
   {
     key: 'spacer',
-    label: 'Sincronización',
+    label: 'Consultar',
     disabled: true
   },
   {
     key: 'students',
     label: renderLink('students', 'Estudiantes'),
     icon: renderIcon(User)
+  },
+  {
+    key: 'registers',
+    label: renderLink('registers', 'Registros'),
+    icon: renderIcon(ListCheck)
+  },
+  {
+    key: 'spacer',
+    label: 'Sincronización',
+    disabled: true
   }
 ]
 </script>

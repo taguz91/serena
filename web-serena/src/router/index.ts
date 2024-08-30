@@ -50,41 +50,39 @@ const router = createRouter({
           component: () => import('../views/admin/DashboardView.vue')
         },
 
-        // academic-periods
+        // management
 
         {
           path: 'academic-periods',
           name: 'academic-periods',
           component: () => import('../views/admin/academic-period/ListView.vue')
         },
-
-        // teachers
         {
           path: 'teachers',
           name: 'teachers',
           component: () => import('../views/admin/teacher/ListView.vue')
         },
-
-        // subjects
         {
           path: 'subjects',
           name: 'subjects',
           component: () => import('../views/admin/subject/ListView.vue')
         },
-
-        // classrooms
-
         {
           path: 'classrooms',
           name: 'classrooms',
           component: () => import('../views/admin/classrooms/ListView.vue')
         },
 
-        // students
+        // information
         {
           path: 'students',
           name: 'students',
           component: () => import('../views/admin/students/ListView.vue')
+        },
+        {
+          path: 'registers',
+          name: 'registers',
+          component: () => import('../views/admin/registers/ListView.vue')
         }
       ]
     }
