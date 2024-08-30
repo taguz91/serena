@@ -65,6 +65,14 @@ const router = createRouter({
           component: () => import('../views/admin/subject/ListView.vue')
         },
 
+        // classrooms
+
+        {
+          path: 'classrooms',
+          name: 'classrooms',
+          component: () => import('../views/admin/classrooms/ListView.vue')
+        },
+
         // students
         {
           path: 'students',

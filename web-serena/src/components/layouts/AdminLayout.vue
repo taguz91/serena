@@ -24,7 +24,7 @@
 import { h, type Component } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
 
-import { Calendar, Home, LayoutBoard, User } from '@vicons/tabler'
+import { Calendar, Home, LayoutBoard, School, User } from '@vicons/tabler'
 import { NIcon, NMenu, NModalProvider, type MenuOption } from 'naive-ui'
 import AppIcon from '../shared/AppIcon.vue'
 import TopNav from '../shared/TopNav.vue'
@@ -66,6 +66,11 @@ const menuOptions: MenuOption[] = [
     key: 'subjects',
     label: renderLink('subjects', 'Materias'),
     icon: renderIcon(LayoutBoard)
+  },
+  {
+    key: 'classrooms',
+    label: renderLink('classrooms', 'Clases'),
+    icon: renderIcon(School)
   },
   {
     key: 'spacer',
