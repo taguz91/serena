@@ -83,6 +83,19 @@ const router = createRouter({
           path: 'registers',
           name: 'registers',
           component: () => import('../views/admin/registers/ListView.vue')
+        },
+
+        // sync
+
+        {
+          path: 'sync/students',
+          name: 'sync-students',
+          component: () => import('../views/admin/sync/StudentView.vue')
+        },
+        {
+          path: 'sync/enroll',
+          name: 'sync-enroll',
+          component: () => import('../views/admin/sync/EnrollView.vue')
         }
       ]
     }
