@@ -1,5 +1,5 @@
 <template>
-  <NPageHeader title="Materias" subtitle="Revisar, crear, editar y eliminar materias">
+  <NPageHeader title="Docentes" subtitle="Revisar, crear, editar y eliminar docentes">
     <template #extra>
       <NSpace>
         <NButton type="primary" @click="showModal">
@@ -9,7 +9,7 @@
             </NIcon>
           </template>
 
-          Crear nueva
+          Crear nuevo
         </NButton>
       </NSpace>
     </template>
@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { Pencil, Plus, Trash } from '@vicons/tabler'
+import { LockOff, LockAccess, Pencil, Plus, Trash } from '@vicons/tabler'
 import { NButton, NDataTable, NIcon, NPageHeader, NSpace, type DataTableColumns } from 'naive-ui'
 import { h, onMounted, ref } from 'vue'
 import FormView from './FormView.vue'
@@ -32,24 +32,43 @@ const showModal = () => {
   show.value = true
 }
 
-interface Subject {
+interface Teacher {
   name: string
+  email: string
+  status: boolean
 }
 
-const data = ref<Subject[]>([])
+const data = ref<Teacher[]>([])
 
-const columns: DataTableColumns<Subject> = [
+const columns: DataTableColumns<Teacher> = [
   {
     title: 'Nombre',
     key: 'name'
   },
   {
+    title: 'Correo',
+    key: 'email'
+  },
+  {
     title: 'Acciones',
     key: 'actions',
-    width: 125,
+    width: 175,
     className: 'flex justify-between',
     render: (row) => {
       return [
+        h(
+          NButton,
+          {
+            type: 'info',
+            tertiary: true,
+            onClick: () => {
+              console.log('Edit', row)
+            }
+          },
+          {
+            icon: () => h(NIcon, null, { default: () => (row.status ? h(LockOff) : h(LockAccess)) })
+          }
+        ),
         h(
           NButton,
           {
@@ -85,34 +104,19 @@ onMounted(() => {
   setTimeout(() => {
     data.value = [
       {
-        name: 'Matemáticas'
+        name: 'Juan Pérez',
+        email: 'juan@per.com',
+        status: true
       },
       {
-        name: 'Lenguaje'
+        name: 'María González',
+        email: 'email@dewv.com',
+        status: false
       },
       {
-        name: 'Ciencias'
-      },
-      {
-        name: 'Historia'
-      },
-      {
-        name: 'Geografía'
-      },
-      {
-        name: 'Educación Física'
-      },
-      {
-        name: 'Artes'
-      },
-      {
-        name: 'Música'
-      },
-      {
-        name: 'Religión'
-      },
-      {
-        name: 'Inglés'
+        name: 'Pedro Rodríguez',
+        email: 'pedro@dev.com',
+        status: true
       }
     ]
   }, 1000)
