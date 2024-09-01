@@ -1,11 +1,16 @@
 package com.taguz91.api_serena.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import com.taguz91.api_serena.models.Register;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-@Repository
+import java.util.Optional;
 
-public interface RegisterRepository extends JpaRepository<Register, Object>{
+@Repository
+public interface RegisterRepository extends JpaRepository<Register, String> {
     
+    // Método para encontrar un registro por su estado
+    Optional<Register> findByStatus(@Param("status") String status);
+
 }

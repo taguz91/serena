@@ -1,11 +1,15 @@
 package com.taguz91.api_serena.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import com.taguz91.api_serena.models.Classroom;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-@Repository
+import java.util.Optional;
 
-public interface ClassroomRepository extends JpaRepository<Classroom, Object>{
-    
+@Repository
+public interface ClassroomRepository extends JpaRepository<Classroom, String> {
+
+    // Método para buscar un aula por el nombre del periodo académico
+    Optional<Classroom> findByAcademicPeriod_Name(@Param("academicPeriodName") String academicPeriodName);
 }
