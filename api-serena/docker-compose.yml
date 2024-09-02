@@ -1,0 +1,31 @@
+networks:
+  api-serena_default:
+    external: true
+services:
+  app:
+    image: "docker-spring-boot-with-postgres"
+    build:
+      context: .
+    container_name: serena_app
+    depends_on:
+      - db
+    environment:
+      DATABASE_HOST: serena_db
+      POSTGRES_PASSWORD: serena-bd-app
+    ports:
+      - 8181:8181
+    networks:
+      - api-serena_default
+  db:
+    image: postgres:16.4
+    restart: always
+    container_name: serena_db
+    shm_size: 128mb
+    ports:
+      - 9696:5432
+    environment:
+      POSTGRES_PASSWORD: serena-bd-app
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - api-serena_default
