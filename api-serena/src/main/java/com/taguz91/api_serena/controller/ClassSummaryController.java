@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 
+import java.time.LocalDateTime;
+
 @RestController
 @RequestMapping("api/v1/class-summary")
 public class ClassSummaryController {
@@ -52,7 +54,6 @@ public class ClassSummaryController {
         ClassSummary classSummary = classSummaryRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("El resumen de la clase no existe"));
 
-        classSummary.setSummaryText(request.getSummaryText());
         classSummary.setAvg_emotion(request.getAvgEmotion());
         classSummary.setMin_emotion(request.getMinEmotion());
         classSummary.setMax_emotion(request.getMaxEmotion());

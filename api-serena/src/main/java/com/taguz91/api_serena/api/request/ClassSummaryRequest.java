@@ -31,7 +31,7 @@ public class ClassSummaryRequest implements Serializable {
     public ClassSummary toClassSummary() {
         return new ClassSummary()
                 .setId((new NanoCombCreator()).create().toString())
-                .setSummaryText(summaryText)
+                .setDate(LocalDateTime.now())
                 .setAvg_emotion(avgEmotion)
                 .setMin_emotion(minEmotion)
                 .setMax_emotion(maxEmotion);

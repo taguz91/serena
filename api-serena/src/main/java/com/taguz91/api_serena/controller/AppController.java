@@ -1,6 +1,6 @@
 package com.taguz91.api_serena.controller;
 
-import com.taguz91.api_serena.api.request.RegisterRequest;
+import com.taguz91.api_serena.api.request.RegisterTeacherRequest;
 import com.taguz91.api_serena.api.response.MessageResponse;
 import com.taguz91.api_serena.models.Teacher;
 import com.taguz91.api_serena.service.contracts.RegisterService;
@@ -30,7 +30,7 @@ public class AppController {
     }
 
     @PostMapping("/api/v1/register")
-    public ResponseEntity<Teacher> register(@Valid @RequestBody RegisterRequest request)
+    public ResponseEntity<Teacher> register(@Valid @RequestBody RegisterTeacherRequest request)
     {
         Teacher teacher =  registerService.register(request);
 

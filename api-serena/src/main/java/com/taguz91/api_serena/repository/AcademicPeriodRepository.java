@@ -7,6 +7,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 @Repository
-public interface AcademicPeriodRepository extends JpaRepository<AcademicPeriod, Object>{
-    Optional<AcademicPeriod> findByName(@Param("name") String name);
+public interface AcademicPeriodRepository extends JpaRepository<AcademicPeriod, String>{
+
 }

@@ -11,5 +11,4 @@ import com.taguz91.api_serena.models.Subject;
 @Repository
 public interface SubjectRepository extends JpaRepository<Subject, String> {
 
-    Optional<Subject> findByName(@Param("name") String name);
 }

@@ -7,13 +7,6 @@ import java.util.List;
 
 @Repository
 
-public interface ClassRecordRepository extends JpaRepository<ClassRecord, Object>{
+public interface ClassRecordRepository extends JpaRepository<ClassRecord, String>{
 
-    List<ClassRecord> findByStudentReference(@Param("studentReference") String studentReference);
-
-
-    List<ClassRecord> findByTeacherReference(@Param("teacherReference") String teacherReference);
-
-
-    
 }

@@ -8,9 +8,6 @@ import java.util.List;
 
 @Repository
 
-public interface ClassReportRepository extends JpaRepository<ClassReport, Object>{
-    List<ClassReport> findByRegisterId(@Param("registerId") String registerId);
-
-    List<ClassReport> findByStudentId(@Param("studentId") String studentId);
+public interface ClassReportRepository extends JpaRepository<ClassReport, String>{
 
 }

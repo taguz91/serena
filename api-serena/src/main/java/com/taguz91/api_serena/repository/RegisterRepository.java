@@ -9,8 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface RegisterRepository extends JpaRepository<Register, String> {
-    
-    // Método para encontrar un registro por su estado
-    Optional<Register> findByStatus(@Param("status") String status);
 
 }

@@ -10,6 +10,4 @@ import java.util.Optional;
 @Repository
 public interface ClassroomRepository extends JpaRepository<Classroom, String> {
 
-    // Método para buscar un aula por el nombre del periodo académico
-    Optional<Classroom> findByAcademicPeriod_Name(@Param("academicPeriodName") String academicPeriodName);
 }

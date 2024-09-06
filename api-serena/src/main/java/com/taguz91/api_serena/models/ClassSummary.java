@@ -30,7 +30,7 @@ public class ClassSummary extends BaseEntity implements Serializable {
     @Id
     private String id;
 
-    private LocalDateTime summaryText;
+    private LocalDateTime date;
 
     private String avg_emotion;
 

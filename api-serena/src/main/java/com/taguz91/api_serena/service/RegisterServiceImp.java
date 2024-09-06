@@ -1,7 +1,7 @@
 package com.taguz91.api_serena.service;
 
 import com.taguz91.api_serena.api.exception.InvalidRequestException;
-import com.taguz91.api_serena.api.request.RegisterRequest;
+import com.taguz91.api_serena.api.request.RegisterTeacherRequest;
 import com.taguz91.api_serena.models.Teacher;
 import com.taguz91.api_serena.repository.TeacherRepository;
 import com.taguz91.api_serena.service.contracts.JwtService;
@@ -28,7 +28,7 @@ public class RegisterServiceImp implements RegisterService {
     private TeacherRepository teacherRepository;
 
     @Override
-    public Teacher register(RegisterRequest request) {
+    public Teacher register(RegisterTeacherRequest request) {
         Teacher teacher = request.toTeacher();
 
         if (teacherRepository.findByEmail(teacher.getEmail()).isPresent()) {

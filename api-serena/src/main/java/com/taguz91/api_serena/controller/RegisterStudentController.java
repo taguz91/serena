@@ -56,8 +56,8 @@ public class RegisterStudentController {
 
         registerStudent.setPhoto(request.getPhoto());
         registerStudent.setEmotion(request.getEmotion());
-        registerStudent.setRegister(request.getRegisterId());
-        registerStudent.setStudent(request.getStudentId());
+//        registerStudent.setRegister(request.getRegisterId());
+//        registerStudent.setStudent(request.getStudentId());
 
         registerStudentRepository.save(registerStudent);
 
