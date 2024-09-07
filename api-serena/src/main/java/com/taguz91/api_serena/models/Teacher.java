@@ -2,6 +2,8 @@ package com.taguz91.api_serena.models;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -18,6 +20,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
@@ -27,7 +31,7 @@ import lombok.experimental.Accessors;
 @Table(name = "teachers")
 @Accessors(chain = true)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Teacher extends BaseEntity implements Serializable {
+public class Teacher extends BaseEntity implements Serializable, UserDetails {
 
     @Serial
     private static final long serialVersionUID = -4115808525376597079L;
@@ -48,9 +52,22 @@ public class Teacher extends BaseEntity implements Serializable {
     @JsonIgnore
     private String password;
 
+    @Column(nullable = true)
+    private LocalDateTime lastLogin;
+
     @Column(nullable = true, length = 255)
     private String token;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "teacher")
     private List<Classroom> classrooms;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
 }

@@ -35,6 +35,7 @@ public class JwtServiceImp implements JwtService {
             Jws<Claims> claimsJws = Jwts.parser().setSigningKey(secret).build().parseClaimsJws(token);
             return Optional.ofNullable(claimsJws.getBody().getSubject());
         } catch (Exception e) {
+//            System.out.println("ERROR PARSING TOKEN:" + e.getMessage());
             return Optional.empty();
         }
     }
