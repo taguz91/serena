@@ -32,6 +32,9 @@
 import { ref } from 'vue'
 
 import { NButton, NForm, NFormItem, NInput } from 'naive-ui'
+import { useAuthStore } from '@/stores/user'
+
+const authStore = useAuthStore()
 
 const model = ref({
   email: null,
@@ -41,5 +44,10 @@ const loading = ref(false)
 
 const handleValidateButtonClick = async (e: MouseEvent) => {
   e.preventDefault()
+
+  if (model.value.email && model.value.password) {
+    authStore.returnUrl = '/welcome'
+    authStore.login(model.value.email, model.value.password)
+  }
 }
 </script>
