@@ -15,6 +15,10 @@ import SinglePageLayout from '@/components/layouts/SinglePageLayout.vue';
         Tu cuenta esta siendo validada, cuando un administrados verifique tus datos podrás continuar
         al sistema.
       </p>
+
+      <div class="mx-auto mt-4">
+        <NButton type="error" bordered ghost @click="logout"> Volver al login </NButton>
+      </div>
     </div>
   </SinglePageLayout>
 </template>
@@ -22,4 +26,29 @@ import SinglePageLayout from '@/components/layouts/SinglePageLayout.vue';
 <script lang="ts" setup>
 import SinglePageLayout from '@/components/layouts/SinglePageLayout.vue'
 import AppIcon from '@/components/shared/AppIcon.vue'
+import { useAuthStore } from '@/stores/user'
+import { NButton } from 'naive-ui'
+import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const userStore = useAuthStore()
+
+const logout = () => {
+  userStore.logout()
+}
+
+onMounted(() => {
+  const teacher = userStore.user
+  if (!teacher) return
+
+  if (teacher.email.includes('admin@')) {
+    router.push({ name: 'admin-home' })
+    return
+  }
+
+  if (teacher.isActive) {
+    router.push({ name: 'app-home' })
+  }
+})
 </script>

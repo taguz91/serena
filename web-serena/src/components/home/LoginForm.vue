@@ -5,12 +5,12 @@
       Ingresa tu correo y contraseña para continuar, si no tienes cuenta puedes crear
     </p>
 
-    <NForm>
-      <NFormItem path="task" label="Email">
+    <NForm ref="formRef" :rules="rules" :model="model">
+      <NFormItem path="email" label="Email">
         <NInput v-model:value="model.email" type="text" />
       </NFormItem>
 
-      <NFormItem path="task" label="Contraseña">
+      <NFormItem path="password" label="Contraseña">
         <NInput v-model:value="model.password" type="password" />
       </NFormItem>
 
@@ -31,10 +31,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import { NButton, NForm, NFormItem, NInput } from 'naive-ui'
+import { NButton, NForm, NFormItem, NInput, type FormInst, type FormRules } from 'naive-ui'
 import { useAuthStore } from '@/stores/user'
 
 const authStore = useAuthStore()
+
+const formRef = ref<FormInst | null>()
 
 const model = ref({
   email: null,
@@ -42,12 +44,30 @@ const model = ref({
 })
 const loading = ref(false)
 
+const rules: FormRules = {
+  email: {
+    required: true,
+    trigger: ['blur'],
+    message: 'Ingresa un correo valido',
+    type: 'email'
+  },
+  password: {
+    required: true,
+    trigger: ['blur'],
+    message: 'Ingresa la contraseña'
+  }
+}
+
 const handleValidateButtonClick = async (e: MouseEvent) => {
   e.preventDefault()
 
-  if (model.value.email && model.value.password) {
-    authStore.returnUrl = '/welcome'
-    authStore.login(model.value.email, model.value.password)
-  }
+  formRef.value?.validate((errors) => {
+    if (!errors) {
+      authStore.returnUrl = '/welcome'
+      authStore.login(model.value.email!, model.value.password!)
+    } else {
+      console.log(errors)
+    }
+  })
 }
 </script>

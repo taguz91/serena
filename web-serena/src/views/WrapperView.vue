@@ -38,8 +38,19 @@ onMounted(async () => {
   loading.finish()
   loaded.value = true
 
-  if (teacher) {
-    router.push('/welcome')
+  if (!teacher) return
+
+  if (teacher.email.includes('admin@')) {
+    router.push({ name: 'admin-home' })
+    return
+  }
+
+  if (!teacher.isActive) {
+    router.push({ name: 'welcome' })
+  }
+
+  if (teacher.isActive) {
+    router.push({ name: 'app-home' })
   }
 })
 </script>

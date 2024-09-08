@@ -7,7 +7,7 @@
     <div>
       <NButton tertiary circle type="error">
         <template #icon>
-          <NIcon><Logout /></NIcon>
+          <NIcon @click="logout"><Logout /></NIcon>
         </template>
       </NButton>
     </div>
@@ -15,10 +15,18 @@
 </template>
 
 <script setup lang="ts">
-import { Logout } from '@vicons/tabler'
 import { NButton, NIcon } from 'naive-ui'
+import { Logout } from '@vicons/tabler'
+
+import { useAuthStore } from '@/stores/user'
 
 defineProps<{
   title: string
 }>()
+
+const userStore = useAuthStore()
+
+const logout = () => {
+  userStore.logout()
+}
 </script>
