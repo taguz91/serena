@@ -16,23 +16,39 @@
       </NIcon>
     </template>
 
-    <NForm class="mt-6">
+    <SmallSpinner v-if="isLoading" />
+
+    <NForm v-else ref="formRef" class="mt-6" :model="model">
       <NFormItem label="Periodo académico" required>
         <NSelect
           filterable
+          :loading="isLoadingAcademicPeriods"
+          v-model:value="model.idAcademicPeriod"
           placeholder="Selecciona un periodo académico"
-          :options="optionsAcademicPeriods"
+          :options="academicPeriods"
         >
         </NSelect>
       </NFormItem>
 
       <NFormItem label="Docente" required>
-        <NSelect filterable placeholder="Selecciona un docente" :options="optionsTeachers">
+        <NSelect
+          filterable
+          :loading="isLoadingTeachers"
+          v-model:value="model.idTeacher"
+          placeholder="Selecciona un docente"
+          :options="teachers"
+        >
         </NSelect>
       </NFormItem>
 
       <NFormItem label="Materia" required>
-        <NSelect filterable placeholder="Selecciona una materia" :options="optionsSubjects">
+        <NSelect
+          filterable
+          :loading="isLoadingSubjects"
+          v-model:value="model.idSubject"
+          placeholder="Selecciona una materia"
+          :options="subjects"
+        >
         </NSelect>
       </NFormItem>
     </NForm>
@@ -40,21 +56,39 @@
 </template>
 
 <script setup lang="ts">
-import { NForm, NFormItem, NIcon, NModal, NSelect } from 'naive-ui'
+import { NForm, NFormItem, NIcon, NModal, NSelect, type FormInst } from 'naive-ui'
 import { useVModel } from '@vueuse/core'
 import { School } from '@vicons/tabler'
+import { ref, toRef } from 'vue'
+import { useClassroom } from '@/composable/classrooms/useClassroom'
+import SmallSpinner from '@/components/shared/SmallSpinner.vue'
+import { useOptions } from '@/composable/useOptions'
 
-const props = defineProps<{
+interface Props {
+  id?: string
   modelValue: boolean
-}>()
+}
 
+const props = withDefaults(defineProps<Props>(), {
+  id: undefined
+})
+
+const id = toRef(props, 'id')
+const formRef = ref<FormInst | null>(null)
 const emit = defineEmits<{
   (event: 'update:modelValue', value: boolean): void
 }>()
 
+const { save, isLoading, classroomForm: model } = useClassroom(id)
+const { isLoading: isLoadingAcademicPeriods, options: academicPeriods } =
+  useOptions('academic-period')
+const { isLoading: isLoadingTeachers, options: teachers } = useOptions('teacher')
+const { isLoading: isLoadingSubjects, options: subjects } = useOptions('subject')
+
 const show = useVModel(props, 'modelValue', emit)
 
 const onPositiveClick = () => {
+  save(formRef.value)
   show.value = false
   emit('update:modelValue', false)
 }
@@ -63,87 +97,4 @@ const onNegativeClick = () => {
   show.value = false
   emit('update:modelValue', false)
 }
-
-// data
-
-const optionsAcademicPeriods = [
-  {
-    label: 'Octubre 2024 - Abril 2025',
-    value: 'AHQH1YUWBD7T'
-  },
-  {
-    label: 'Abril 2025 - Octubre 2025',
-    value: 'AHQHUWBD7T'
-  },
-  {
-    label: 'Octubre 2025 - Abril 2026',
-    value: 'AHQH1asdawdYUWBD7T'
-  },
-  {
-    label: 'Abril 2026 - Octubre 2026',
-    value: 'lkahwdbawjk1212'
-  }
-]
-
-const optionsTeachers = [
-  {
-    label: 'Juan Pérez',
-    value: 'AHQH1YUWBD7T'
-  },
-  {
-    label: 'María González',
-    value: 'AHQHUWBD7T'
-  },
-  {
-    label: 'Pedro Rodríguez',
-    value: 'AHQH1asdawd'
-  },
-  {
-    label: 'Ana Pérez',
-    value: 'lkahwdbawjk1212'
-  },
-  {
-    label: 'José González',
-    value: 'AHQH1YUWBD7T'
-  },
-  {
-    label: 'María Rodríguez',
-    value: 'AHQHUWBD7T'
-  },
-  {
-    label: 'Pedro Pérez',
-    value: 'AHQH1asdawd'
-  }
-]
-
-const optionsSubjects = [
-  {
-    label: 'Matemáticas',
-    value: 'AHQH1YUWBD7T'
-  },
-  {
-    label: 'Español',
-    value: 'AHQHUWBD7T'
-  },
-  {
-    label: 'Ciencias',
-    value: 'AHQH1asdawd'
-  },
-  {
-    label: 'Historia',
-    value: 'lkahwdbawjk1212'
-  },
-  {
-    label: 'Geografía',
-    value: 'AHQH1YUWBD7T'
-  },
-  {
-    label: 'Física',
-    value: 'AHQHUWBD7T'
-  },
-  {
-    label: 'Química',
-    value: 'AHQH1asdawd'
-  }
-]
 </script>

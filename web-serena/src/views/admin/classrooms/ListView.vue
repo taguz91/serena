@@ -14,44 +14,57 @@
       </NSpace>
     </template>
 
-    <NDataTable :columns="columns" :data="data" pagination />
+    <NDataTable :columns="columns" :data="classrooms" :loading="isLoading" />
+
+    <div class="mt-2 flex justify-end">
+      <NPagination :page-count="metaData.pages" v-model:page="currentPage" @update:page="getPage" />
+    </div>
   </NPageHeader>
 
-  <FormView v-model="show" @update:model-value="(value: boolean) => (show = value)" />
+  <FormView
+    v-model="show"
+    @update:model-value="(value: boolean) => (show = value)"
+    :id="currentId"
+  />
 </template>
 
 <script setup lang="ts">
 import { Pencil, Plus, Trash } from '@vicons/tabler'
-import { NButton, NDataTable, NIcon, NPageHeader, NSpace, type DataTableColumns } from 'naive-ui'
-import { h, onMounted, ref } from 'vue'
+import {
+  NButton,
+  NDataTable,
+  NIcon,
+  NPageHeader,
+  NPagination,
+  NSpace,
+  type DataTableColumns
+} from 'naive-ui'
+import { h, ref } from 'vue'
 import FormView from './FormView.vue'
+import type { Classroom } from '@/interfaces'
+import { useClassrooms } from '@/composable/classrooms/useClassrooms'
 
 const show = ref(false)
+const currentId = ref<string | undefined>(undefined)
 
 const showModal = () => {
   show.value = true
 }
 
-interface Classroom {
-  academicPeriod: string
-  teacher: string
-  subject: string
-}
-
-const data = ref<Classroom[]>([])
+const { classrooms, metaData, currentPage, isLoading, getPage, deleteClassroom } = useClassrooms()
 
 const columns: DataTableColumns<Classroom> = [
   {
     title: 'Periodo académico',
-    key: 'academicPeriod'
+    key: 'academicPeriod.name'
   },
   {
     title: 'Profesor',
-    key: 'teacher'
+    key: 'teacher.name'
   },
   {
     title: 'Materia',
-    key: 'subject'
+    key: 'subject.name'
   },
   {
     title: 'Acciones',
@@ -66,7 +79,8 @@ const columns: DataTableColumns<Classroom> = [
             type: 'info',
             tertiary: true,
             onClick: () => {
-              console.log('Edit', row)
+              currentId.value = row.id
+              showModal()
             }
           },
           {
@@ -79,7 +93,7 @@ const columns: DataTableColumns<Classroom> = [
             type: 'error',
             tertiary: true,
             onClick: () => {
-              console.log('Delete', row)
+              deleteClassroom(row.id)
             }
           },
           {
@@ -90,71 +104,4 @@ const columns: DataTableColumns<Classroom> = [
     }
   }
 ]
-
-onMounted(() => {
-  setTimeout(() => {
-    data.value = [
-      {
-        academicPeriod: 'Octubre 2024 - Abril 2025',
-        teacher: 'Juan Perez',
-        subject: 'Matemáticas'
-      },
-      {
-        academicPeriod: 'Enero 2024 - Julio 2024',
-        teacher: 'Maria Rodriguez',
-        subject: 'Español'
-      },
-      {
-        academicPeriod: 'Octubre 2024 - Abril 2025',
-        teacher: 'Pedro Gomez',
-        subject: 'Ciencias'
-      },
-      {
-        academicPeriod: 'Enero 2024 - Julio 2024',
-        teacher: 'Ana Perez',
-        subject: 'Historia'
-      },
-      {
-        academicPeriod: 'Octubre 2024 - Abril 2025',
-        teacher: 'Juan Perez',
-        subject: 'Matemáticas'
-      },
-      {
-        academicPeriod: 'Enero 2024 - Julio 2024',
-        teacher: 'Maria Rodriguez',
-        subject: 'Español'
-      },
-      {
-        academicPeriod: 'Octubre 2024 - Abril 2025',
-        teacher: 'Pedro Gomez',
-        subject: 'Ciencias'
-      },
-      {
-        academicPeriod: 'Enero 2024 - Julio 2024',
-        teacher: 'Ana Perez',
-        subject: 'Historia'
-      },
-      {
-        academicPeriod: 'Octubre 2024 - Abril 2025',
-        teacher: 'Juan Perez',
-        subject: 'Matemáticas'
-      },
-      {
-        academicPeriod: 'Enero 2024 - Julio 2024',
-        teacher: 'Maria Rodriguez',
-        subject: 'Español'
-      },
-      {
-        academicPeriod: 'Octubre 2024 - Abril 2025',
-        teacher: 'Pedro Gomez',
-        subject: 'Ciencias'
-      },
-      {
-        academicPeriod: 'Enero 2024 - Julio 2024',
-        teacher: 'Ana Perez',
-        subject: 'Historia'
-      }
-    ]
-  }, 1000)
-})
 </script>

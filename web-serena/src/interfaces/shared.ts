@@ -9,3 +9,10 @@ export interface Meta {
   pages: number
   perPage: number
 }
+
+export type OptionType = 'academic-period' | 'subject' | 'teacher' | 'classroom'
+
+export interface Option {
+  label: string
+  value: string
+}
