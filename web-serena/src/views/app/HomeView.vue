@@ -9,11 +9,11 @@
         class="hover:bg-blue-100"
         v-for="classroom in classrooms"
         :key="classroom.id"
-        :title="classroom.subject"
+        :title="classroom.subject.name"
         bordered
       >
         <div class="flex">
-          <p class="w-full">{{ classroom.academicPeriod }}</p>
+          <p class="w-full">{{ classroom.academicPeriod.name }}</p>
           <NButton type="info" @click="goClassroom(classroom.id)">
             <template #icon>
               <NIcon><LayoutBoard /></NIcon>
@@ -22,7 +22,12 @@
         </div>
 
         <div class="flex justify-end">
-          <NButton type="primary" class="mt-4 ml-auto" @click="createRegister">
+          <NButton
+            type="primary"
+            class="mt-4 ml-auto"
+            @click="createRegister(classroom)"
+            :loading="idClassroomCreating === classroom.id"
+          >
             <template #icon>
               <NIcon><User /></NIcon>
             </template>
@@ -37,13 +42,18 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 
-import AppLayout from '@/components/layouts/AppLayout.vue'
-
 import { NButton, NCard, NIcon } from 'naive-ui'
 import { User, LayoutBoard } from '@vicons/tabler'
+
+import AppLayout from '@/components/layouts/AppLayout.vue'
 import StudentList from '@/components/shared/StudentList.vue'
+import { useCurrentClassrooms } from '@/composable/classrooms/useCurrentClassrooms'
+import { userCreateRegister } from '@/composable/register/useRegister'
+import type { Classroom } from '@/interfaces'
 
 const router = useRouter()
+const { classrooms } = useCurrentClassrooms()
+const { idClassroomCreating, create } = userCreateRegister()
 
 const goClassroom = (id: string) => {
   router.push({
@@ -54,71 +64,10 @@ const goClassroom = (id: string) => {
   })
 }
 
-const createRegister = () => {
-  router.push({
-    name: 'classroom-register',
-    params: {
-      id: '1'
-    }
+const createRegister = (classroom: Classroom) => {
+  create({
+    idClassroom: classroom.id,
+    status: 'open'
   })
 }
-
-interface Classroom {
-  id: string
-  subject: string
-  academicPeriod: string
-}
-
-const classrooms: Classroom[] = [
-  {
-    id: '1',
-    subject: 'Mathematics',
-    academicPeriod: '2021-2022'
-  },
-  {
-    id: '2',
-    subject: 'Science',
-    academicPeriod: '2021-2022'
-  },
-  {
-    id: '3',
-    subject: 'English',
-    academicPeriod: '2021-2022'
-  },
-  {
-    id: '4',
-    subject: 'History',
-    academicPeriod: '2021-2022'
-  },
-  {
-    id: '5',
-    subject: 'Geography',
-    academicPeriod: '2021-2022'
-  },
-  {
-    id: '6',
-    subject: 'Physical Education',
-    academicPeriod: '2021-2022'
-  },
-  {
-    id: '7',
-    subject: 'Music',
-    academicPeriod: '2021-2022'
-  },
-  {
-    id: '8',
-    subject: 'Art',
-    academicPeriod: '2021-2022'
-  },
-  {
-    id: '9',
-    subject: 'Computer Science',
-    academicPeriod: '2021-2022'
-  },
-  {
-    id: '10',
-    subject: 'Health',
-    academicPeriod: '2021-2022'
-  }
-]
 </script>

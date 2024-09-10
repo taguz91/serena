@@ -81,6 +81,9 @@ export const useClassroom = (id: Ref<string | undefined>) => {
       })
 
       classroomForm.value = emptyForm()
+
+      saveMutation.reset()
+      updateMutation.reset()
     }
   })
 
