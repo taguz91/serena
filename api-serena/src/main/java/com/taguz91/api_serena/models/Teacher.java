@@ -59,6 +59,7 @@ public class Teacher extends BaseEntity implements Serializable, UserDetails {
     private String token;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "teacher")
+    @JsonIgnore
     private List<Classroom> classrooms;
 
     @Override

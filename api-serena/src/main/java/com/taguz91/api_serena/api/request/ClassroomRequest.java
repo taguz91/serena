@@ -5,7 +5,7 @@ import com.taguz91.api_serena.models.AcademicPeriod;
 import com.taguz91.api_serena.models.Teacher;
 import com.taguz91.api_serena.models.Subject;
 import com.taguz91.api_serena.utils.NanoCombCreator;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -19,20 +19,20 @@ public class ClassroomRequest implements Serializable {
     @Serial
     private static final long serialVersionUID = 819512021687550742L;
 
-    @NotNull
-    private AcademicPeriod academicPeriod;
+    @NotBlank
+    private String idAcademicPeriod;
 
-    @NotNull
-    private Teacher teacher;
+    @NotBlank
+    private String idTeacher;
 
-    @NotNull
-    private Subject subject;
+    @NotBlank
+    private String idSubject;
 
     public Classroom toClassroom() {
         return new Classroom()
                 .setId((new NanoCombCreator()).create().toString())
-                .setAcademicPeriod(academicPeriod)
-                .setTeacher(teacher)
-                .setSubject(subject);
+                .setAcademicPeriod((new AcademicPeriod()).setId(idAcademicPeriod))
+                .setTeacher((new Teacher()).setId(idTeacher))
+                .setSubject((new Subject()).setId(idSubject));
     }
 }

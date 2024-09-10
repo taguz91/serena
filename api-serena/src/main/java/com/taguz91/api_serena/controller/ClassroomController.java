@@ -4,7 +4,10 @@ import com.amazonaws.services.eks.model.NotFoundException;
 import com.taguz91.api_serena.api.request.ClassroomRequest;
 import com.taguz91.api_serena.api.response.MessageResponse;
 import com.taguz91.api_serena.api.response.PageResponse;
+import com.taguz91.api_serena.models.AcademicPeriod;
 import com.taguz91.api_serena.models.Classroom;
+import com.taguz91.api_serena.models.Subject;
+import com.taguz91.api_serena.models.Teacher;
 import com.taguz91.api_serena.repository.ClassroomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -52,9 +55,15 @@ public class ClassroomController {
         Classroom classroom = classroomRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("El aula no existe"));
 
-        classroom.setAcademicPeriod(request.getAcademicPeriod());
-        classroom.setTeacher(request.getTeacher());
-        classroom.setSubject(request.getSubject());
+        classroom.setAcademicPeriod(
+                (new AcademicPeriod()).setId(request.getIdAcademicPeriod())
+        );
+        classroom.setTeacher(
+                (new Teacher()).setId(request.getIdTeacher())
+        );
+        classroom.setSubject(
+                (new Subject()).setId(request.getIdSubject())
+        );
 
         classroomRepository.save(classroom);
 
