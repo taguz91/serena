@@ -69,6 +69,7 @@ public class RegisterServiceImp implements RegisterService {
             });
         }
 
+        teacher.setIsActive(false);
         teacher.setToken(jwtService.toToken(teacher));
         teacher.setPassword(
                 passwordEncoder.encode(teacher.getPassword())

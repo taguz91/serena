@@ -24,6 +24,7 @@ public class JwtServiceImp implements JwtService {
 
     @Override
     public String toToken(Teacher teacher) {
+//        System.out.println("EL TOKEN EXPIRARA EN: " + expireTimeFromNow().toString());
         return Jwts.builder().setSubject(teacher.getId())
                 .setExpiration(expireTimeFromNow())
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
