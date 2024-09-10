@@ -16,38 +16,51 @@
       </NIcon>
     </template>
 
-    <NForm class="mt-6">
+    <SmallSpinner v-if="isLoading" />
+
+    <NForm v-else ref="formRef" class="mt-6" :model="model">
       <NFormItem label="Nombre" required>
-        <NInput placeholder="Juan Perez" />
+        <NInput v-model:value="model.name" placeholder="Juan Perez" />
       </NFormItem>
 
       <NFormItem label="Correo" required>
-        <NInput placeholder="email@dominio.com" />
-      </NFormItem>
-
-      <NFormItem label="Contraseña">
-        <NInput placeholder="**********" type="password" />
+        <NInput v-model:value="model.email" placeholder="email@dominio.com" />
       </NFormItem>
     </NForm>
   </NModal>
 </template>
 
 <script setup lang="ts">
-import { NForm, NFormItem, NIcon, NInput, NModal } from 'naive-ui'
+import { ref, toRef } from 'vue'
+
+import { NForm, NFormItem, NIcon, NInput, NModal, type FormInst } from 'naive-ui'
 import { useVModel } from '@vueuse/core'
 import { Users } from '@vicons/tabler'
 
-const props = defineProps<{
-  modelValue: boolean
-}>()
+import { useTeacher } from '@/composable'
+import SmallSpinner from '@/components/shared/SmallSpinner.vue'
 
+interface Props {
+  modelValue: boolean
+  id?: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  id: undefined
+})
+
+const id = toRef(props, 'id')
 const emit = defineEmits<{
   (event: 'update:modelValue', value: boolean): void
 }>()
 
+const formRef = ref<FormInst | null>(null)
+const { isLoading, teacherForm: model, save } = useTeacher(id)
+
 const show = useVModel(props, 'modelValue', emit)
 
 const onPositiveClick = () => {
+  save(formRef.value)
   show.value = false
   emit('update:modelValue', false)
 }

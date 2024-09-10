@@ -34,23 +34,21 @@ const loading = useLoadingBar()
 onMounted(async () => {
   // load the data from current user
   loading.start()
-  const teacher = await userStore.init()
+  await userStore.init()
   loading.finish()
   loaded.value = true
 
-  if (!teacher) return
-
-  if (teacher.email.includes('admin@')) {
-    router.push({ name: 'admin-home' })
-    return
-  }
-
-  if (!teacher.isActive) {
-    router.push({ name: 'welcome' })
-  }
-
-  if (teacher.isActive) {
-    router.push({ name: 'app-home' })
-  }
+  // no debe redireccionar si ya esta en la pagina
+  // if (!teacher) return
+  // if (teacher.email.includes('admin@')) {
+  //   router.push({ name: 'admin-home' })
+  //   return
+  // }
+  // if (!teacher.isActive) {
+  //   router.push({ name: 'welcome' })
+  // }
+  // if (teacher.isActive) {
+  //   router.push({ name: 'app-home' })
+  // }
 })
 </script>

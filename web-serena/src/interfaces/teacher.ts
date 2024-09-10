@@ -11,3 +11,9 @@ export interface Teacher {
   lastLogin: string | undefined
   token: string
 }
+
+export interface TeacherForm {
+  id?: string
+  name: string
+  email: string
+}

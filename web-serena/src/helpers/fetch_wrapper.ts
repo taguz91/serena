@@ -1,37 +1,38 @@
 import { useAuthStore } from '@/stores/user'
 
 const request = (method: 'GET' | 'POST' | 'PUT' | 'DELETE') => {
-  return async (url: string, body: Record<string, unknown> | undefined) => {
+  return async <T, R>(url: string, data: T | undefined = undefined) => {
     const requestOptions: RequestInit = {
       method,
       headers: {
-        ...authHeader(url),
+        ...authHeader(),
         'Content-Type': 'application/json'
       }
     }
 
-    if (body) {
-      requestOptions.body = JSON.stringify(body)
+    if (data) {
+      requestOptions.body = JSON.stringify(data)
     }
 
-    return fetch(`http://localhost:8181/api${url}`, requestOptions).then(handleResponse)
+    return fetch(`http://localhost:8181/api${url}`, requestOptions).then((response) =>
+      handleResponse<R>(response)
+    )
   }
 }
 
-function authHeader(url: string): HeadersInit {
+function authHeader(): HeadersInit {
   const { user } = useAuthStore()
 
   const isLoggedIn = !!user?.token
 
-  const isApiUrl = url.startsWith(import.meta.env.VITE_API_URL)
-  if (isLoggedIn && isApiUrl) {
+  if (isLoggedIn) {
     return { Authorization: `Bearer ${user.token}` }
   } else {
     return {}
   }
 }
 
-async function handleResponse(response: Response) {
+async function handleResponse<R>(response: Response) {
   const isJson = response.headers?.get('content-type')?.includes('application/json')
   const data = isJson ? await response.json() : null
 
@@ -50,7 +51,7 @@ async function handleResponse(response: Response) {
     return Promise.reject(error)
   }
 
-  return data
+  return data as R
 }
 
 export const fetchWrapper = {

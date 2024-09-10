@@ -14,31 +14,46 @@
       </NSpace>
     </template>
 
-    <NDataTable :columns="columns" :data="data" pagination />
+    <NDataTable :columns="columns" :data="teachers" :loading="isLoading" />
+
+    <data class="mt-2 flex justify-end">
+      <NPagination :page-count="metaData.pages" v-model:page="currentPage" @update:page="getPage" />
+    </data>
   </NPageHeader>
 
-  <FormView v-model="show" @update:model-value="(value: boolean) => (show = value)" />
+  <FormView v-model="show" :id="currentId" @update:model-value="toggleModal" />
 </template>
 
 <script setup lang="ts">
+import { h, ref } from 'vue'
+
 import { LockOff, LockAccess, Pencil, Plus, Trash } from '@vicons/tabler'
-import { NButton, NDataTable, NIcon, NPageHeader, NSpace, type DataTableColumns } from 'naive-ui'
-import { h, onMounted, ref } from 'vue'
+import {
+  NButton,
+  NDataTable,
+  NIcon,
+  NPageHeader,
+  NPagination,
+  NSpace,
+  type DataTableColumns
+} from 'naive-ui'
+
 import FormView from './FormView.vue'
+import { useTeachers } from '@/composable/teachers/useTeachers'
+import type { Teacher } from '@/interfaces'
 
 const show = ref(false)
+const currentId = ref<string | undefined>(undefined)
 
 const showModal = () => {
   show.value = true
 }
 
-interface Teacher {
-  name: string
-  email: string
-  status: boolean
-}
+const { isLoading, teachers, metaData, currentPage, getPage, deleteTeacher } = useTeachers()
 
-const data = ref<Teacher[]>([])
+const toggleModal = (newShow: boolean) => {
+  show.value = newShow
+}
 
 const columns: DataTableColumns<Teacher> = [
   {
@@ -62,11 +77,12 @@ const columns: DataTableColumns<Teacher> = [
             type: 'info',
             tertiary: true,
             onClick: () => {
-              console.log('Edit', row)
+              console.log('info', row)
             }
           },
           {
-            icon: () => h(NIcon, null, { default: () => (row.status ? h(LockOff) : h(LockAccess)) })
+            icon: () =>
+              h(NIcon, null, { default: () => (row.isActive ? h(LockOff) : h(LockAccess)) })
           }
         ),
         h(
@@ -75,7 +91,8 @@ const columns: DataTableColumns<Teacher> = [
             type: 'info',
             tertiary: true,
             onClick: () => {
-              console.log('Edit', row)
+              currentId.value = row.id
+              showModal()
             }
           },
           {
@@ -88,7 +105,7 @@ const columns: DataTableColumns<Teacher> = [
             type: 'error',
             tertiary: true,
             onClick: () => {
-              console.log('Delete', row)
+              deleteTeacher(row.id)
             }
           },
           {
@@ -99,26 +116,4 @@ const columns: DataTableColumns<Teacher> = [
     }
   }
 ]
-
-onMounted(() => {
-  setTimeout(() => {
-    data.value = [
-      {
-        name: 'Juan Pérez',
-        email: 'juan@per.com',
-        status: true
-      },
-      {
-        name: 'María González',
-        email: 'email@dewv.com',
-        status: false
-      },
-      {
-        name: 'Pedro Rodríguez',
-        email: 'pedro@dev.com',
-        status: true
-      }
-    ]
-  }, 1000)
-})
 </script>

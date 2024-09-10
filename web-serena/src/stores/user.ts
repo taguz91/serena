@@ -30,7 +30,10 @@ export const useAuthStore = defineStore({
     },
     async login(email: string, password: string) {
       try {
-        const user = await fetchWrapper.post(`/v1/login`, { email, password })
+        const user = await fetchWrapper.post<Record<string, any>, Teacher>(`/v1/login`, {
+          email,
+          password
+        })
         this.user = user
 
         // changes this to use more secure storage

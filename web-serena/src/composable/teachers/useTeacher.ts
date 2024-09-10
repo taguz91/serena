@@ -1,0 +1,112 @@
+import { ref, watch, type Ref } from 'vue'
+
+import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
+
+import { fetchWrapper } from '@/helpers/fetch_wrapper'
+import type { Teacher, TeacherForm } from '@/interfaces'
+import type { FormInst } from 'naive-ui'
+
+const getTeacher = async (id: string | undefined): Promise<Teacher | null> => {
+  if (!id) {
+    return null
+  }
+
+  const teacher = await fetchWrapper.get<unknown, Teacher>(`/v1/teacher/${id}`)
+
+  return teacher
+}
+
+const saveTeacher = async (data: TeacherForm) => {
+  const record = await fetchWrapper.post<TeacherForm, Teacher>('/v1/teacher', data)
+
+  return record
+}
+
+const updateTeacher = async (data: TeacherForm) => {
+  const record = await fetchWrapper.put<TeacherForm, Teacher>(`/v1/teacher/${data.id}`, data)
+
+  return record
+}
+
+export const useTeacher = (id: Ref<string | undefined>) => {
+  const teacher = ref<Teacher>()
+  const teacherForm = ref<TeacherForm>({
+    name: '',
+    email: ''
+  })
+
+  const { isLoading, data } = useQuery({
+    queryKey: ['teacher', id],
+    queryFn: () => getTeacher(id.value)
+  })
+
+  const queryClient = useQueryClient()
+
+  watch(
+    data,
+    () => {
+      if (data.value) {
+        teacher.value = {
+          ...data.value
+        }
+
+        teacherForm.value = {
+          id: data.value.id,
+          name: data.value.name,
+          email: data.value.email
+        }
+      } else {
+        teacherForm.value = {
+          name: '',
+          email: ''
+        }
+      }
+    },
+    { immediate: true }
+  )
+
+  const saveMutation = useMutation({
+    mutationFn: saveTeacher
+  })
+
+  const updateMutation = useMutation({
+    mutationFn: updateTeacher
+  })
+
+  const save = async (formRef: FormInst | null) => {
+    formRef?.validate((errors) => {
+      if (errors) {
+        console.log('show errors', errors)
+        return
+      }
+
+      if (id) {
+        updateMutation.mutate(teacherForm.value)
+      } else {
+        saveMutation.mutate(teacherForm.value)
+      }
+    })
+  }
+
+  watch(updateMutation.isSuccess, () => {
+    if (!updateMutation.isSuccess.value) {
+      return
+    }
+
+    const queries = queryClient.getQueryCache().findAll({
+      queryKey: ['teachers?page='],
+      exact: false
+    })
+
+    queries.forEach((query) => {
+      query.fetch()
+    })
+  })
+
+  return {
+    isLoading,
+    teacher,
+    teacherForm,
+    save
+  }
+}
