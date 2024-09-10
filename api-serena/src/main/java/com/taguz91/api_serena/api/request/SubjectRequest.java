@@ -10,11 +10,12 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class SubjectRequest implements Serializable {
-
     @Serial
     private static final long serialVersionUID = 5643849213470286453L;
 

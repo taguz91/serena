@@ -96,6 +96,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     ) {
         Map<String, Object> response = new HashMap<>();
         response.put("message", "No se enviaron los datos.");
+        System.out.println("ERROR NO DATOS ENVIADOS: " + ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
