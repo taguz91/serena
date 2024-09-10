@@ -14,29 +14,44 @@
       </NSpace>
     </template>
 
-    <NDataTable :columns="columns" :data="data" pagination />
+    <NDataTable :columns="columns" :data="subjects" :loading="isLoading" />
+
+    <div class="mt-2 flex justify-end">
+      <NPagination :page-count="metaData.pages" v-model:page="currentPage" @update:page="getPage" />
+    </div>
   </NPageHeader>
 
-  <FormView v-model="show" @update:model-value="(value: boolean) => (show = value)" />
+  <FormView
+    v-model="show"
+    @update:model-value="(value: boolean) => (show = value)"
+    :id="currentId"
+  />
 </template>
 
 <script setup lang="ts">
 import { Pencil, Plus, Trash } from '@vicons/tabler'
-import { NButton, NDataTable, NIcon, NPageHeader, NSpace, type DataTableColumns } from 'naive-ui'
-import { h, onMounted, ref } from 'vue'
+import {
+  NButton,
+  NDataTable,
+  NIcon,
+  NPageHeader,
+  NPagination,
+  NSpace,
+  type DataTableColumns
+} from 'naive-ui'
+import { h, ref } from 'vue'
 import FormView from './FormView.vue'
+import type { Subject } from '@/interfaces'
+import { useSubjects } from '@/composable/subjects/useSubjects'
 
 const show = ref(false)
+const currentId = ref<string | undefined>(undefined)
 
 const showModal = () => {
   show.value = true
 }
 
-interface Subject {
-  name: string
-}
-
-const data = ref<Subject[]>([])
+const { subjects, isLoading, currentPage, metaData, deleteSubject, getPage } = useSubjects()
 
 const columns: DataTableColumns<Subject> = [
   {
@@ -56,7 +71,8 @@ const columns: DataTableColumns<Subject> = [
             type: 'info',
             tertiary: true,
             onClick: () => {
-              console.log('Edit', row)
+              currentId.value = row.id
+              showModal()
             }
           },
           {
@@ -69,7 +85,7 @@ const columns: DataTableColumns<Subject> = [
             type: 'error',
             tertiary: true,
             onClick: () => {
-              console.log('Delete', row)
+              deleteSubject(row.id)
             }
           },
           {
@@ -80,41 +96,4 @@ const columns: DataTableColumns<Subject> = [
     }
   }
 ]
-
-onMounted(() => {
-  setTimeout(() => {
-    data.value = [
-      {
-        name: 'Matemáticas'
-      },
-      {
-        name: 'Lenguaje'
-      },
-      {
-        name: 'Ciencias'
-      },
-      {
-        name: 'Historia'
-      },
-      {
-        name: 'Geografía'
-      },
-      {
-        name: 'Educación Física'
-      },
-      {
-        name: 'Artes'
-      },
-      {
-        name: 'Música'
-      },
-      {
-        name: 'Religión'
-      },
-      {
-        name: 'Inglés'
-      }
-    ]
-  }, 1000)
-})
 </script>

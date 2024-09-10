@@ -53,7 +53,6 @@ export const useTeachers = () => {
 
     // actions
     getPage(page: number) {
-      console.log('set the page number', page)
       store.setPage(page)
     },
     deleteTeacher(id: string) {

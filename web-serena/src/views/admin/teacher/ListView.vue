@@ -16,9 +16,9 @@
 
     <NDataTable :columns="columns" :data="teachers" :loading="isLoading" />
 
-    <data class="mt-2 flex justify-end">
+    <div class="mt-2 flex justify-end">
       <NPagination :page-count="metaData.pages" v-model:page="currentPage" @update:page="getPage" />
-    </data>
+    </div>
   </NPageHeader>
 
   <FormView v-model="show" :id="currentId" @update:model-value="toggleModal" />

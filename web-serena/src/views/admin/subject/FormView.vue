@@ -16,30 +16,43 @@
       </NIcon>
     </template>
 
-    <NForm class="mt-6">
+    <SmallSpinner v-if="isLoading" />
+
+    <NForm v-else ref="formRef" class="mt-6" :model="model">
       <NFormItem label="Nombre" required>
-        <NInput placeholder="Calculo" />
+        <NInput v-model:value="model.name" placeholder="Calculo" />
       </NFormItem>
     </NForm>
   </NModal>
 </template>
 
 <script setup lang="ts">
-import { NForm, NFormItem, NIcon, NInput, NModal } from 'naive-ui'
+import { NForm, NFormItem, NIcon, NInput, NModal, type FormInst } from 'naive-ui'
 import { useVModel } from '@vueuse/core'
 import { LayoutBoard } from '@vicons/tabler'
+import { ref, toRef } from 'vue'
+import { useSubject } from '@/composable/subjects/useSubject'
+import SmallSpinner from '@/components/shared/SmallSpinner.vue'
 
-const props = defineProps<{
+interface Props {
+  id?: string
   modelValue: boolean
-}>()
+}
 
+const props = defineProps<Props>()
+
+const id = toRef(props, 'id')
 const emit = defineEmits<{
   (event: 'update:modelValue', value: boolean): void
 }>()
 
+const formRef = ref<FormInst | null>(null)
+const { isLoading, save, subjectForm: model } = useSubject(id)
+
 const show = useVModel(props, 'modelValue', emit)
 
 const onPositiveClick = () => {
+  save(formRef.value)
   show.value = false
   emit('update:modelValue', false)
 }
