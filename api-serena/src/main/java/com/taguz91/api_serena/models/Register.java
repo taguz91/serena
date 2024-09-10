@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -44,6 +45,7 @@ public class Register extends BaseEntity implements Serializable {
             mappedBy = "register",
             fetch = FetchType.LAZY
     )
+    @JsonIgnore
     private List<RegisterStudent> students;
 }
 

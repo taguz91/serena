@@ -19,20 +19,19 @@ public class RegisterRequest implements Serializable {
     @Serial
     private static final long serialVersionUID = 2884596714048044738L;
 
-    @NotNull
-    private LocalDateTime date;
-
     @NotEmpty
     private String status;
 
     @NotNull
-    private Classroom classroom;
+    private String idClassroom;
 
     public Register toRegister() {
         return new Register()
                 .setId(new NanoCombCreator().create().toString())
-                .setDate(date)
+                .setDate(LocalDateTime.now())
                 .setStatus(status)
-                .setClassroom(classroom);
+                .setClassroom(
+                        (new Classroom()).setId(idClassroom)
+                );
     }
 }

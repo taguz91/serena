@@ -1,5 +1,6 @@
 package com.taguz91.api_serena.controller;
 
+import com.taguz91.api_serena.models.Classroom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -60,10 +61,7 @@ public class RegisterController {
     ) {
         Register register = registerRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("El registro no existe"));
-
-        register.setDate(request.getDate());
         register.setStatus(request.getStatus());
-        register.setClassroom(request.getClassroom());
 
         registerRepository.save(register);
 
