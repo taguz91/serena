@@ -1,25 +1,23 @@
+import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
-import { defineStore } from 'pinia'
-
-import type { Meta, Teacher } from '@/interfaces'
+import type { AcademicPeriod, Meta } from '@/interfaces'
 import { defaultMeta } from '@/utils'
 
-export const useTeachersStore = defineStore('teachers', () => {
+export const useAcademicPeriodsStore = defineStore('academicPeriods', () => {
   const metaData = ref<Meta>(defaultMeta())
   const currentPage = ref(1)
 
-  const teachers = ref<Teacher[]>([])
+  const academicPeriods = ref<AcademicPeriod[]>([])
 
   return {
-    // states
     metaData,
-    teachers,
+    academicPeriods,
     currentPage,
 
     // actions
-    setTeachers(newTeachers: Teacher[]) {
-      teachers.value = newTeachers
+    setAcademicPeriods(newAcademicPeriods: AcademicPeriod[]) {
+      academicPeriods.value = newAcademicPeriods
     },
 
     setMeta(newMeta: Meta) {

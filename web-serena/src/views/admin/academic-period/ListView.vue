@@ -17,10 +17,14 @@
       </NSpace>
     </template>
 
-    <NDataTable :columns="columns" :data="data" pagination />
+    <NDataTable :columns="columns" :loading="isLoading" :data="academicPeriods" />
+
+    <data class="mt-2 flex justify-end">
+      <NPagination :page-count="metaData.pages" v-model:page="currentPage" @update:page="getPage" />
+    </data>
   </NPageHeader>
 
-  <FormView v-model="show" @update:model-value="(value: boolean) => (show = value)" />
+  <FormView v-model="show" @update:model-value="toggleModal" :id="currentId" />
 </template>
 
 <script setup lang="ts">
@@ -31,25 +35,28 @@ import {
   NDataTable,
   NIcon,
   NPageHeader,
+  NPagination,
   NSpace,
   type DataTableColumns
 } from 'naive-ui'
-import { h, onMounted, ref } from 'vue'
+import { h, ref } from 'vue'
 import FormView from './FormView.vue'
+import type { AcademicPeriod } from '@/interfaces'
+import { useAcademicPeriods } from '@/composable/academicPeriods/useAcademicPeriods'
 
 const show = ref(false)
+const currentId = ref<string | undefined>(undefined)
 
 const showModal = () => {
   show.value = true
 }
 
-interface AcademicPeriod {
-  name: string
-  isActive: boolean
-  reference: string
-}
+const { isLoading, academicPeriods, metaData, currentPage, getPage, deleteAcademicPeriod } =
+  useAcademicPeriods()
 
-const data = ref<AcademicPeriod[]>([])
+const toggleModal = (newShow: boolean) => {
+  show.value = newShow
+}
 
 const columns: DataTableColumns<AcademicPeriod> = [
   {
@@ -83,7 +90,8 @@ const columns: DataTableColumns<AcademicPeriod> = [
             type: 'info',
             tertiary: true,
             onClick: () => {
-              console.log('Edit', row)
+              currentId.value = row.id
+              showModal()
             }
           },
           {
@@ -96,7 +104,7 @@ const columns: DataTableColumns<AcademicPeriod> = [
             type: 'error',
             tertiary: true,
             onClick: () => {
-              console.log('Delete', row)
+              deleteAcademicPeriod(row.id)
             }
           },
           {
@@ -107,36 +115,4 @@ const columns: DataTableColumns<AcademicPeriod> = [
     }
   }
 ]
-
-onMounted(() => {
-  setTimeout(() => {
-    data.value = [
-      {
-        name: '2021-2022',
-        isActive: true,
-        reference: '2021-2022'
-      },
-      {
-        name: '2022-2023',
-        isActive: false,
-        reference: '2022-2023'
-      },
-      {
-        name: '2023-2024',
-        isActive: false,
-        reference: '2023-2024'
-      },
-      {
-        name: '2024-2025',
-        isActive: false,
-        reference: '2024-2025'
-      },
-      {
-        name: '2025-2026',
-        isActive: false,
-        reference: '2025-2026'
-      }
-    ]
-  }, 1000)
-})
 </script>

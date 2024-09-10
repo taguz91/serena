@@ -80,7 +80,7 @@ export const useTeacher = (id: Ref<string | undefined>) => {
         return
       }
 
-      if (id) {
+      if (id.value) {
         updateMutation.mutate(teacherForm.value)
       } else {
         saveMutation.mutate(teacherForm.value)
@@ -88,19 +88,17 @@ export const useTeacher = (id: Ref<string | undefined>) => {
     })
   }
 
-  watch(updateMutation.isSuccess, () => {
-    if (!updateMutation.isSuccess.value) {
-      return
+  watch([saveMutation.isSuccess, updateMutation.isSuccess], (isSave, isUpdate) => {
+    if (isSave || isUpdate) {
+      const queries = queryClient.getQueryCache().findAll({
+        queryKey: ['teachers?page='],
+        exact: false
+      })
+
+      queries.forEach((query) => {
+        query.fetch()
+      })
     }
-
-    const queries = queryClient.getQueryCache().findAll({
-      queryKey: ['teachers?page='],
-      exact: false
-    })
-
-    queries.forEach((query) => {
-      query.fetch()
-    })
   })
 
   return {
