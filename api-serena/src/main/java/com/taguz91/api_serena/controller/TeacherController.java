@@ -3,6 +3,7 @@ package com.taguz91.api_serena.controller;
 import com.amazonaws.services.eks.model.NotFoundException;
 import com.taguz91.api_serena.api.request.TeacherRequest;
 import com.taguz91.api_serena.api.response.MessageResponse;
+import com.taguz91.api_serena.api.response.OptionResponse;
 import com.taguz91.api_serena.api.response.PageResponse;
 import com.taguz91.api_serena.models.Teacher;
 import com.taguz91.api_serena.repository.TeacherRepository;
@@ -14,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/teacher")
@@ -80,5 +83,12 @@ public class TeacherController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new MessageResponse("Borrado con exito"));
+    }
+
+    @GetMapping("/all/options")
+    public ResponseEntity<List<OptionResponse>> options()
+    {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(teacherRepository.findAllOptions());
     }
 }

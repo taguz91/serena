@@ -3,6 +3,7 @@ package com.taguz91.api_serena.controller;
 import com.amazonaws.services.eks.model.NotFoundException;
 import com.taguz91.api_serena.api.request.AcademicPeriodRequest;
 import com.taguz91.api_serena.api.response.MessageResponse;
+import com.taguz91.api_serena.api.response.OptionResponse;
 import com.taguz91.api_serena.api.response.PageResponse;
 import com.taguz91.api_serena.models.AcademicPeriod;
 import com.taguz91.api_serena.repository.AcademicPeriodRepository;
@@ -15,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/academic-period")
@@ -81,5 +84,13 @@ public class AcademicPeriodController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new MessageResponse("Borrado con éxito"));
+    }
+
+    @GetMapping("/all/options")
+    public ResponseEntity<List<OptionResponse>> options() {
+        List<OptionResponse> options = academicPeriodRepository.findAllOptions();
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(options);
     }
 }
