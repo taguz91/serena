@@ -13,8 +13,10 @@
 
       <hr class="my-2" />
 
-      <div class="flex w-full h-full justify-center items-center mt-10">
-        <div class="bg-white rounded-lg w-96 h-96"></div>
+      <div class="w-full h-full mt-10">
+        <MainCamera />
+
+        <!-- <div class="bg-white rounded-lg w-96 h-96"></div> -->
       </div>
     </DetailContainer>
   </AppLayout>
@@ -28,6 +30,7 @@ import AppLayout from '@/components/layouts/AppLayout.vue'
 import StudentCheckList from '@/components/shared/StudentCheckList.vue'
 import { useRegister } from '@/composable/register/useRegister'
 import SmallSpinner from '@/components/shared/SmallSpinner.vue'
+import MainCamera from '@/liveness/components/MainCamera.vue'
 
 const route = useRoute()
 

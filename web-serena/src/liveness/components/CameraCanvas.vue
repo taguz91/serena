@@ -1,0 +1,125 @@
+<template>
+  <div class="mb-4">
+    <div
+      class="mx-auto"
+      :style="{
+        width: `${width}px`
+      }"
+    >
+      <template v-if="isReady">
+        <h4 class="text-center font-bold mb-2">Vamos a tomarte una fotografía</h4>
+        <p>Colocate en el centro de la cámara, te tomaremos una foto en lo que parpadeas</p>
+      </template>
+
+      <template v-else>
+        <h4>Estamos iniciando todo...</h4>
+      </template>
+
+      <div class="my-4 relative w-full max-w-[640px] box-border text-center">
+        <video
+          ref="cameraElement"
+          id="main-camera"
+          :class="{
+            'rotate-camera': shouldRotate
+          }"
+          :width="width"
+          :height="height"
+          autoplay
+          muted
+          playsinline
+          :style="{
+            width: `${width}px`,
+            height: `${height}px`
+          }"
+        />
+
+        <canvas
+          ref="canvasElement"
+          id="overlay-canvas"
+          :class="{
+            'rotate-camera': shouldRotate
+          }"
+          :width="width"
+          :height="height"
+        />
+      </div>
+    </div>
+  </div>
+
+  <hr />
+
+  <div class="flex justify-center mt-[500px]">
+    <template v-if="images.length > 0">
+      <div v-for="(image, index) in images" :key="index" class="mx-2">
+        <img :src="image" alt="Foto" class="w-32 h-32" />
+      </div>
+    </template>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { ref, watch } from 'vue'
+import { useFaceDetection } from '../composables/useFaceDetection'
+import { useFrame } from '../composables/useFrame'
+
+interface Props {
+  width: number
+  height: number
+  shouldRotate: boolean
+}
+
+const props = defineProps<Props>()
+
+const cameraElement = ref<HTMLVideoElement | null>(null)
+const canvasElement = ref<HTMLCanvasElement | null>(null)
+
+const { isReady, start, isValid, process } = useFaceDetection(
+  cameraElement,
+  canvasElement,
+  props.width,
+  props.height
+)
+
+const { images, takePhoto } = useFrame(cameraElement, props.shouldRotate)
+
+// start in the firs load
+watch(cameraElement, () => {
+  if (!cameraElement.value || !canvasElement.value) {
+    return
+  }
+
+  setTimeout(() => {
+    start()
+  }, 1000)
+})
+
+// process again new frames
+
+watch(isValid, () => {
+  if (isValid.value) {
+    console.log('is valid, en 5 segundo tomaremos una nueva foto')
+    takePhoto()
+    setTimeout(() => {
+      console.log('vamos por la siguiente foto')
+      process()
+    }, 5000)
+  }
+})
+</script>
+
+<style scoped>
+#main-camera {
+  width: 100%;
+  max-width: 640px;
+}
+
+#main-camera,
+#overlay-canvas {
+  position: absolute;
+  left: 50%;
+}
+
+.rotate-camera {
+  transform: translate(-50%) rotateY(180deg);
+}
+</style>
