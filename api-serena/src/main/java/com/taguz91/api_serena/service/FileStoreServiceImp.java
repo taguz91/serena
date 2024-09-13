@@ -2,7 +2,6 @@ package com.taguz91.api_serena.service;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.taguz91.api_serena.api.aws.BucketName;
@@ -14,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -56,10 +57,11 @@ public class FileStoreServiceImp implements FileStoreService {
             }
         });
         try {
-            amazonS3.putObject(new PutObjectRequest(path, filename, inputStream, objectMetadata)
-                    .withCannedAcl(CannedAccessControlList.AuthenticatedRead));
-            URL s3Url = amazonS3.getUrl(path, filename);
-            return s3Url.toExternalForm();
+            String s3Key = new SimpleDateFormat("yyyyMMddHHmm").format(new Date())
+                    + '-' + filename;
+
+            amazonS3.putObject(new PutObjectRequest(path, s3Key, inputStream, objectMetadata));
+            return s3Key;
         } catch (AmazonServiceException e) {
             throw new IllegalStateException("Failed to upload a file. " + e.getMessage());
         }

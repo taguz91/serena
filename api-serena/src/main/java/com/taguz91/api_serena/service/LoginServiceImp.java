@@ -1,14 +1,15 @@
 package com.taguz91.api_serena.service;
 
-import com.amazonaws.services.eks.model.NotFoundException;
 import com.taguz91.api_serena.api.request.LoginRequest;
 import com.taguz91.api_serena.models.Teacher;
 import com.taguz91.api_serena.repository.TeacherRepository;
 import com.taguz91.api_serena.service.contracts.JwtService;
 import com.taguz91.api_serena.service.contracts.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Optional;
 
@@ -27,7 +28,7 @@ public class LoginServiceImp implements LoginService {
     public Teacher login(LoginRequest request) {
         Teacher teacher = teacherRepository.findByEmail(
                 request.getEmail()
-        ).orElseThrow(() -> new NotFoundException("Correo o contrasena incorrectas"));
+        ).orElseThrow(() -> new HttpClientErrorException(HttpStatus.OK, "Correo o contrasena incorrectas"));
 
 
         boolean isValid = passwordEncoder.matches(
@@ -36,7 +37,7 @@ public class LoginServiceImp implements LoginService {
         );
 
         if (!isValid) {
-            throw  new NotFoundException("Correo o contrasena incorrectas");
+            throw new HttpClientErrorException(HttpStatus.OK, "Correo o contrasena incorrectas");
         }
 
         // set the new token

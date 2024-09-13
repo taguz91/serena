@@ -5,6 +5,7 @@ import com.taguz91.api_serena.api.response.PageResponse;
 import com.taguz91.api_serena.models.SyncHistory;
 import com.taguz91.api_serena.repository.SyncHistoryRepository;
 import com.taguz91.api_serena.service.contracts.FileStoreService;
+import com.taguz91.api_serena.utils.NanoCombCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -46,6 +47,7 @@ public class SyncHistoryController {
             @RequestParam("type") String type
     ) {
         SyncHistory sync = new SyncHistory();
+        sync.setId((new NanoCombCreator()).create().toString());
         sync.setFilename(file.getOriginalFilename());
         sync.setStatus("pending");
         sync.setType(type);
