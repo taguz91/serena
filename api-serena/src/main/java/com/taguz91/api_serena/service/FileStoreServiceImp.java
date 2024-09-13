@@ -25,6 +25,12 @@ public class FileStoreServiceImp implements FileStoreService {
     @Autowired
     private AmazonS3 amazonS3;
 
+    private  String folders = "";
+
+    public void setPrefixFolder(String folders) {
+        this.folders = folders;
+    }
+
     public String save(MultipartFile file, BucketName bucket) {
         if (file.isEmpty()) {
             throw new IllegalStateException("El archivo esta vacio, sube uno con datos");
@@ -59,8 +65,11 @@ public class FileStoreServiceImp implements FileStoreService {
         try {
             String s3Key = new SimpleDateFormat("yyyyMMddHHmm").format(new Date())
                     + '-' + filename;
-
+            // use the prefix folder
+            s3Key = this.folders + s3Key;
             amazonS3.putObject(new PutObjectRequest(path, s3Key, inputStream, objectMetadata));
+            // always set the prefix folder to empty after save the
+            this.setPrefixFolder("");
             return s3Key;
         } catch (AmazonServiceException e) {
             throw new IllegalStateException("Failed to upload a file. " + e.getMessage());

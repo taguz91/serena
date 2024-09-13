@@ -6,16 +6,20 @@ import com.taguz91.api_serena.api.response.MessageResponse;
 import com.taguz91.api_serena.api.response.PageResponse;
 import com.taguz91.api_serena.models.RegisterStudent;
 import com.taguz91.api_serena.repository.RegisterStudentRepository;
+import com.taguz91.api_serena.service.contracts.CreateStudentRegister;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
+import javax.print.attribute.standard.Media;
 import java.util.Optional;
 
 @RestController
@@ -25,10 +29,13 @@ public class RegisterStudentController {
     @Autowired
     private RegisterStudentRepository registerStudentRepository;
 
+    @Autowired
+    private CreateStudentRegister createStudentRegister;
+
     @GetMapping("")
     public ResponseEntity<PageResponse<RegisterStudent>> index(
             @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "20") int size
+            @RequestParam(value = "size", defaultValue = "30") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
         Page<RegisterStudent> registerStudents = registerStudentRepository.findAll(pageable);
@@ -37,31 +44,18 @@ public class RegisterStudentController {
                 .body(new PageResponse<RegisterStudent>(registerStudents));
     }
 
-    @PostMapping("")
-    public ResponseEntity<RegisterStudent> create(@Valid @RequestBody RegisterStudentRequest request) {
-        RegisterStudent registerStudent = request.toRegisterStudent();
-        RegisterStudent saved = registerStudentRepository.save(registerStudent);
+    @PostMapping(
+            value = "",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<RegisterStudent> create(
+            @Valid @RequestParam("photo") MultipartFile photo,
+            @Valid @RequestParam("idRegister") String idRegister
+    ) {
+        RegisterStudent registerStudent = createStudentRegister.create(photo, idRegister);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(saved);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<RegisterStudent> update(
-            @PathVariable(value = "id") String id,
-            @Valid @RequestBody RegisterStudentRequest request
-    ) {
-        RegisterStudent registerStudent = registerStudentRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("El registro del estudiante no existe"));
-
-        registerStudent.setPhoto(request.getPhoto());
-        registerStudent.setEmotion(request.getEmotion());
-//        registerStudent.setRegister(request.getRegisterId());
-//        registerStudent.setStudent(request.getStudentId());
-
-        registerStudentRepository.save(registerStudent);
-
-        return ResponseEntity.status(HttpStatus.OK)
                 .body(registerStudent);
     }
 

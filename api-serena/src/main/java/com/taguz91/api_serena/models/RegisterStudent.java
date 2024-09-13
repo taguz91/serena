@@ -1,6 +1,7 @@
 package com.taguz91.api_serena.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -34,6 +35,7 @@ public class RegisterStudent extends BaseEntity implements Serializable {
 
     @JsonManagedReference(value = "rf_register_student_register")
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     private Register register;
 
     @JsonManagedReference(value = "rf_register_student_student")

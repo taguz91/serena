@@ -9,6 +9,8 @@ import java.util.Optional;
 
 public interface FileStoreService {
 
+    public void setPrefixFolder(String folders);
+
     public String save(MultipartFile file, BucketName bucket);
 
     public String uploadToS3(
