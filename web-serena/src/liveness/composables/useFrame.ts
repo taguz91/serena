@@ -34,13 +34,15 @@ export const useFrame = (cameraElement: Ref<HTMLVideoElement | null>, shouldRota
 
       const canvas = invisibleCanvas
 
-      return new Promise((resolve: (value: unknown) => void) => {
+      return new Promise((resolve: (value: string) => void) => {
         const image = canvas.toDataURL('image/jpeg', 0.7)
 
         setTimeout(() => {
           images.value.push(image)
           resolve(image)
         }, 1000)
+
+        return image
       })
     }
   }

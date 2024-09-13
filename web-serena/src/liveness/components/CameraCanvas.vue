@@ -66,6 +66,7 @@ interface Props {
   width: number
   height: number
   shouldRotate: boolean
+  savePhoto: (photo: string) => Promise<void>
 }
 
 const props = defineProps<Props>()
@@ -95,14 +96,14 @@ watch(cameraElement, () => {
 
 // process again new frames
 
-watch(isValid, () => {
+watch(isValid, async () => {
   if (isValid.value) {
-    console.log('is valid, en 5 segundo tomaremos una nueva foto')
-    takePhoto()
+    const image = await takePhoto()
+    await props.savePhoto(image)
+    // set the timeout
     setTimeout(() => {
-      console.log('vamos por la siguiente foto')
       process()
-    }, 5000)
+    }, 500)
   }
 })
 </script>

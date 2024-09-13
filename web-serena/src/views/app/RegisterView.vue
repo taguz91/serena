@@ -14,7 +14,7 @@
       <hr class="my-2" />
 
       <div class="w-full h-full mt-10">
-        <MainCamera />
+        <MainCamera :save-photo="savePhoto" />
 
         <!-- <div class="bg-white rounded-lg w-96 h-96"></div> -->
       </div>
@@ -31,8 +31,14 @@ import StudentCheckList from '@/components/shared/StudentCheckList.vue'
 import { useRegister } from '@/composable/register/useRegister'
 import SmallSpinner from '@/components/shared/SmallSpinner.vue'
 import MainCamera from '@/liveness/components/MainCamera.vue'
+import { useRegisterStudent } from '@/composable/register/useRegisterStudent'
 
 const route = useRoute()
+const { create } = useRegisterStudent(route.params.id.toString())
 
 const { isLoading, register } = useRegister(route.params.id.toString())
+
+const savePhoto = async (photo: string) => {
+  create(photo)
+}
 </script>

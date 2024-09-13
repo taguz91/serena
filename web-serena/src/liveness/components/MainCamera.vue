@@ -12,6 +12,7 @@
     :width="videoWidth"
     :height="videoHeight"
     :shouldRotate="shouldRotate"
+    :save-photo="savePhoto"
   />
 
   <div v-else>
@@ -22,6 +23,10 @@
 <script lang="ts" setup>
 import { useMediaScreen } from '../composables/useMediaScreen'
 import CameraCanvas from './CameraCanvas.vue'
+
+defineProps<{
+  savePhoto: (photo: string) => Promise<void>
+}>()
 
 const { mediaStreamReady, hasError, videoHeight, videoWidth, shouldRotate } = useMediaScreen()
 </script>

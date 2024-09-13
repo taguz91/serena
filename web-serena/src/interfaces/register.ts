@@ -18,3 +18,8 @@ export interface RegisterForm {
   status: StatusRegister
   idClassroom: string
 }
+
+export interface RegisterStudentForm {
+  photo: string
+  idRegister: string
+}

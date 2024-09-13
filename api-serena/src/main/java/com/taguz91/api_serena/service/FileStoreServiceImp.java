@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -53,17 +52,17 @@ public class FileStoreServiceImp implements FileStoreService {
     public String uploadToS3(
             String path,
             String filename,
-            Optional<Map<String, String>> optionalMetada,
+            Optional<Map<String, String>> optionalMetadata,
             InputStream inputStream
     ) {
         ObjectMetadata objectMetadata = new ObjectMetadata();
-        optionalMetada.ifPresent(map -> {
+        optionalMetadata.ifPresent(map -> {
             if (!map.isEmpty()) {
                 map.forEach(objectMetadata::addUserMetadata);
             }
         });
         try {
-            String s3Key = new SimpleDateFormat("yyyyMMddHHmm").format(new Date())
+            String s3Key = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())
                     + '-' + filename;
             // use the prefix folder
             s3Key = this.folders + s3Key;

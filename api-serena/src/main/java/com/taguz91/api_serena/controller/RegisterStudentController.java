@@ -1,12 +1,14 @@
 package com.taguz91.api_serena.controller;
 
 import com.amazonaws.services.eks.model.NotFoundException;
+import com.taguz91.api_serena.api.request.CreateRegisterStudentRequest;
 import com.taguz91.api_serena.api.request.RegisterStudentRequest;
 import com.taguz91.api_serena.api.response.MessageResponse;
 import com.taguz91.api_serena.api.response.PageResponse;
 import com.taguz91.api_serena.models.RegisterStudent;
 import com.taguz91.api_serena.repository.RegisterStudentRepository;
 import com.taguz91.api_serena.service.contracts.CreateStudentRegister;
+import com.taguz91.api_serena.utils.ImageUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -54,6 +56,19 @@ public class RegisterStudentController {
             @Valid @RequestParam("idRegister") String idRegister
     ) {
         RegisterStudent registerStudent = createStudentRegister.create(photo, idRegister);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(registerStudent);
+    }
+
+    @PostMapping("/create/base64")
+    public ResponseEntity<RegisterStudent> createBase64(
+            @Valid @RequestBody CreateRegisterStudentRequest request
+    ) {
+        RegisterStudent registerStudent = createStudentRegister.create(
+                ImageUtil.base64ToMultipartFile("students-checks", request.getPhoto()),
+                request.getIdRegister()
+        );
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(registerStudent);

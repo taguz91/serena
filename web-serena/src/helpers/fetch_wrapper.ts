@@ -20,6 +20,24 @@ const request = (method: 'GET' | 'POST' | 'PUT' | 'DELETE') => {
   }
 }
 
+const requestFormData = (method: 'POST') => {
+  return async <R>(url: string, data: FormData) => {
+    const requestOptions: RequestInit = {
+      method,
+      headers: {
+        ...authHeader(),
+        'Content-Type': 'multipart/form-data'
+      }
+    }
+
+    requestOptions.body = data
+
+    return fetch(`http://localhost:8181/api${url}`, requestOptions).then((response) =>
+      handleResponseWithoutLogout<R>(response)
+    )
+  }
+}
+
 function authHeader(): HeadersInit {
   const { user } = useAuthStore()
 
@@ -54,9 +72,24 @@ async function handleResponse<R>(response: Response) {
   return data as R
 }
 
+async function handleResponseWithoutLogout<R>(response: Response) {
+  const isJson = response.headers?.get('content-type')?.includes('application/json')
+  const data = isJson ? await response.json() : null
+
+  // check for error response
+  if (!response.ok) {
+    // get error message from body or default to response status
+    const error = (data && data.message) || response.status
+    return Promise.reject(error)
+  }
+
+  return data as R
+}
+
 export const fetchWrapper = {
   get: request('GET'),
   post: request('POST'),
+  postFile: requestFormData('POST'),
   put: request('PUT'),
   delete: request('DELETE')
 }
