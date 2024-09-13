@@ -60,6 +60,11 @@ Entities
   - end_emotion
   - Register
   - Student
+- SyncHistory
+  - type
+  - filename
+  - status
+  - s3key
 
 ### Build api application
 
