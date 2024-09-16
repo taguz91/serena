@@ -48,7 +48,7 @@
 
   <hr />
 
-  <div class="flex justify-center mt-[500px]">
+  <div class="hidden justify-center mt-[500px]">
     <template v-if="images.length > 0">
       <div v-for="(image, index) in images" :key="index" class="mx-2">
         <img :src="image" alt="Foto" class="w-32 h-32" />

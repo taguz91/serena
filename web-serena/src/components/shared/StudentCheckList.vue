@@ -1,77 +1,41 @@
 <template>
-  <h2 class="mb-2 font-bold text-xl p-4">Estudiantes</h2>
+  <h2 class="mb-2 font-bold text-xl p-4">Estudiantes: #{{ numStudents }}</h2>
   <NMenu mode="vertical" :options="menuOptions" />
 </template>
 
 <script setup lang="ts">
-import { computed, h, type Component } from 'vue'
+import { computed, h, ref, watch, type Component } from 'vue'
 
 import { Check, CheckupList } from '@vicons/tabler'
-
 import { NIcon, NMenu, type MenuOption } from 'naive-ui'
+
+import { useRegisterStudents } from '@/composable/register/userRegisterStudents'
+
+interface Props {
+  idRegister: string
+}
+
+const props = defineProps<Props>()
+
+const menuOptions = ref<MenuOption[]>([])
+const { students } = useRegisterStudents(props.idRegister)
 
 const renderIcon = (icon: Component) => {
   return () => h(NIcon, null, { default: () => h(icon) })
 }
 
-const students = [
-  {
-    id: '1',
-    name: 'John Doe',
-    age: 20
-  },
-  {
-    id: '2',
-    name: 'Jane Doe',
-    age: 21
-  },
-  {
-    id: '3',
-    name: 'John Smith',
-    age: 22
-  },
-  {
-    id: '4',
-    name: 'Jane Smith',
-    age: 23
-  },
-  {
-    id: '5',
-    name: 'John Johnson',
-    age: 24
-  },
-  {
-    id: '6',
-    name: 'Jane Johnson',
-    age: 25
-  },
-  {
-    id: '7',
-    name: 'John Brown',
-    age: 26
-  },
-  {
-    id: '8',
-    name: 'Jane Brown',
-    age: 27
-  },
-  {
-    id: '9',
-    name: 'John White',
-    age: 28
-  },
-  {
-    id: '10',
-    name: 'Jane White',
-    age: 29
-  }
-]
+const numStudents = computed(() => students.value.length)
 
-const menuOptions = computed(() => {
-  return students.map((student): MenuOption => {
+watch(students, () => {
+  menuOptions.value = students.value.map((student): MenuOption => {
     return {
       key: student.id,
-      label: student.name,
+      label: () => {
+        return h('div', { class: 'text-left' }, [
+          h('p', student.student.name.length > 0 ? student.student.name : 'Sin nombre'),
+          h('p', { class: 'ml-2 text-sm text-gray-500' }, student.student.createdAt)
+        ])
+      },
       icon: renderIcon(parseInt(student.id) > 4 ? CheckupList : Check),
       props: {
         class: 'hover:bg-blue-200'

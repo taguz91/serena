@@ -1,7 +1,7 @@
 <template>
   <AppLayout>
     <template #side>
-      <StudentCheckList />
+      <StudentCheckList :id-register="route.params.id.toString()" />
     </template>
 
     <SmallSpinner v-if="isLoading" />
@@ -15,8 +15,6 @@
 
       <div class="w-full h-full mt-10">
         <MainCamera :save-photo="savePhoto" />
-
-        <!-- <div class="bg-white rounded-lg w-96 h-96"></div> -->
       </div>
     </DetailContainer>
   </AppLayout>
@@ -25,12 +23,13 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
 
+import MainCamera from '@/liveness/components/MainCamera.vue'
+
 import DetailContainer from '@/components/containers/DetailContainer.vue'
 import AppLayout from '@/components/layouts/AppLayout.vue'
 import StudentCheckList from '@/components/shared/StudentCheckList.vue'
 import { useRegister } from '@/composable/register/useRegister'
 import SmallSpinner from '@/components/shared/SmallSpinner.vue'
-import MainCamera from '@/liveness/components/MainCamera.vue'
 import { useRegisterStudent } from '@/composable/register/useRegisterStudent'
 
 const route = useRoute()
