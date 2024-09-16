@@ -4,12 +4,10 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -39,4 +37,12 @@ public class Student extends BaseEntity implements Serializable {
 
     @Column(nullable = true)
     private String reference;
+
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            mappedBy = "student",
+            fetch = FetchType.LAZY
+    )
+    @JsonIgnore
+    private List<RegisterStudent> registers;
 }

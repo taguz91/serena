@@ -6,6 +6,7 @@ import com.taguz91.api_serena.api.request.RegisterStudentRequest;
 import com.taguz91.api_serena.api.response.MessageResponse;
 import com.taguz91.api_serena.api.response.PageResponse;
 import com.taguz91.api_serena.models.RegisterStudent;
+import com.taguz91.api_serena.models.Teacher;
 import com.taguz91.api_serena.repository.RegisterStudentRepository;
 import com.taguz91.api_serena.service.contracts.CreateStudentRegister;
 import com.taguz91.api_serena.utils.ImageUtil;
@@ -17,11 +18,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
 import javax.print.attribute.standard.Media;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -44,6 +47,40 @@ public class RegisterStudentController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new PageResponse<RegisterStudent>(registerStudents));
+    }
+
+    @GetMapping("/register/{idRegister}")
+    public ResponseEntity<List<RegisterStudent>> byIdRegister(
+            @PathVariable(value = "idRegister") String idRegister
+    ) {
+        List<RegisterStudent> registerStudents = registerStudentRepository.findByIdRegister(idRegister);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(registerStudents);
+    }
+
+    @GetMapping("/register/current/{idRegister}")
+    public ResponseEntity<List<RegisterStudent>> byCurrentTeacherIdRegister(
+            @PathVariable(value = "idRegister") String idRegister,
+            @AuthenticationPrincipal Teacher teacher
+    ) {
+        List<RegisterStudent> registerStudents = registerStudentRepository.findByIdRegisterAndTeacher(
+                idRegister,
+                teacher.getId()
+        );
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(registerStudents);
+    }
+
+    @GetMapping("/student/{idRegister}")
+    public ResponseEntity<List<RegisterStudent>> byIdStudent(
+            @PathVariable(value = "idStudent") String idStudent
+    ) {
+        List<RegisterStudent> registerStudents = registerStudentRepository.findByIdStudent(idStudent);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(registerStudents);
     }
 
     @PostMapping(
