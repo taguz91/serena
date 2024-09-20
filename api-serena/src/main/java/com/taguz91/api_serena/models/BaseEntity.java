@@ -1,13 +1,18 @@
 package com.taguz91.api_serena.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import java.time.LocalDateTime;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import lombok.Getter;
+import lombok.Setter;
 
 @MappedSuperclass
 @Getter

@@ -31,6 +31,9 @@ public class Classroom extends BaseEntity implements Serializable {
     @Id
     private String id;
 
+    private Carrera carrera;
+
+
     @JsonManagedReference(value = "rf_classroom_academic_period")
     @ManyToOne(fetch = FetchType.LAZY)
     private AcademicPeriod academicPeriod;
