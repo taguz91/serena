@@ -6,6 +6,9 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -20,8 +23,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
@@ -45,8 +46,7 @@ public class Teacher extends BaseEntity implements Serializable, UserDetails {
     private String name;
 
     private String email;
-    
-    private Carrera carrera;
+
 
 
     @Column(name = "is_active", columnDefinition = "BOOLEAN DEFAULT  'false' ")

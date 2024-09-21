@@ -13,6 +13,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -37,6 +39,11 @@ public class AcademicPeriod extends BaseEntity implements Serializable {
     private String id;
 
     private String name;
+    
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "carrera_id", nullable = false)
+    private Carrera carrera;
 
     @Column(nullable = true)
     private String reference;
@@ -51,5 +58,4 @@ public class AcademicPeriod extends BaseEntity implements Serializable {
     @JsonIgnore
     private List<Classroom> classrooms;
 
-    private List<Carrera> carreras;
 }
