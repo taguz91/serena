@@ -5,7 +5,7 @@
     preset="dialog"
     class="w-[500px]"
     title="Creación de un nuevo docente"
-    positive-text="Crear"
+    :positive-text="props.id ? 'Actualizar' : 'Crear'"
     negative-text="Cancelar"
     @positive-click="onPositiveClick"
     @negative-click="onNegativeClick"
