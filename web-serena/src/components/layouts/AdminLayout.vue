@@ -27,6 +27,7 @@ import { RouterLink, RouterView } from 'vue-router'
 import {
   Calendar,
   CalendarPlus,
+  Certificate,
   File,
   Home,
   LayoutBoard,
@@ -66,6 +67,11 @@ const menuOptions: MenuOption[] = [
     key: 'spacer-administrar',
     label: 'Administrar',
     disabled: true
+  },
+  {
+    key: 'carrera',
+    label: renderLink('carrera', 'Carreras'),
+    icon: renderIcon(Certificate)
   },
   {
     key: 'academic-period',
