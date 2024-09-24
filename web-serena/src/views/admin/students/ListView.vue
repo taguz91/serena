@@ -1,21 +1,28 @@
 <template>
   <NPageHeader title="Estudiantes" subtitle="Revisar todos los estudiantes">
-    <NDataTable :columns="columns" :data="data" pagination />
+    <NDataTable :columns="columns" :data="students" :loading="isLoading" />
+
+    <div class="mt-2 flex justify-end">
+      <NPagination :page-count="metaData.pages" v-model:page="currentPage" @update:page="getPage" />
+    </div>
   </NPageHeader>
 </template>
 
 <script setup lang="ts">
+import { useStudentsAll } from '@/composable/students/useAdminStudents'
+import type { Subject } from '@/interfaces'
 import { Eye } from '@vicons/tabler'
-import { NButton, NDataTable, NIcon, NPageHeader, type DataTableColumns } from 'naive-ui'
-import { h, onMounted, ref } from 'vue'
+import {
+  NButton,
+  NDataTable,
+  NIcon,
+  NPageHeader,
+  NPagination,
+  type DataTableColumns
+} from 'naive-ui'
+import { h } from 'vue'
 
-interface Subject {
-  identification: string
-  gender: string
-  name: string
-}
-
-const data = ref<Subject[]>([])
+const { students, metaData, currentPage, isLoading, getPage } = useStudentsAll()
 
 const columns: DataTableColumns<Subject> = [
   {
@@ -46,31 +53,4 @@ const columns: DataTableColumns<Subject> = [
     }
   }
 ]
-
-onMounted(() => {
-  setTimeout(() => {
-    data.value = [
-      {
-        identification: '123456789',
-        name: 'Juan Perez',
-        gender: 'Masculino'
-      },
-      {
-        identification: '987654321',
-        name: 'Maria Rodriguez',
-        gender: 'Femenino'
-      },
-      {
-        identification: '456789123',
-        name: 'Pedro Gomez',
-        gender: 'Masculino'
-      },
-      {
-        identification: '654321987',
-        name: 'Ana Perez',
-        gender: 'Femenino'
-      }
-    ]
-  }, 1000)
-})
 </script>

@@ -3,30 +3,27 @@
     title="Últimos registros creados"
     subtitle="Se mostraran los últimos 10 registros creados, para revisarlos"
   >
-    <NDataTable :columns="columns" :data="data" pagination bordered />
+    <NDataTable :columns="columns" :data="data" bordered :loading="isLoading" />
   </NPageHeader>
 </template>
 
 <script setup lang="ts">
+import { fetchWrapper } from '@/helpers/fetch_wrapper'
+import type { Paginate, Register } from '@/interfaces'
 import { NDataTable, NPageHeader, type DataTableColumns } from 'naive-ui'
 import { onMounted, ref } from 'vue'
 
-interface Register {
-  date: string
-  subject: string
-  teacher: string
-}
-
 const data = ref<Register[]>([])
+const isLoading = ref<boolean>(true)
 
 const columns: DataTableColumns<Register> = [
   {
     title: 'Subject',
-    key: 'subject'
+    key: 'classroom.subject.name'
   },
   {
     title: 'Teacher',
-    key: 'teacher'
+    key: 'classroom.teacher.name'
   },
   {
     title: 'Date',
@@ -34,60 +31,17 @@ const columns: DataTableColumns<Register> = [
   }
 ]
 
-onMounted(() => {
-  setTimeout(() => {
-    data.value = [
-      {
-        date: '2021-10-10',
-        subject: 'Math',
-        teacher: 'John Doe'
-      },
-      {
-        date: '2021-10-11',
-        subject: 'Science',
-        teacher: 'Jane Doe'
-      },
-      {
-        date: '2021-10-12',
-        subject: 'History',
-        teacher: 'John Doe'
-      },
-      {
-        date: '2021-10-13',
-        subject: 'Math',
-        teacher: 'Jane Doe'
-      },
-      {
-        date: '2021-10-14',
-        subject: 'Science',
-        teacher: 'John Doe'
-      },
-      {
-        date: '2021-10-15',
-        subject: 'History',
-        teacher: 'Jane Doe'
-      },
-      {
-        date: '2021-10-16',
-        subject: 'Math',
-        teacher: 'John Doe'
-      },
-      {
-        date: '2021-10-17',
-        subject: 'Science',
-        teacher: 'Jane Doe'
-      },
-      {
-        date: '2021-10-18',
-        subject: 'History',
-        teacher: 'John Doe'
-      },
-      {
-        date: '2021-10-19',
-        subject: 'Math',
-        teacher: 'Jane Doe'
-      }
-    ]
-  }, 1500)
+onMounted(async () => {
+  const getLastRegisters = async () => {
+    const data = await fetchWrapper.get<unknown, Paginate<Register>>(`/v1/register?size=10`)
+
+    return data
+  }
+
+  const { data: registers } = await getLastRegisters()
+
+  data.value = registers
+
+  isLoading.value = false
 })
 </script>

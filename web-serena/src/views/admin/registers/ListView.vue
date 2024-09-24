@@ -1,30 +1,37 @@
 <template>
   <NPageHeader title="Registros" subtitle="Revisar todos los registros creados">
-    <NDataTable :columns="columns" :data="data" pagination />
+    <NDataTable :columns="columns" :data="registers" :loading="isLoading" />
+
+    <div class="mt-2 flex justify-end">
+      <NPagination :page-count="metaData.pages" v-model:page="currentPage" @update:page="getPage" />
+    </div>
   </NPageHeader>
 </template>
 
 <script setup lang="ts">
+import { useRegisterAll } from '@/composable/register/useRegisterAll'
+import type { Register } from '@/interfaces'
 import { Eye } from '@vicons/tabler'
-import { NButton, NDataTable, NIcon, NPageHeader, type DataTableColumns } from 'naive-ui'
-import { h, onMounted, ref } from 'vue'
+import {
+  NButton,
+  NDataTable,
+  NIcon,
+  NPageHeader,
+  NPagination,
+  type DataTableColumns
+} from 'naive-ui'
+import { h } from 'vue'
 
-interface Register {
-  date: string
-  subject: string
-  teacher: string
-}
-
-const data = ref<Register[]>([])
+const { currentPage, isLoading, getPage, metaData, registers } = useRegisterAll()
 
 const columns: DataTableColumns<Register> = [
   {
     title: 'Subject',
-    key: 'subject'
+    key: 'classroom.subject.name'
   },
   {
     title: 'Teacher',
-    key: 'teacher'
+    key: 'classroom.teacher.name'
   },
   {
     title: 'Date',
@@ -54,61 +61,4 @@ const columns: DataTableColumns<Register> = [
     }
   }
 ]
-
-onMounted(() => {
-  setTimeout(() => {
-    data.value = [
-      {
-        date: '2021-10-10',
-        subject: 'Math',
-        teacher: 'John Doe'
-      },
-      {
-        date: '2021-10-11',
-        subject: 'Science',
-        teacher: 'Jane Doe'
-      },
-      {
-        date: '2021-10-12',
-        subject: 'History',
-        teacher: 'John Doe'
-      },
-      {
-        date: '2021-10-13',
-        subject: 'Math',
-        teacher: 'Jane Doe'
-      },
-      {
-        date: '2021-10-14',
-        subject: 'Science',
-        teacher: 'John Doe'
-      },
-      {
-        date: '2021-10-15',
-        subject: 'History',
-        teacher: 'Jane Doe'
-      },
-      {
-        date: '2021-10-16',
-        subject: 'Math',
-        teacher: 'John Doe'
-      },
-      {
-        date: '2021-10-17',
-        subject: 'Science',
-        teacher: 'Jane Doe'
-      },
-      {
-        date: '2021-10-18',
-        subject: 'History',
-        teacher: 'John Doe'
-      },
-      {
-        date: '2021-10-19',
-        subject: 'Math',
-        teacher: 'Jane Doe'
-      }
-    ]
-  }, 1000)
-})
 </script>
