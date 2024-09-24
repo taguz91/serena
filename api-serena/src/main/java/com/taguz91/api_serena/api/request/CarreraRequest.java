@@ -19,7 +19,7 @@ public class CarreraRequest implements Serializable {
     @NotEmpty
     private String name;
 
-    private String description;
+    private String description = "";
 
     // Método que convierte el request en una entidad Carrera
     public Carrera toCarrera() {

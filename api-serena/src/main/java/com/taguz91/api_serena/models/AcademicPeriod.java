@@ -8,6 +8,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -39,16 +40,15 @@ public class AcademicPeriod extends BaseEntity implements Serializable {
     private String id;
 
     private String name;
-    
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "carrera_id", nullable = false)
-    private Carrera carrera;
 
     @Column(nullable = true)
     private String reference;
 
     private Boolean isActive;
+
+    @JsonManagedReference(value = "rf_academic_period_carrera")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Carrera carrera;
 
     @OneToMany(
             cascade = CascadeType.ALL,
