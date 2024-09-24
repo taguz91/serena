@@ -1,3 +1,5 @@
+import type { Career } from './careers'
+
 export interface AcademicPeriod {
   createdAt: string
   updatedAt: string
@@ -7,11 +9,12 @@ export interface AcademicPeriod {
   name: string
   reference?: string
   isActive: boolean
-  classrooms: unknown[]
+  carrera?: Career
 }
 
 export interface AcademicPeriodForm {
   id?: string
   name: string
+  idCarrera: string
   isActive: boolean
 }

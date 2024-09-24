@@ -10,7 +10,7 @@ export interface Meta {
   perPage: number
 }
 
-export type OptionType = 'academic-period' | 'subject' | 'teacher' | 'classroom'
+export type OptionType = 'academic-period' | 'subject' | 'teacher' | 'classroom' | 'carrera'
 
 export interface Option {
   label: string

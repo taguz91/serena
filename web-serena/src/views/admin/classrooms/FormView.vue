@@ -3,9 +3,9 @@
     v-model:show="show"
     :mask-closable="false"
     preset="dialog"
-    class="w-[500px]"
+    class="w-[670px]"
     title="Creación de una nueva clase"
-    positive-text="Crear"
+    :positive-text="props.id ? 'Actualizar' : 'Crear'"
     negative-text="Cancelar"
     @positive-click="onPositiveClick"
     @negative-click="onNegativeClick"
@@ -19,17 +19,6 @@
     <SmallSpinner v-if="isLoading" />
 
     <NForm v-else ref="formRef" class="mt-6" :model="model">
-      <NFormItem label="Periodo académico" required>
-        <NSelect
-          filterable
-          :loading="isLoadingAcademicPeriods"
-          v-model:value="model.idAcademicPeriod"
-          placeholder="Selecciona un periodo académico"
-          :options="academicPeriods"
-        >
-        </NSelect>
-      </NFormItem>
-
       <NFormItem label="Docente" required>
         <NSelect
           filterable
@@ -37,6 +26,17 @@
           v-model:value="model.idTeacher"
           placeholder="Selecciona un docente"
           :options="teachers"
+        >
+        </NSelect>
+      </NFormItem>
+
+      <NFormItem label="Periodo académico" required>
+        <NSelect
+          filterable
+          :loading="isLoadingAcademicPeriods"
+          v-model:value="model.idAcademicPeriod"
+          placeholder="Selecciona un periodo académico"
+          :options="academicPeriods"
         >
         </NSelect>
       </NFormItem>

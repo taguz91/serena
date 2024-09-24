@@ -60,6 +60,10 @@ const toggleModal = (newShow: boolean) => {
 
 const columns: DataTableColumns<AcademicPeriod> = [
   {
+    title: 'Carrera',
+    key: 'carrera.name'
+  },
+  {
     title: 'Nombre',
     key: 'name'
   },

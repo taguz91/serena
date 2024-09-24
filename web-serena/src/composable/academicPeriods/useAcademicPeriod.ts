@@ -40,7 +40,8 @@ export const useAcademicPeriod = (id: Ref<string | undefined>) => {
   const academicPeriod = ref<AcademicPeriod>()
   const academicPeriodForm = ref<AcademicPeriodForm>({
     name: '',
-    isActive: false
+    isActive: false,
+    idCarrera: ''
   })
 
   const { isLoading, data } = useQuery({
@@ -61,11 +62,13 @@ export const useAcademicPeriod = (id: Ref<string | undefined>) => {
         academicPeriodForm.value = {
           id: data.value.id,
           name: data.value.name,
+          idCarrera: data.value.carrera?.id || '',
           isActive: data.value.isActive
         }
       } else {
         academicPeriodForm.value = {
           name: '',
+          idCarrera: '',
           isActive: false
         }
       }

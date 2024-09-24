@@ -19,6 +19,17 @@
     <SmallSpinner v-if="isLoading" />
 
     <NForm v-else ref="formRef" class="mt-6" :model="model">
+      <NFormItem label="Carrera" required>
+        <NSelect
+          filterable
+          :loading="isLoadingCareers"
+          v-model:value="model.idCarrera"
+          placeholder="Selecciona una materia"
+          :options="careers"
+        >
+        </NSelect>
+      </NFormItem>
+
       <NFormItem label="Nombre" required>
         <NInput v-model:value="model.name" placeholder="Periodo Octubre 2024 Abril 2025" />
       </NFormItem>
@@ -35,12 +46,23 @@
 </template>
 
 <script setup lang="ts">
-import { NAlert, NCheckbox, NForm, NFormItem, NIcon, NInput, NModal, type FormInst } from 'naive-ui'
+import {
+  NAlert,
+  NCheckbox,
+  NForm,
+  NFormItem,
+  NIcon,
+  NInput,
+  NModal,
+  NSelect,
+  type FormInst
+} from 'naive-ui'
 import { useVModel } from '@vueuse/core'
 import { Calendar } from '@vicons/tabler'
 import { ref, toRef } from 'vue'
 import { useAcademicPeriod } from '@/composable/academicPeriods/useAcademicPeriod'
 import SmallSpinner from '@/components/shared/SmallSpinner.vue'
+import { useOptions } from '@/composable/useOptions'
 
 interface Props {
   modelValue: boolean
@@ -52,6 +74,8 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const id = toRef(props, 'id')
+
+const { isLoading: isLoadingCareers, options: careers } = useOptions('carrera')
 
 const emit = defineEmits<{
   (event: 'update:modelValue', value: boolean): void
