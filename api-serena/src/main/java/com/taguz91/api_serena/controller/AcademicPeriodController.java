@@ -6,6 +6,7 @@ import com.taguz91.api_serena.api.response.MessageResponse;
 import com.taguz91.api_serena.api.response.OptionResponse;
 import com.taguz91.api_serena.api.response.PageResponse;
 import com.taguz91.api_serena.models.AcademicPeriod;
+import com.taguz91.api_serena.models.Carrera;
 import com.taguz91.api_serena.repository.AcademicPeriodRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -58,6 +59,9 @@ public class AcademicPeriodController {
         academicPeriod.setName(request.getName());
         academicPeriod.setReference(request.getReference());
         academicPeriod.setIsActive(request.getIsActive());
+        academicPeriod.setCarrera(
+                (new Carrera()).setId(request.getIdCarrera())
+        );
 
         academicPeriodRepository.save(academicPeriod);
 
