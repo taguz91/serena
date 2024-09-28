@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface AcademicPeriodRepository extends JpaRepository<AcademicPeriod, String> {
 
-    @Query("SELECT ap.id as value, ap.name as label FROM AcademicPeriod ap WHERE isDeleted = false ORDER BY label")
+    @Query("SELECT ap.id as value, concat(ap.carrera.name, \" - \", ap.name) as label FROM AcademicPeriod ap WHERE isDeleted = false ORDER BY label")
     List<OptionResponse> findAllOptions();
 }

@@ -4,8 +4,10 @@ import com.taguz91.api_serena.api.aws.BucketName;
 import com.taguz91.api_serena.models.Register;
 import com.taguz91.api_serena.models.RegisterStudent;
 import com.taguz91.api_serena.models.Student;
+import com.taguz91.api_serena.models.StudentEmotion;
 import com.taguz91.api_serena.repository.RegisterRepository;
 import com.taguz91.api_serena.repository.RegisterStudentRepository;
+import com.taguz91.api_serena.repository.StudentEmotionRepository;
 import com.taguz91.api_serena.repository.StudentRepository;
 import com.taguz91.api_serena.service.contracts.CreateStudentRegister;
 import com.taguz91.api_serena.service.contracts.FileStoreService;
@@ -18,9 +20,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Stream;
 
 @Service
 public class CreateStudentRegisterImp implements CreateStudentRegister {
+    // to test now whe can select a random emotion
+    // this is going to  be used from aws lambda
+    //HAPPY | SAD | ANGRY | CONFUSED | DISGUSTED | SURPRISED | CALM | UNKNOWN | FEAR
+    final List<String> emotions = List.of("HAPPY", "SAD", "ANGRY", "CONFUSED", "DISGUSTED", "SURPRISED", "CALM", "UNKNOWN", "FEAR");
 
     @Autowired
     private FileStoreService fileStoreService;
@@ -30,6 +37,8 @@ public class CreateStudentRegisterImp implements CreateStudentRegister {
     private StudentRepository studentRepository;
     @Autowired
     private RegisterRepository registerRepository;
+    @Autowired
+    private StudentEmotionRepository studentEmotionRepository;
 
     public RegisterStudent create(MultipartFile photo, String idRegister) {
         RegisterStudent registerStudent = new RegisterStudent();
@@ -53,17 +62,46 @@ public class CreateStudentRegisterImp implements CreateStudentRegister {
                 this.getStudent()
         );
 
-        return registerStudentRepository.save(registerStudent);
+        RegisterStudent newRegisterStudent = registerStudentRepository.save(registerStudent);
+        saveEmotionDetails(newRegisterStudent, newRegisterStudent.getEmotion());
+
+        return newRegisterStudent;
     }
 
     private String getEmotion() {
-        // to test now whe can select a random emotion
-        // this is going to  be used from aws lambda
-        //HAPPY | SAD | ANGRY | CONFUSED | DISGUSTED | SURPRISED | CALM | UNKNOWN | FEAR
-        List<String> emotions = List.of("HAPPY", "SAD", "ANGRY", "CONFUSED", "DISGUSTED", "SURPRISED", "CALM", "UNKNOWN", "FEAR");
         int rnd = new Random().nextInt(emotions.size());
 
         return emotions.get(rnd);
+    }
+
+    private void saveEmotionDetails(
+            RegisterStudent registerStudent,
+            String emotion
+    ) {
+        Stream<StudentEmotion> studentEmotions =  emotions.stream().map((e) -> {
+            StudentEmotion studentEmotion = new StudentEmotion();
+            studentEmotion.setId((new NanoCombCreator()).create().toString());
+            studentEmotion.setRegisterStudent(registerStudent);
+            studentEmotion.setEmotion(emotion);
+
+            int lower = new Random().nextInt(100);
+
+            if (!e.equals(emotion)) {
+                int rnd = new Random().nextInt(lower > 50 ? 25 : 12);
+                double percentage = ((double) rnd) / 100;
+                studentEmotion.setPercentage(percentage);
+            } else {
+                int high = lower > 50 ? 96 : 91;
+                int low = lower > 50 ? 84 : 76;
+                int rnd = new Random().nextInt(high - low) + low;
+                double percentage = ((double) rnd) / 100;
+                studentEmotion.setPercentage(percentage);
+            }
+
+            return studentEmotion;
+        });
+
+        studentEmotionRepository.saveAll(studentEmotions.toList());
     }
 
     private Student getStudent() {
