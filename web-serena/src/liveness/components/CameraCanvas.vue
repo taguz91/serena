@@ -58,9 +58,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue'
+import { onUnmounted, ref, watch } from 'vue'
 import { useFaceDetection } from '../composables/useFaceDetection'
 import { useFrame } from '../composables/useFrame'
+import { MediaUtils } from '../utils/media'
 
 interface Props {
   width: number
@@ -100,11 +101,20 @@ watch(isValid, async () => {
   if (isValid.value) {
     const image = await takePhoto()
     await props.savePhoto(image)
-    // set the timeout
+    // wait 10 seconds to change the student
     setTimeout(() => {
       process()
-    }, 500)
+    }, 10000)
   }
+})
+
+onUnmounted(() => {
+  // stop all video tracks
+  MediaUtils.getMediaStreamInfo()
+    .mediaStream.getTracks()
+    .forEach((track) => {
+      track.stop()
+    })
 })
 </script>
 
