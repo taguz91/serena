@@ -98,4 +98,18 @@ public class RegisterController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new MessageResponse("Borrado con éxito"));
     }
+
+    @GetMapping("/classroom/{idClassroom}")
+    public ResponseEntity<PageResponse<Register>> byClassroom(
+            @PathVariable(value = "idClassroom") String idClassroom,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "20") int size
+    )  {
+        Pageable pageable = PageRequest.of(page, size);
+
+       Page<Register> registers = registerRepository.findAllByIdClassroom(idClassroom, pageable);
+
+       return ResponseEntity.status(HttpStatus.OK)
+               .body(new PageResponse<>(registers));
+    }
 }
