@@ -16,3 +16,8 @@ export interface Option {
   label: string
   value: string
 }
+
+export interface Summary {
+  emotion: string
+  count: number
+}
