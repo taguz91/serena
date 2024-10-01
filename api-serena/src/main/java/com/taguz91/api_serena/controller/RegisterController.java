@@ -1,5 +1,7 @@
 package com.taguz91.api_serena.controller;
 
+import com.amazonaws.Response;
+import com.taguz91.api_serena.api.response.ClassroomSummaryGlobal;
 import com.taguz91.api_serena.models.Classroom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,6 +28,7 @@ import com.taguz91.api_serena.repository.RegisterRepository;
 
 import jakarta.validation.Valid;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -107,9 +110,17 @@ public class RegisterController {
     )  {
         Pageable pageable = PageRequest.of(page, size);
 
-       Page<Register> registers = registerRepository.findAllByIdClassroom(idClassroom, pageable);
+        Page<Register> registers = registerRepository.findAllByIdClassroom(idClassroom, pageable);
 
-       return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(HttpStatus.OK)
                .body(new PageResponse<>(registers));
+    }
+
+    @GetMapping("/summary/{idRegister}")
+    public ResponseEntity<List<ClassroomSummaryGlobal>> byRegister(
+            @PathVariable(value = "idRegister") String idRegister
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(registerRepository.findSummary(idRegister));
     }
 }
