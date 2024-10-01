@@ -2,6 +2,7 @@ package com.taguz91.api_serena.controller;
 
 import com.amazonaws.services.eks.model.NotFoundException;
 import com.taguz91.api_serena.api.request.ClassroomRequest;
+import com.taguz91.api_serena.api.response.ClassroomSummaryGlobal;
 import com.taguz91.api_serena.api.response.MessageResponse;
 import com.taguz91.api_serena.api.response.PageResponse;
 import com.taguz91.api_serena.models.AcademicPeriod;
@@ -112,5 +113,13 @@ public class ClassroomController {
                 .body(classroomRepository.findAllByTeacherAcademicPeriodActive(
                         teacher.getId()
                 ));
+    }
+
+    @GetMapping("/summary/{idClassroom}")
+    public ResponseEntity<List<ClassroomSummaryGlobal>> emotionSummary(
+            @PathVariable(value = "idClassroom") String idClassroom
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(classroomRepository.findSummary(idClassroom));
     }
 }
