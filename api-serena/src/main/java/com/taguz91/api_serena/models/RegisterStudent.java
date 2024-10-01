@@ -33,6 +33,8 @@ public class RegisterStudent extends BaseEntity implements Serializable {
 
     private String emotion;
 
+    private String status;
+
     @JsonManagedReference(value = "rf_register_student_register")
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore

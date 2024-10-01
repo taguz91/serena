@@ -20,6 +20,9 @@ public class ClassroomRequest implements Serializable {
     private static final long serialVersionUID = 819512021687550742L;
 
     @NotBlank
+    private String name;
+
+    @NotBlank
     private String idAcademicPeriod;
 
     @NotBlank
@@ -31,6 +34,7 @@ public class ClassroomRequest implements Serializable {
     public Classroom toClassroom() {
         return new Classroom()
                 .setId((new NanoCombCreator()).create().toString())
+                .setName(name)
                 .setAcademicPeriod((new AcademicPeriod()).setId(idAcademicPeriod))
                 .setTeacher((new Teacher()).setId(idTeacher))
                 .setSubject((new Subject()).setId(idSubject));

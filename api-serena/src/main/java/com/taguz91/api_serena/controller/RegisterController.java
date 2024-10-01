@@ -26,6 +26,8 @@ import com.taguz91.api_serena.repository.RegisterRepository;
 
 import jakarta.validation.Valid;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("api/v1/register")
 public class RegisterController {
@@ -47,6 +49,13 @@ public class RegisterController {
 
     @PostMapping("")
     public ResponseEntity<Register> create(@Valid @RequestBody RegisterRequest request) {
+        Optional<Register> registerExist = registerRepository.findByIdClassroom(request.getIdClassroom());
+
+        if (registerExist.isPresent()) {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(registerExist.get());
+        }
+
         Register register = request.toRegister();
         Register saved = registerRepository.save(register);
 

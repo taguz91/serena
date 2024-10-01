@@ -55,6 +55,7 @@ public class CreateStudentRegisterImp implements CreateStudentRegister {
 
         registerStudent.setPhoto(s3key);
 
+        registerStudent.setStatus(register.getStatus());
         registerStudent.setEmotion(getEmotion());
         registerStudent.setRegister(register);
 
