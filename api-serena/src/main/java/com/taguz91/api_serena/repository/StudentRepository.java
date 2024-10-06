@@ -36,4 +36,24 @@ public interface StudentRepository extends JpaRepository<Student, String> {
             @Param("limitParam") int limitParam,
             Pageable pageable
     );
+
+
+    static final String QUERY_BY_CLASSROOM = " from registers r "
+                + "join registers_students rs on rs.register_id = r.id "
+                + "join students s on rs.student_id = s.id "
+                + "where classroom_id = :idClassroom and s.\"name\" = '' ";
+
+    @Query(
+            value = "SELECT s.* " + QUERY_BY_CLASSROOM
+            + " ORDER BY s.created_at DESC LIMIT :limitParam OFFSET :offset "
+            + "\n-- #pageable\n",
+            countQuery = "SELECT count(*) " + QUERY_BY_CLASSROOM,
+            nativeQuery = true
+    )
+    Page<Student> findPendingInscriptionByClassroom(
+            @Param("idClassroom") String idClassroom,
+            @Param("offset") long offset,
+            @Param("limitParam") int limitParam,
+            Pageable pageable
+    );
 }

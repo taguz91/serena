@@ -1,5 +1,7 @@
 package com.taguz91.api_serena.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,4 +25,23 @@ public interface RegisterStudentRepository extends JpaRepository<RegisterStudent
 
     @Query("SELECT rs FROM RegisterStudent rs WHERE rs.student.id = :idStudent")
     public List<RegisterStudent> findByIdStudent(@Param("idStudent") String idStudent);
+
+    static final String QUERY_BY_CLASSROOM = " from registers r "
+            + "join registers_students rs on rs.register_id = r.id "
+            + "join students s on rs.student_id = s.id "
+            + "where classroom_id = :idClassroom and s.\"name\" = '' ";
+
+    @Query(
+            value = "SELECT rs.* " + QUERY_BY_CLASSROOM
+                    + " ORDER BY s.created_at DESC LIMIT :limitParam OFFSET :offset "
+                    + "\n-- #pageable\n",
+            countQuery = "SELECT count(*) " + QUERY_BY_CLASSROOM,
+            nativeQuery = true
+    )
+    Page<RegisterStudent> findPendingInscriptionClassroom(
+            @Param("idClassroom") String idClassroom,
+            @Param("offset") long offset,
+            @Param("limitParam") int limitParam,
+            Pageable pageable
+    );
 }

@@ -56,6 +56,7 @@ public class TeacherController {
 
         teacher.setName(request.getName());
         teacher.setEmail(request.getEmail());
+        teacher.setIsActive(request.isActive());
 
         teacherRepository.save(teacher);
 

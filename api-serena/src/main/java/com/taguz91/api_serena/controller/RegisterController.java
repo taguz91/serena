@@ -1,8 +1,9 @@
 package com.taguz91.api_serena.controller;
 
-import com.amazonaws.Response;
 import com.taguz91.api_serena.api.response.ClassroomSummaryGlobal;
-import com.taguz91.api_serena.models.Classroom;
+import com.taguz91.api_serena.models.Inscription;
+import com.taguz91.api_serena.repository.InscriptionRepository;
+import com.taguz91.api_serena.utils.NanoCombCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -38,6 +39,9 @@ public class RegisterController {
     @Autowired
     private RegisterRepository registerRepository;
 
+    @Autowired
+    private InscriptionRepository inscriptionRepository;
+
     @GetMapping("")
     public ResponseEntity<PageResponse<Register>> index(
             @RequestParam(value = "page", defaultValue = "0") int page,
@@ -61,6 +65,19 @@ public class RegisterController {
 
         Register register = request.toRegister();
         Register saved = registerRepository.save(register);
+
+        Optional<Inscription> inscription = inscriptionRepository.findByIdClassroom(request.getIdClassroom());
+
+        if (inscription.isEmpty()) {
+            Inscription newInscription = new Inscription();
+            newInscription.setId(new NanoCombCreator().create().toString());
+            newInscription.setClassroom(register.getClassroom());
+            newInscription.setPhotos(List.of());
+            newInscription.setStudents(List.of());
+            newInscription.setPhoto("");
+
+            inscriptionRepository.save(newInscription);
+        }
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(saved);

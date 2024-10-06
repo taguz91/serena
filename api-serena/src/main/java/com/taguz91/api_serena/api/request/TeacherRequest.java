@@ -25,11 +25,14 @@ public class TeacherRequest  implements Serializable {
     @Email
     private String  email;
 
+    private boolean isActive = false;
+
     public Teacher toTeacher() {
         return new Teacher()
                 .setId((new NanoCombCreator()).create().toString())
                 .setName(name)
                 .setEmail(email)
+                .setIsActive(isActive)
                 .setPassword("123");
     }
 }
