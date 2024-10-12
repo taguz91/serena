@@ -1,6 +1,7 @@
 package com.taguz91.api_serena.controller;
 
 import com.amazonaws.services.eks.model.NotFoundException;
+import com.taguz91.api_serena.api.request.CreateDuplicateRegisterStudentRequest;
 import com.taguz91.api_serena.api.request.CreateRegisterStudentRequest;
 import com.taguz91.api_serena.api.request.RegisterStudentRequest;
 import com.taguz91.api_serena.api.response.MessageResponse;
@@ -9,12 +10,14 @@ import com.taguz91.api_serena.models.RegisterStudent;
 import com.taguz91.api_serena.models.Teacher;
 import com.taguz91.api_serena.repository.RegisterStudentRepository;
 import com.taguz91.api_serena.service.contracts.CreateStudentRegister;
+import com.taguz91.api_serena.service.contracts.DownloadImageService;
 import com.taguz91.api_serena.utils.ImageUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import javax.print.attribute.standard.Media;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +40,9 @@ public class RegisterStudentController {
 
     @Autowired
     private CreateStudentRegister createStudentRegister;
+
+    @Autowired
+    private DownloadImageService downloadImageService;
 
     @GetMapping("")
     public ResponseEntity<PageResponse<RegisterStudent>> index(
@@ -111,6 +118,21 @@ public class RegisterStudentController {
                 .body(registerStudent);
     }
 
+    @PostMapping("/create/duplicate")
+    public ResponseEntity<RegisterStudent> createDuplicate(
+            @Valid @RequestBody CreateDuplicateRegisterStudentRequest request
+    ) {
+        RegisterStudent registerStudent = request.getPhoto() == null
+            ? createStudentRegister.duplicate(request.getIdStudent(), request.getIdRegister())
+            : createStudentRegister.create(
+                    ImageUtil.base64ToMultipartFile("students-checks", request.getPhoto()),
+                    request.getIdRegister()
+            );
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(registerStudent);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<RegisterStudent> one(
             @PathVariable(value = "id") String id
@@ -130,5 +152,23 @@ public class RegisterStudentController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new MessageResponse("Borrado con exito"));
+    }
+
+    @GetMapping("/photo/{id}")
+    public ResponseEntity<byte[]> showPhoto(@PathVariable(value = "id") String id) throws IOException {
+        RegisterStudent registerStudent = registerStudentRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("El registro del estudiante no existe"));
+
+        byte[] bytes = downloadImageService.download(registerStudent.getPhoto());
+        String[] paths = registerStudent.getPhoto().split("/");
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        httpHeaders.setContentLength(bytes.length);
+        httpHeaders.setContentDispositionFormData("attachment", paths[paths.length - 1]);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .headers(httpHeaders)
+                .body(bytes);
     }
 }

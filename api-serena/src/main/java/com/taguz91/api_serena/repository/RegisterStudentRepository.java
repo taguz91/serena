@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.taguz91.api_serena.models.RegisterStudent;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 
@@ -25,6 +26,9 @@ public interface RegisterStudentRepository extends JpaRepository<RegisterStudent
 
     @Query("SELECT rs FROM RegisterStudent rs WHERE rs.student.id = :idStudent")
     public List<RegisterStudent> findByIdStudent(@Param("idStudent") String idStudent);
+
+    @Query(value = "SELECT rs FROM RegisterStudent rs WHERE rs.student_id = :idStudent AND rs.status = 'inscription' ORDER BY created_at DESC LIMIT 1", nativeQuery = true)
+    public Optional<RegisterStudent> findByLastByIdStudent(@Param("idStudent") String idStudent);
 
     static final String QUERY_BY_CLASSROOM = " from registers r "
             + "join registers_students rs on rs.register_id = r.id "

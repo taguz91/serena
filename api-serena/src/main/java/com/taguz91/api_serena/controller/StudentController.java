@@ -1,5 +1,6 @@
 package com.taguz91.api_serena.controller;
 
+import com.taguz91.api_serena.api.response.OptionResponse;
 import com.taguz91.api_serena.models.Teacher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,6 +27,9 @@ import com.taguz91.api_serena.models.Student;
 import com.taguz91.api_serena.repository.StudentRepository;
 
 import jakarta.validation.Valid;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/student")
@@ -82,6 +86,18 @@ public class StudentController {
                 .body(new PageResponse<>(students));
     }
 
+    @GetMapping("/options/teacher/current")
+    public ResponseEntity<List<OptionResponse>> optionsByCurrentTeacher(
+            @AuthenticationPrincipal Teacher teacher
+    ) {
+        List<OptionResponse> students = studentRepository.findOptionsByTeacher(
+                teacher.getId()
+        );
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(students);
+    }
+
     @PostMapping("")
     public ResponseEntity<Student> create(@Valid @RequestBody StudentRequest request) {
         Student student = request.toStudent();
@@ -119,6 +135,16 @@ public class StudentController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(student);
+    }
+
+    @GetMapping("/identification/{id}")
+    public ResponseEntity<Student> identification(
+            @PathVariable(value = "id") String id
+    ) {
+        Optional<Student> student = studentRepository.findByIdentification(id);
+
+        return ResponseEntity.status(student.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK)
+                .body(student.orElseGet(Student::new));
     }
 
     @DeleteMapping("/{id}")

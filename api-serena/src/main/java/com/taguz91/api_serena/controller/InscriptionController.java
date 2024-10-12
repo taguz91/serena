@@ -1,6 +1,5 @@
 package com.taguz91.api_serena.controller;
 
-import com.amazonaws.services.eks.model.NotFoundException;
 import com.taguz91.api_serena.api.request.InscriptionRequest;
 import com.taguz91.api_serena.api.response.PageResponse;
 import com.taguz91.api_serena.models.Inscription;
@@ -72,7 +71,6 @@ public class InscriptionController {
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "20") int size
     ) {
-
         Pageable pageable = PageRequest.of(page, size);
         Page<RegisterStudent> students = registerStudentRepository.findPendingInscriptionClassroom(
                 idClassroom,

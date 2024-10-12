@@ -64,7 +64,10 @@ public class CreateStudentRegisterImp implements CreateStudentRegister {
         );
 
         RegisterStudent newRegisterStudent = registerStudentRepository.save(registerStudent);
-        saveEmotionDetails(newRegisterStudent, newRegisterStudent.getEmotion());
+
+        if (!register.getStatus().equals("inscription")) {
+            saveEmotionDetails(newRegisterStudent, newRegisterStudent.getEmotion());
+        }
 
         return newRegisterStudent;
     }
@@ -117,5 +120,30 @@ public class CreateStudentRegisterImp implements CreateStudentRegister {
         student.setGender("");
 
         return studentRepository.save(student);
+    }
+
+    public RegisterStudent duplicate(String idStudent, String idRegister) {
+        Student student = studentRepository.findById(idStudent).orElseThrow(() -> new HttpClientErrorException(
+                HttpStatus.NOT_FOUND,
+                "No existe el estudiante"
+        ));
+
+        RegisterStudent registerStudent = registerStudentRepository.findByLastByIdStudent(idStudent)
+                .orElseThrow(() -> new HttpClientErrorException(
+                        HttpStatus.NOT_FOUND,
+                        "No existe el registro del estudiante"
+                ));
+
+        RegisterStudent duplicateRegisterStudent = new RegisterStudent();
+        duplicateRegisterStudent.setId((new NanoCombCreator()).create().toString());
+
+        duplicateRegisterStudent.setRegister((new Register()).setId(idRegister));
+
+        duplicateRegisterStudent.setStudent(student);
+        duplicateRegisterStudent.setEmotion(registerStudent.getEmotion());
+        duplicateRegisterStudent.setPhoto(registerStudent.getPhoto());
+        duplicateRegisterStudent.setStatus(registerStudent.getStatus());
+
+        return registerStudentRepository.save(registerStudent);
     }
 }

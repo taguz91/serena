@@ -1,5 +1,6 @@
 package com.taguz91.api_serena.repository;
 
+import com.taguz91.api_serena.api.response.OptionResponse;
 import com.taguz91.api_serena.models.Student;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -25,7 +27,7 @@ public interface StudentRepository extends JpaRepository<Student, String> {
     @Query(
             value = "SELECT s.id, s.identification, s.name, s.gender, s.reference, s.created_at, s.updated_at, s.created_by, s.updated_by, s.is_deleted "
                     + QUERY_BY_TEACHER
-                    +  " ORDER BY s.name DESC LIMIT :limitParam OFFSET :offset "
+                    +  " ORDER BY s.name ASC LIMIT :limitParam OFFSET :offset "
                     + "\n-- #pageable\n",
             countQuery = "SELECT count(*) " + QUERY_BY_TEACHER,
             nativeQuery = true
@@ -36,6 +38,14 @@ public interface StudentRepository extends JpaRepository<Student, String> {
             @Param("limitParam") int limitParam,
             Pageable pageable
     );
+
+    @Query(
+            value = "SELECT s.id as value, s.name as label "
+                    + QUERY_BY_TEACHER
+                    +  " ORDER BY s.name ASC",
+            nativeQuery = true
+    )
+    List<OptionResponse> findOptionsByTeacher(@Param("idTeacher") String idTeacher);
 
 
     static final String QUERY_BY_CLASSROOM = " from registers r "

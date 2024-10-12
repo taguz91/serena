@@ -56,9 +56,14 @@ public class RegisterController {
 
     @PostMapping("")
     public ResponseEntity<Register> create(@Valid @RequestBody RegisterRequest request) {
-        Optional<Register> registerExist = registerRepository.findByIdClassroom(request.getIdClassroom());
+        Optional<Register> registerExist = registerRepository.findByIdClassroomAndStatus(
+                request.getIdClassroom(),
+                request.getStatus()
+        );
 
         if (registerExist.isPresent()) {
+            this.createInscription(request);
+
             return ResponseEntity.status(HttpStatus.OK)
                     .body(registerExist.get());
         }
@@ -66,21 +71,25 @@ public class RegisterController {
         Register register = request.toRegister();
         Register saved = registerRepository.save(register);
 
+        this.createInscription(request);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(saved);
+    }
+
+    private void createInscription (RegisterRequest request) {
         Optional<Inscription> inscription = inscriptionRepository.findByIdClassroom(request.getIdClassroom());
 
         if (inscription.isEmpty()) {
             Inscription newInscription = new Inscription();
             newInscription.setId(new NanoCombCreator().create().toString());
-            newInscription.setClassroom(register.getClassroom());
+            newInscription.setClassroom(request.toRegister().getClassroom());
             newInscription.setPhotos(List.of());
             newInscription.setStudents(List.of());
             newInscription.setPhoto("");
 
             inscriptionRepository.save(newInscription);
         }
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(saved);
     }
 
     @PutMapping("/{id}")
