@@ -3,10 +3,10 @@ package com.taguz91.api_serena.controller;
 import com.amazonaws.services.eks.model.NotFoundException;
 import com.taguz91.api_serena.api.request.CreateDuplicateRegisterStudentRequest;
 import com.taguz91.api_serena.api.request.CreateRegisterStudentRequest;
-import com.taguz91.api_serena.api.request.RegisterStudentRequest;
 import com.taguz91.api_serena.api.response.MessageResponse;
 import com.taguz91.api_serena.api.response.PageResponse;
 import com.taguz91.api_serena.models.RegisterStudent;
+import com.taguz91.api_serena.models.Student;
 import com.taguz91.api_serena.models.Teacher;
 import com.taguz91.api_serena.repository.RegisterStudentRepository;
 import com.taguz91.api_serena.service.contracts.CreateStudentRegister;
@@ -25,11 +25,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-
-import javax.print.attribute.standard.Media;
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/register-student")
@@ -99,7 +96,7 @@ public class RegisterStudentController {
             @Valid @RequestParam("photo") MultipartFile photo,
             @Valid @RequestParam("idRegister") String idRegister
     ) {
-        RegisterStudent registerStudent = createStudentRegister.create(photo, idRegister);
+        RegisterStudent registerStudent = createStudentRegister.create(photo, idRegister, null);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(registerStudent);
@@ -111,22 +108,24 @@ public class RegisterStudentController {
     ) {
         RegisterStudent registerStudent = createStudentRegister.create(
                 ImageUtil.base64ToMultipartFile("students-checks", request.getPhoto()),
-                request.getIdRegister()
+                request.getIdRegister(),
+                null
         );
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(registerStudent);
     }
 
-    @PostMapping("/create/duplicate")
-    public ResponseEntity<RegisterStudent> createDuplicate(
+    @PostMapping("/create/inscription")
+    public ResponseEntity<RegisterStudent> createInscription(
             @Valid @RequestBody CreateDuplicateRegisterStudentRequest request
     ) {
         RegisterStudent registerStudent = request.getPhoto() == null
             ? createStudentRegister.duplicate(request.getIdStudent(), request.getIdRegister())
             : createStudentRegister.create(
                     ImageUtil.base64ToMultipartFile("students-checks", request.getPhoto()),
-                    request.getIdRegister()
+                    request.getIdRegister(),
+                    (new Student()).setId(request.getIdStudent())
             );
 
         return ResponseEntity.status(HttpStatus.CREATED)

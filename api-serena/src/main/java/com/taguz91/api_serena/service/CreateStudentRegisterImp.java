@@ -40,7 +40,7 @@ public class CreateStudentRegisterImp implements CreateStudentRegister {
     @Autowired
     private StudentEmotionRepository studentEmotionRepository;
 
-    public RegisterStudent create(MultipartFile photo, String idRegister) {
+    public RegisterStudent create(MultipartFile photo, String idRegister, Student student) {
         RegisterStudent registerStudent = new RegisterStudent();
         registerStudent.setId((new NanoCombCreator()).create().toString());
 
@@ -60,7 +60,7 @@ public class CreateStudentRegisterImp implements CreateStudentRegister {
         registerStudent.setRegister(register);
 
         registerStudent.setStudent(
-                this.getStudent()
+                student == null ? this.getStudent() : student
         );
 
         RegisterStudent newRegisterStudent = registerStudentRepository.save(registerStudent);

@@ -58,6 +58,7 @@ public class RegisterController {
     public ResponseEntity<Register> create(@Valid @RequestBody RegisterRequest request) {
         Optional<Register> registerExist = registerRepository.findByIdClassroomAndStatus(
                 request.getIdClassroom(),
+                
                 request.getStatus()
         );
 
