@@ -1,6 +1,6 @@
 import type { Classroom } from './classrooms'
 
-export type StatusRegister = 'open' | 'closed' | 'cancelled'
+export type StatusRegister = 'open' | 'closed' | 'cancelled' | 'inscription'
 
 export interface Register {
   createdAt: string
@@ -22,4 +22,10 @@ export interface RegisterForm {
 export interface RegisterStudentForm {
   photo: string
   idRegister: string
+}
+
+export interface RegisterStudentDuplicateForm {
+  photo?: string
+  idRegister: string
+  idStudent: string
 }

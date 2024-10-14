@@ -51,7 +51,7 @@ export const userCreateRegister = () => {
 
       idClassroomCreating.value = ''
       router.push({
-        name: 'classroom-register',
+        name: 'classroom-register-copy',
         params: {
           id: saveMutation.data.value?.id
         }

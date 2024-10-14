@@ -14,11 +14,17 @@
       >
         <div class="flex">
           <p class="w-full">{{ classroom.academicPeriod.name }}</p>
-          <NButton type="info" @click="goClassroom(classroom.id)">
-            <template #icon>
-              <NIcon><LayoutBoard /></NIcon>
-            </template>
-          </NButton>
+
+          <NDropdown
+            :options="options"
+            @select="(key: string | number) => handleSelect(classroom, key)"
+          >
+            <NButton type="tertiary">
+              <template #icon>
+                <NIcon><DotsVertical /></NIcon>
+              </template>
+            </NButton>
+          </NDropdown>
         </div>
 
         <div class="flex justify-end">
@@ -42,14 +48,16 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 
-import { NButton, NCard, NIcon } from 'naive-ui'
-import { User, LayoutBoard } from '@vicons/tabler'
+import { NButton, NCard, NDropdown, NIcon } from 'naive-ui'
+import { User, LayoutBoard, DotsVertical, Clipboard } from '@vicons/tabler'
 
 import AppLayout from '@/components/layouts/AppLayout.vue'
 import StudentList from '@/components/shared/StudentList.vue'
 import { useCurrentClassrooms } from '@/composable/classrooms/useCurrentClassrooms'
 import { userCreateRegister } from '@/composable/register/useRegister'
 import type { Classroom } from '@/interfaces'
+import type { DropdownMixedOption } from 'naive-ui/es/dropdown/src/interface'
+import { h, type Component } from 'vue'
 
 const router = useRouter()
 const { classrooms } = useCurrentClassrooms()
@@ -70,4 +78,43 @@ const createRegister = (classroom: Classroom) => {
     status: 'open'
   })
 }
+
+const createInscription = (classroom: Classroom) => {
+  create({
+    idClassroom: classroom.id,
+    status: 'inscription'
+  })
+}
+
+const renderIcon = (icon: Component) => {
+  return () => {
+    return h(NIcon, null, {
+      default: () => h(icon)
+    })
+  }
+}
+
+const handleSelect = (classroom: Classroom, key: string | number) => {
+  switch (key) {
+    case 'report':
+      goClassroom(classroom.id)
+      break
+    case 'inscription':
+      createInscription(classroom)
+      break
+  }
+}
+
+const options: DropdownMixedOption[] = [
+  {
+    label: 'Ver reporte',
+    key: 'report',
+    icon: renderIcon(LayoutBoard)
+  },
+  {
+    label: 'Crear inscripción',
+    key: 'inscription',
+    icon: renderIcon(Clipboard)
+  }
+]
 </script>

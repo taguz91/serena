@@ -9,6 +9,7 @@
 
   <CameraCanvas
     v-else-if="mediaStreamReady"
+    :infinite="infinite"
     :width="videoWidth"
     :height="videoHeight"
     :shouldRotate="shouldRotate"
@@ -26,6 +27,7 @@ import CameraCanvas from './CameraCanvas.vue'
 
 defineProps<{
   savePhoto: (photo: string) => Promise<void>
+  infinite: boolean
 }>()
 
 const { mediaStreamReady, hasError, videoHeight, videoWidth, shouldRotate } = useMediaScreen()

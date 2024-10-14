@@ -67,6 +67,7 @@ interface Props {
   width: number
   height: number
   shouldRotate: boolean
+  infinite: boolean
   savePhoto: (photo: string) => Promise<void>
 }
 
@@ -102,9 +103,12 @@ watch(isValid, async () => {
     const image = await takePhoto()
     await props.savePhoto(image)
     // wait 10 seconds to change the student
-    setTimeout(() => {
-      process()
-    }, 10000)
+
+    if (props.infinite) {
+      setTimeout(() => {
+        process()
+      }, 10000)
+    }
   }
 })
 

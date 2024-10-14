@@ -20,3 +20,10 @@ export interface Student {
   gender: string
   reference: any
 }
+
+export interface StudentForm {
+  id?: string
+  identification: string
+  name: string
+  gender: string
+}

@@ -37,6 +37,32 @@ const router = createRouter({
           path: 'register/:id',
           name: 'classroom-register',
           component: () => import('../views/app/RegisterView.vue')
+        },
+        {
+          path: 'register/copy/:id',
+          name: 'classroom-register-copy',
+          component: () => import('../views/app/RegisterCopyView.vue')
+        }
+      ]
+    },
+    {
+      path: '/public',
+      name: 'public',
+      children: [
+        {
+          path: 'check/:id',
+          name: 'public-register-check',
+          component: () => import('../views/public/CheckView.vue')
+        },
+        {
+          path: 'register/:id',
+          name: 'public-register-inscription',
+          component: () => import('../views/public/RegisterView.vue')
+        },
+        {
+          path: 'register/:id/:idStudent',
+          name: 'public-register-inscription-photo',
+          component: () => import('../views/public/RegisterView.vue')
         }
       ]
     },

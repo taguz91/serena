@@ -7,37 +7,42 @@
     <SmallSpinner v-if="isLoading" />
 
     <DetailContainer v-else current="Registrar">
-      <p class="font-bold text-lg">{{ register?.createdAt }}</p>
-      <p class="font-semibold">{{ register?.classroom.subject.name }}</p>
-      <p class="text-sm text-slate-400">{{ register?.classroom.academicPeriod.name }}</p>
+      <NInput :value="url" disabled />
 
       <hr class="my-2" />
 
-      <div class="w-full h-full mt-10">
-        <MainCamera :save-photo="savePhoto" infinite />
-      </div>
+      <p class="font-bold text-lg">{{ register?.createdAt }}</p>
     </DetailContainer>
   </AppLayout>
 </template>
 
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
-
-import MainCamera from '@/liveness/components/MainCamera.vue'
+import { useRoute, useRouter } from 'vue-router'
 
 import DetailContainer from '@/components/containers/DetailContainer.vue'
 import AppLayout from '@/components/layouts/AppLayout.vue'
 import StudentCheckList from '@/components/shared/StudentCheckList.vue'
 import { useRegister } from '@/composable/register/useRegister'
 import SmallSpinner from '@/components/shared/SmallSpinner.vue'
-import { useRegisterStudent } from '@/composable/register/useRegisterStudent'
+import { NInput } from 'naive-ui'
+import { computed } from 'vue'
 
 const route = useRoute()
-const { create } = useRegisterStudent(route.params.id.toString())
+const router = useRouter()
 
 const { isLoading, register } = useRegister(route.params.id.toString())
 
-const savePhoto = async (photo: string) => {
-  create(photo)
-}
+const url = computed(() => {
+  const href = router.resolve({
+    name:
+      register.value?.status === 'inscription'
+        ? 'public-register-inscription'
+        : 'classroom-register',
+    params: {
+      id: route.params.id.toString()
+    }
+  }).href
+
+  return `${window.location.origin}${href}`
+})
 </script>
