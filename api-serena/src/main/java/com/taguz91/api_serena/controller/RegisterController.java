@@ -1,5 +1,6 @@
 package com.taguz91.api_serena.controller;
 
+import com.amazonaws.services.xray.model.Http;
 import com.taguz91.api_serena.api.response.ClassroomSummaryGlobal;
 import com.taguz91.api_serena.models.Inscription;
 import com.taguz91.api_serena.repository.InscriptionRepository;

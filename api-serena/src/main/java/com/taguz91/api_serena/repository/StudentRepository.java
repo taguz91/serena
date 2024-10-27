@@ -1,6 +1,8 @@
 package com.taguz91.api_serena.repository;
 
+import com.taguz91.api_serena.api.response.ClassroomSummaryGlobal;
 import com.taguz91.api_serena.api.response.OptionResponse;
+import com.taguz91.api_serena.api.response.StudentSubject;
 import com.taguz91.api_serena.models.Student;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -65,5 +67,41 @@ public interface StudentRepository extends JpaRepository<Student, String> {
             @Param("offset") long offset,
             @Param("limitParam") int limitParam,
             Pageable pageable
+    );
+
+    @Query(
+            nativeQuery = true,
+            value = "select rs.emotion, count(rs.emotion) as count from registers r "
+                    + "join registers_students rs on rs.register_id = r.id  "
+                    + "where rs.student_id = :idStudent "
+                    + "group by rs.emotion "
+    )
+    public List<ClassroomSummaryGlobal> findSummaryByStudent(@Param("idStudent") String idStudent);
+
+    @Query(
+            nativeQuery = true,
+            value = "select rs.emotion, count(rs.emotion) as count from registers r "
+                    + "join registers_students rs on rs.register_id = r.id  "
+                    + "join classrooms c on c.id = r.classroom_id "
+                    + "where rs.student_id = :idStudent "
+                    + "and c.subject_id = :idSubject "
+                    + "group by rs.emotion "
+    )
+    public List<ClassroomSummaryGlobal> findSummaryByStudentAndSubject(
+            @Param("idStudent") String idStudent,
+            @Param("idSubject") String idSubject
+    );
+
+    @Query(
+            nativeQuery = true,
+            value = "select s.id, s.\"name\" from registers r "
+                + "join registers_students rs on rs.register_id = r.id "
+                + "join classrooms c on c.id = r.classroom_id "
+                + "join subjects s on s.id = c.subject_id "
+                + "where rs.student_id = :idStudent "
+                + "group by s.id "
+    )
+    public List<StudentSubject> findSubjects(
+            @Param("idStudent") String idStudent
     );
 }

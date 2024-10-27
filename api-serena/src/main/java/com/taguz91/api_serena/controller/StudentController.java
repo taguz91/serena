@@ -1,6 +1,6 @@
 package com.taguz91.api_serena.controller;
 
-import com.taguz91.api_serena.api.response.OptionResponse;
+import com.taguz91.api_serena.api.response.*;
 import com.taguz91.api_serena.models.Teacher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.amazonaws.services.eks.model.NotFoundException;
 import com.taguz91.api_serena.api.request.StudentRequest;
-import com.taguz91.api_serena.api.response.MessageResponse;
-import com.taguz91.api_serena.api.response.PageResponse;
 import com.taguz91.api_serena.models.Student;
 import com.taguz91.api_serena.repository.StudentRepository;
 
@@ -155,5 +153,33 @@ public class StudentController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new MessageResponse("Borrado con éxito"));
+    }
+
+    @GetMapping("/summary/{idStudent}")
+    public ResponseEntity<List<ClassroomSummaryGlobal>> summaryByStudent(
+            @PathVariable(value = "idStudent") String idStudent
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(studentRepository.findSummaryByStudent(idStudent));
+    }
+
+    @GetMapping("/summary/{idStudent}/subject/{idSubject}")
+    public ResponseEntity<List<ClassroomSummaryGlobal>> summaryByStudentAndSubject(
+            @PathVariable(value = "idStudent") String idStudent,
+            @PathVariable(value = "idSubject") String idSubject
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(studentRepository.findSummaryByStudentAndSubject(
+                        idStudent,
+                        idSubject
+                ));
+    }
+
+    @GetMapping("/subjects/{idStudent}")
+    public ResponseEntity<List<StudentSubject>> listSubjects(
+            @PathVariable(value = "idStudent") String idStudent
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(studentRepository.findSubjects(idStudent));
     }
 }
