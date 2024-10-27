@@ -34,53 +34,35 @@
     </template>
 
     <DetailContainer current="Estudiante">
-      <GraphContainer title="Resumen Maths">
-        <div class="flex justify-between p-5">
-          <div class="h-52 w-52 rounded-full bg-red-300 flex justify-center items-center">
-            <p>Grafico</p>
-          </div>
+      <GeneralChart :summary="summary" />
 
-          <div class="mr-10">
-            <h2 class="text-xl font-bold mb-2">Estados</h2>
-            <p><span class="font-bold text-xl">3</span> Feliz</p>
-            <p><span class="font-bold text-xl">2</span> Molestos</p>
-          </div>
-        </div>
-      </GraphContainer>
-
-      <GraphContainer title="Resumen Science">
-        <div class="flex justify-between p-5">
-          <div class="h-52 w-52 rounded-full bg-red-300 flex justify-center items-center">
-            <p>Grafico</p>
-          </div>
-
-          <div class="mr-10">
-            <h2 class="text-xl font-bold mb-2">Estados</h2>
-            <p><span class="font-bold text-xl">3</span> Feliz</p>
-            <p><span class="font-bold text-xl">2</span> Molestos</p>
-          </div>
-        </div>
-      </GraphContainer>
-
-      <GraphContainer title="Resumen Maths">
-        <div class="flex justify-between p-5">
-          <div class="h-52 w-52 rounded-full bg-red-300 flex justify-center items-center">
-            <p>Grafico</p>
-          </div>
-
-          <div class="mr-10">
-            <h2 class="text-xl font-bold mb-2">Estados</h2>
-            <p><span class="font-bold text-xl">3</span> Feliz</p>
-            <p><span class="font-bold text-xl">2</span> Molestos</p>
-          </div>
-        </div>
-      </GraphContainer>
+      <div class="my-4">
+        <SubjectSummary
+          v-for="studentSubject in subjects"
+          :student-subject="studentSubject"
+          :id-student="id.toString()"
+          :key="studentSubject.id"
+        />
+      </div>
     </DetailContainer>
   </AppLayout>
 </template>
 
 <script setup lang="ts">
+import { toRef } from 'vue'
+import { useRoute } from 'vue-router'
+
+import GeneralChart from '@/components/chart/GeneralChart.vue'
 import DetailContainer from '@/components/containers/DetailContainer.vue'
-import GraphContainer from '@/components/containers/GraphContainer.vue'
+import SubjectSummary from '@/components/containers/SubjectSummary.vue'
 import AppLayout from '@/components/layouts/AppLayout.vue'
+import { useEmotionSummary } from '@/composable/students/useEmotionSummary'
+import { useStudentSubjectsSummary } from '@/composable/students/useStudentSubjectsSummary'
+
+const route = useRoute()
+const id = toRef(route.params, 'id')
+
+const { summary } = useEmotionSummary(id)
+
+const { subjects } = useStudentSubjectsSummary(id)
 </script>

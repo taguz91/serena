@@ -27,3 +27,8 @@ export interface StudentForm {
   name: string
   gender: string
 }
+
+export interface StudentSubject {
+  id: string
+  name: string
+}
