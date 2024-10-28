@@ -10,6 +10,6 @@ const env = getEnvironment();
 
 const app = new App();
 
-new LambdaInfra(app, `lambda-infra-${env.stage}`, { env });
+new LambdaInfra(app, `serena-infra-${env.stage}`, { env });
 
 app.synth();
