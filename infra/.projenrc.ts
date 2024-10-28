@@ -4,6 +4,9 @@ const project = new awscdk.AwsCdkTypeScriptApp({
   defaultReleaseBranch: "main",
   name: "infra-lambda-emotions",
   projenrcTs: true,
+  githubOptions: {
+    workflows: false,
+  },
   tsconfig: {
     compilerOptions: {
       baseUrl: ".",
