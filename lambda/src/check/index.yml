@@ -1,0 +1,9 @@
+checkStudent:
+  name: check-student-${opt:stage}
+  role:
+    Fn::ImportValue: ${param:INFRA_NAME}-CheckStudentRoleArn
+  events:
+    - httpApi:
+        method: POST
+        path: /api/check-student
+  handler: ./src/check/handler.check

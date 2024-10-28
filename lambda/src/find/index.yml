@@ -1,0 +1,9 @@
+findStudent:
+  name: find-student-${opt:stage}
+  role:
+    Fn::ImportValue: ${param:INFRA_NAME}-FindStudentRoleArn
+  events:
+    - httpApi:
+        method: POST
+        path: /api/find-student
+  handler: ./src/find/handler.find

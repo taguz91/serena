@@ -1,0 +1,39 @@
+{
+  "name": "emotions-lambda",
+  "version": "1.0.0",
+  "description": "Lambdas to determinate the emotions of students",
+  "scripts": {
+    "lint": "eslint . --ext .ts --max-warnings=0",
+    "deploy:dev": "npm run install:user-layer && serverless deploy --stage dev",
+    "deploy:prod": "npm run install:user-layer && serverless deploy --stage prod",
+    "remove:prod": "npm run install:user-layer && serverless remove --stage prod",
+    "install:user-layer": "cd ./layers/user-layer/ && npm install && npm run build"
+  },
+  "keywords": [
+    "lambda",
+    "serverless",
+    "rekognition"
+  ],
+  "author": "Johnny Garcia",
+  "license": "MIT",
+  "devDependencies": {
+    "@aws-sdk/client-rekognition": "^3.679.0",
+    "@types/aws-lambda": "^8.10.61",
+    "@typescript-eslint/eslint-plugin": "^7.8.0",
+    "@typescript-eslint/parser": "^7.8.0",
+    "esbuild": "^0.20.2",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "prettier": "^3.2.5",
+    "serverless": "^3.36.0",
+    "serverless-esbuild": "^1.52.1",
+    "typescript": "^3.9.7"
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.ts": "eslint --max-warnings=0"
+  }
+}
