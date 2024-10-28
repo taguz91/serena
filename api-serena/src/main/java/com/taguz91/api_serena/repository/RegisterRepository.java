@@ -23,6 +23,9 @@ public interface RegisterRepository extends JpaRepository<Register, String> {
     @Query("SELECT r FROM Register r WHERE r.classroom.id = :idClassroom AND r.status <> 'inscription'")
     Page<Register> findAllByIdClassroom(@Param("idClassroom") String idClassroom, Pageable pageable);
 
+    @Query("SELECT r FROM Register r WHERE r.classroom.id = :idClassroom AND r.status = 'inscription'")
+    Optional<Register> findInscriptionByClassroom(@Param("idClassroom") String idClassroom);
+
     @Query(
             nativeQuery = true,
             value = "select rs.emotion, count(rs.emotion) as count "

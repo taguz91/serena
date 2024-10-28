@@ -18,7 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.stream.Stream;
 
@@ -60,7 +62,7 @@ public class CreateStudentRegisterImp implements CreateStudentRegister {
         registerStudent.setRegister(register);
 
         registerStudent.setStudent(
-                student == null ? this.getStudent() : student
+                student == null ? this.getStudent(register, s3key) : student
         );
 
         RegisterStudent newRegisterStudent = registerStudentRepository.save(registerStudent);
@@ -108,7 +110,28 @@ public class CreateStudentRegisterImp implements CreateStudentRegister {
         studentEmotionRepository.saveAll(studentEmotions.toList());
     }
 
-    private Student getStudent() {
+    private Student getStudent(Register register, String s3KeyTarget) {
+        // find student using the current photo and the list of students
+        Register registerInscription = registerRepository.findInscriptionByClassroom(
+                register.getClassroom().getId()
+        ).orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND, "No existe el registro"));
+
+        List<RegisterStudent> registerStudents = registerStudentRepository.findByIdRegister(
+                registerInscription.getId()
+        );
+
+        List<Map<String, String>> studentsPhotos = registerStudents.stream().map((registerStudent) -> {
+            Map<String, String> option = new HashMap<>();
+            option.put("photo", registerStudent.getPhoto());
+            option.put("idStudent", registerStudent.getStudent().getId());
+
+            return option;
+        }).toList();
+
+        Map<String, Object> request = new HashMap<>();
+        request.put("s3Target", s3KeyTarget);
+        request.put("photos", studentsPhotos);
+
         return this.createStudent();
     }
 
