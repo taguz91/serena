@@ -21,7 +21,7 @@ export class FindStudentRole extends Construct {
       description: "Role for find the student, in inscription records",
       managedPolicies: [
         ManagedPolicy.fromAwsManagedPolicyName(
-          "service-role/AWSLambdaBasicExecutionRole"
+          "service-role/AWSLambdaBasicExecutionRole",
         ),
         new ManagedPolicy(this, "FindStudentPolicy", {
           document: PolicyDocument.fromJson({
@@ -36,6 +36,7 @@ export class FindStudentRole extends Construct {
                 Sid: "AllowCompareFaces",
                 Effect: "Allow",
                 Action: ["rekognition:CompareFaces"],
+                Resource: "*",
               },
             ],
           }),

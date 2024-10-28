@@ -21,7 +21,7 @@ export class CheckStudentRole extends Construct {
       description: "Role for check the student emotion in the class",
       managedPolicies: [
         ManagedPolicy.fromAwsManagedPolicyName(
-          "service-role/AWSLambdaBasicExecutionRole"
+          "service-role/AWSLambdaBasicExecutionRole",
         ),
         new ManagedPolicy(this, "FindStudentPolicy", {
           document: PolicyDocument.fromJson({
@@ -36,6 +36,7 @@ export class CheckStudentRole extends Construct {
                 Sid: "AllowDetectFacesEmotions",
                 Effect: "Allow",
                 Action: ["rekognition:DetectFaces"],
+                Resource: "*",
               },
             ],
           }),

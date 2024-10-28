@@ -1,0 +1,186 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot 1`] = `
+{
+  "Outputs": {
+    "CheckStudentRoleOutput": {
+      "Description": "Role for check student role",
+      "Export": {
+        "Name": "test-CheckStudentRoleArn",
+      },
+      "Value": {
+        "Fn::GetAtt": [
+          "CheckStudentRole6C985858",
+          "Arn",
+        ],
+      },
+    },
+    "FindStudentRoleOutput": {
+      "Description": "Role for find student role",
+      "Export": {
+        "Name": "test-FindStudentRoleArn",
+      },
+      "Value": {
+        "Fn::GetAtt": [
+          "FindStudentRole32260A61",
+          "Arn",
+        ],
+      },
+    },
+  },
+  "Parameters": {
+    "BootstrapVersion": {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+  },
+  "Resources": {
+    "CheckStudentRole6C985858": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Description": "Role for check the student emotion in the class",
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+          {
+            "Ref": "CheckStudentRoleFindStudentPolicy2D3A0E96",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "CheckStudentRoleFindStudentPolicy2D3A0E96": {
+      "Properties": {
+        "Description": "",
+        "Path": "/",
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "S3:GetObject",
+              "Effect": "Allow",
+              "Resource": "arn:aws:s3:::test/*",
+              "Sid": "AllowReadFilesFromS3",
+            },
+            {
+              "Action": "rekognition:DetectFaces",
+              "Effect": "Allow",
+              "Resource": "*",
+              "Sid": "AllowDetectFacesEmotions",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::ManagedPolicy",
+    },
+    "FindStudentRole32260A61": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Description": "Role for find the student, in inscription records",
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+          {
+            "Ref": "FindStudentRoleFindStudentPolicyDFC73662",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "FindStudentRoleFindStudentPolicyDFC73662": {
+      "Properties": {
+        "Description": "",
+        "Path": "/",
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "S3:GetObject",
+              "Effect": "Allow",
+              "Resource": "arn:aws:s3:::test/*",
+              "Sid": "AllowReadFilesFromS3",
+            },
+            {
+              "Action": "rekognition:CompareFaces",
+              "Effect": "Allow",
+              "Resource": "*",
+              "Sid": "AllowCompareFaces",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::ManagedPolicy",
+    },
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;
