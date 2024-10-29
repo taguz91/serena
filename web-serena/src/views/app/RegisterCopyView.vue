@@ -34,10 +34,7 @@ const { isLoading, register } = useRegister(route.params.id.toString())
 
 const url = computed(() => {
   const href = router.resolve({
-    name:
-      register.value?.status === 'inscription'
-        ? 'public-register-inscription'
-        : 'classroom-register',
+    name: register.value?.status === 'inscription' ? 'public-register-check' : 'classroom-register',
     params: {
       id: route.params.id.toString()
     }
