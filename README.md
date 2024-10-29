@@ -35,14 +35,24 @@ Entities
   - Academic Period
   - Teacher
   - Subject
+- Inscription
+  - Classroom
+  - students
+  - photos
+  - photo
 - Register
   - date
   - status
   - Classroom
 - Register Student
+  - Register
   - Student
   - photo
   - emotion
+- Student Emotion
+  - RegisterStudent
+  - emotion
+  - percentage
 - Class summary
   - date
   - Classroom
