@@ -5,6 +5,7 @@
   "scripts": {
     "lint": "eslint . --ext .ts --max-warnings=0",
     "deploy:dev": "serverless deploy --stage dev",
+    "remove:dev": "serverless remove --stage dev",
     "deploy:prod": "serverless deploy --stage prod",
     "remove:prod": "serverless remove --stage prod"
   },

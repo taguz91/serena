@@ -25,7 +25,8 @@ export const check = async (event: APIGatewayEvent) => {
         Bucket: process.env.BUCKET_NAME,
         Name: request.s3Key
       }
-    }
+    },
+    Attributes: ["EMOTIONS"]
   };
 
   try {
@@ -36,6 +37,7 @@ export const check = async (event: APIGatewayEvent) => {
 
       return {
         statusCode: 200,
+        headers: { "content-type": "application/json" },
         body: JSON.stringify({
           emotions: detail.Emotions.map(emotion => ({
             type: emotion.Type,
@@ -50,6 +52,7 @@ export const check = async (event: APIGatewayEvent) => {
 
   return {
     statusCode: 200,
+    headers: { "content-type": "application/json" },
     body: JSON.stringify({
       emotions: [
         {

@@ -11,6 +11,7 @@ export const find = async (event: APIGatewayEvent) => {
   if (!request.s3Target) {
     return {
       statusCode: 422,
+      headers: { "content-type": "application/json" },
       body: JSON.stringify({
         message: "The s3Target field is required"
       })
@@ -20,6 +21,7 @@ export const find = async (event: APIGatewayEvent) => {
   if (!request.photos) {
     return {
       statusCode: 422,
+      headers: { "content-type": "application/json" },
       body: JSON.stringify({
         message: "The photos field is required"
       })
@@ -29,6 +31,7 @@ export const find = async (event: APIGatewayEvent) => {
   if (request.photos.length === 0) {
     return {
       statusCode: 422,
+      headers: { "content-type": "application/json" },
       body: JSON.stringify({
         message: "We need at least one photo to search"
       })
@@ -48,7 +51,7 @@ export const find = async (event: APIGatewayEvent) => {
       TargetImage: {
         S3Object: {
           Bucket: process.env.BUCKET_NAME,
-          Name: photo.photo
+          Name: photo
         }
       },
       SimilarityThreshold: 90
@@ -61,11 +64,14 @@ export const find = async (event: APIGatewayEvent) => {
 
       if (result.FaceMatches?.length > 1) {
         console.log(`Check the response exist more faces: ${idStudent}`, result.FaceMatches);
+      } else {
+        console.log(`Result:`, result.FaceMatches);
       }
 
-      if (result.FaceMatches?.[0]) {
+      if (result.FaceMatches?.[0] && result.FaceMatches?.[0]?.Similarity > 90) {
         return {
           statusCode: 200,
+          headers: { "content-type": "application/json" },
           body: JSON.stringify({
             idStudent
           })
@@ -78,6 +84,7 @@ export const find = async (event: APIGatewayEvent) => {
 
   return {
     statusCode: 404,
+    headers: { "content-type": "application/json" },
     body: JSON.stringify({
       message: "We couldn't find any matches"
     })

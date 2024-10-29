@@ -25,6 +25,7 @@ custom:
 
 provider:
   name: aws
+  region: us-east-2
   runtime: nodejs18.x
   logRetentionInDays: 90
   versionFunctions: false
@@ -46,7 +47,7 @@ provider:
     shouldStartNameWithService: true
   environment:
     stage: ${opt:stage}
-    BUCKET_NAME:
+    BUCKET_NAME: ${param:BUCKET_NAME}
 
 functions:
   - ${file(./src/check/index.yml)}
