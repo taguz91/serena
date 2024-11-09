@@ -22,6 +22,10 @@ public class StudentRequest implements Serializable {
     private String name;
 
     @NotEmpty
+    @Pattern(regexp = "[^.]{2,200}")
+    private String lastname;
+
+    @NotEmpty
     private String identification;
 
     @NotEmpty
@@ -33,6 +37,7 @@ public class StudentRequest implements Serializable {
         return new Student()
                 .setId((new NanoCombCreator()).create().toString())
                 .setName(name)
+                .setLastname(lastname)
                 .setIdentification(identification)
                 .setGender(gender)
                 .setReference(reference);

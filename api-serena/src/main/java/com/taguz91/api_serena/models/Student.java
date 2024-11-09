@@ -39,9 +39,9 @@ public class Student extends BaseEntity implements Serializable {
 
     private String name;
 
+    private String lastname;
+
     private String gender;
-
-
 
     @Column(nullable = true)
     private String reference;

@@ -1,6 +1,7 @@
 package com.taguz91.api_serena.controller;
 
 import com.amazonaws.services.eks.model.NotFoundException;
+import com.taguz91.api_serena.api.exception.ResourceNotFoundException;
 import com.taguz91.api_serena.api.request.CreateDuplicateRegisterStudentRequest;
 import com.taguz91.api_serena.api.request.CreateRegisterStudentRequest;
 import com.taguz91.api_serena.api.response.MessageResponse;
@@ -132,12 +133,26 @@ public class RegisterStudentController {
                 .body(registerStudent);
     }
 
+    @GetMapping("/exists/inscription/{idRegister}/{idStudent}")
+    public ResponseEntity<RegisterStudent> existInscription(
+            @PathVariable(value = "idRegister") String idRegister,
+            @PathVariable(value = "idStudent") String idStudent
+    ) {
+        RegisterStudent registerStudent = registerStudentRepository.findInscriptionByIdRegisterAndIdStudent(
+            idRegister,
+            idStudent
+        ).orElseThrow(ResourceNotFoundException::new);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(registerStudent);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<RegisterStudent> one(
             @PathVariable(value = "id") String id
     ) {
         RegisterStudent registerStudent = registerStudentRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("El registro del estudiante no existe"));
+                .orElseThrow(() -> new ResourceNotFoundException("El registro del estudiante no existe"));
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(registerStudent);
@@ -156,7 +171,7 @@ public class RegisterStudentController {
     @GetMapping("/photo/{id}")
     public ResponseEntity<byte[]> showPhoto(@PathVariable(value = "id") String id) throws IOException {
         RegisterStudent registerStudent = registerStudentRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("El registro del estudiante no existe"));
+                .orElseThrow(() -> new ResourceNotFoundException("El registro del estudiante no existe"));
 
         byte[] bytes = downloadImageService.download(registerStudent.getPhoto());
         String[] paths = registerStudent.getPhoto().split("/");

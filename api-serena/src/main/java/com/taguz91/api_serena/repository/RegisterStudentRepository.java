@@ -12,11 +12,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-
 public interface RegisterStudentRepository extends JpaRepository<RegisterStudent, String> {
 
     @Query("SELECT rs FROM RegisterStudent rs WHERE rs.register.id = :idRegister")
     public List<RegisterStudent> findByIdRegister(@Param("idRegister") String idRegister);
+
+    @Query("SELECT rs FROM RegisterStudent rs WHERE rs.register.id = :idRegister AND rs.student.id = :idStudent AND rs.status = 'inscription'")
+    public Optional<RegisterStudent> findInscriptionByIdRegisterAndIdStudent(
+            @Param("idRegister") String idRegister,
+            @Param("idStudent") String idStudent
+    );
 
     @Query("SELECT rs FROM RegisterStudent rs WHERE rs.register.id = :idRegister AND rs.register.classroom.teacher.id = :idTeacher")
     public List<RegisterStudent> findByIdRegisterAndTeacher(

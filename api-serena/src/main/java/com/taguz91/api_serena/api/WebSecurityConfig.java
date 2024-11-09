@@ -35,6 +35,10 @@ public class WebSecurityConfig {
                 "/api",
                 "/api/v1/login",
                 "/api/v1/create-account",
+                "/api/v1/register-student/create/inscription",
+                "/api/v1/register/{id}",
+                "/api/v1/student/identification/{id}",
+                "/api/v1/student",
                 "/v3/api-docs/**",
                 "/swagger-ui/**",
                 "/swagger-ui.html"
