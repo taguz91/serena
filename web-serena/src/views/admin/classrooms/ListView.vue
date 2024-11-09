@@ -67,6 +67,10 @@ const columns: DataTableColumns<Classroom> = [
     key: 'subject.name'
   },
   {
+    title: 'Curso',
+    key: 'name'
+  },
+  {
     title: 'Acciones',
     key: 'actions',
     width: 125,

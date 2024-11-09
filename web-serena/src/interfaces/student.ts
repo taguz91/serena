@@ -25,6 +25,7 @@ export interface StudentForm {
   id?: string
   identification: string
   name: string
+  lastname: string
   gender: string
 }
 

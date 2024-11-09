@@ -35,7 +35,11 @@
           </NFormItem>
 
           <NFormItem path="name" label="Nombre">
-            <NInput v-model:value="studentForm.name" type="text" placeholder="John Doe" />
+            <NInput v-model:value="studentForm.name" type="text" placeholder="John" />
+          </NFormItem>
+
+          <NFormItem path="lastname" label="Apellido">
+            <NInput v-model:value="studentForm.lastname" type="text" placeholder="Doe" />
           </NFormItem>
 
           <NFormItem path="gender" label="Sexo">
@@ -85,7 +89,18 @@
         </div>
 
         <div v-else class="flex justify-center gap-2">
-          <NButton type="primary" @click="duplicateRegister"> Confirmar inscripción </NButton>
+          <NButton
+            v-if="checkedExistInscription === 'error'"
+            type="primary"
+            @click="duplicateRegister"
+          >
+            Confirmar inscripción
+          </NButton>
+
+          <p v-else>
+            <span class="font-semibold"> Ya tienes una inscripción vigente </span>
+            {{ registerStudent?.createdAt }}
+          </p>
 
           <NButton type="primary" @click="redirectToRegister"> Actualizar fotografía </NButton>
         </div>
@@ -102,7 +117,10 @@ import SmallSpinner from '@/components/shared/SmallSpinner.vue'
 import PublicLayout from '@/components/layouts/PublicLayout.vue'
 import { NButton, NForm, type FormInst, type FormRules, NFormItem, NInput, NRadio } from 'naive-ui'
 import { ref, watch } from 'vue'
-import { useRegisterStudentInscription } from '@/composable/register/useRegisterStudentInscription'
+import {
+  useExistsRegisterStudentInscription,
+  useRegisterStudentInscription
+} from '@/composable/register/useRegisterStudentInscription'
 import { useRegisterStudentDuplicate } from '@/composable/register/useRegisterStudentDuplicate'
 import { useStudentInscription } from '@/composable/students/useStudentInscription'
 
@@ -132,12 +150,14 @@ const formRef = ref<FormInst | null>()
 const formStudent = ref<FormInst | null>()
 const loading = ref(false)
 const checked = ref<'error' | 'success' | 'pending' | ''>('')
+const checkedExistInscription = ref<'error' | 'success' | 'pending' | ''>('')
 const identification = ref<string>('')
 
 const handleValidateButtonClick = async (e: MouseEvent) => {
   e.preventDefault()
 
   formRef.value?.validate(async (errors) => {
+    loading.value = true
     checked.value = ''
     confirmation.value = false
     if (!errors) {
@@ -147,7 +167,11 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
 
       if (status == 'error') {
         studentForm.value.identification = identification.value
+      } else {
+        checkedExistInscription.value = await searchRegisterStudent()
       }
+
+      loading.value = false
     }
   })
 }
@@ -179,6 +203,11 @@ watch(student, () => {
     console.log('No student')
   }
 })
+
+const { registerStudent, search: searchRegisterStudent } = useExistsRegisterStudentInscription(
+  route.params.id.toString(),
+  student
+)
 
 const redirectToRegister = () => {
   router.push({

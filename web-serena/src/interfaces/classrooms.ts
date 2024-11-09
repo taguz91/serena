@@ -8,6 +8,7 @@ export interface Classroom {
   createdBy: string
   updatedBy?: string
   id: string
+  name: string
   academicPeriod: AcademicPeriod
   teacher: Teacher
   subject: Subject
@@ -18,4 +19,5 @@ export interface ClassroomForm {
   idAcademicPeriod: string
   idTeacher: string
   idSubject: string
+  name: string
 }

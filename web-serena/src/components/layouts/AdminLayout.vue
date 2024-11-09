@@ -108,21 +108,21 @@ const menuOptions: MenuOption[] = [
     key: 'registers',
     label: renderLink('registers', 'Registros'),
     icon: renderIcon(ListCheck)
-  },
-  {
-    key: 'spacer',
-    label: 'Sincronización',
-    disabled: true
-  },
-  {
-    key: 'sync-students',
-    label: renderLink('sync-students', 'Estudiantes'),
-    icon: renderIcon(File)
-  },
-  {
-    key: 'sync-enroll',
-    label: renderLink('sync-enroll', 'Matriculas'),
-    icon: renderIcon(CalendarPlus)
   }
+  // {
+  //   key: 'spacer',
+  //   label: 'Sincronización',
+  //   disabled: true
+  // },
+  // {
+  //   key: 'sync-students',
+  //   label: renderLink('sync-students', 'Estudiantes'),
+  //   icon: renderIcon(File)
+  // },
+  // {
+  //   key: 'sync-enroll',
+  //   label: renderLink('sync-enroll', 'Matriculas'),
+  //   icon: renderIcon(CalendarPlus)
+  // }
 ]
 </script>

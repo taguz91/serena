@@ -16,6 +16,7 @@ export const useStudentInscription = (idRegister: string) => {
 
   const studentForm = ref<StudentForm>({
     name: '',
+    lastname: '',
     identification: '',
     gender: ''
   })
@@ -28,6 +29,7 @@ export const useStudentInscription = (idRegister: string) => {
     if (success) {
       studentForm.value = {
         name: '',
+        lastname: '',
         identification: '',
         gender: ''
       }

@@ -1,5 +1,5 @@
 import { fetchWrapper } from '@/helpers/fetch_wrapper'
-import type { Student } from '@/interfaces'
+import type { RegisterStudent, Student } from '@/interfaces'
 import { useQuery } from '@tanstack/vue-query'
 import { ref, watch, type Ref } from 'vue'
 
@@ -30,6 +30,45 @@ export const useRegisterStudentInscription = (identification: Ref<string>) => {
   return {
     isLoading,
     student,
+
+    // actions
+    async search() {
+      const res = await refetch()
+
+      return res.status
+    }
+  }
+}
+
+const byRegisterIdStudent = async (idRegister: string, idStudent: string) => {
+  const response = await fetchWrapper.get<unknown, RegisterStudent>(
+    `/v1/register-student/exists/inscription/${idRegister}/${idStudent}`
+  )
+
+  return response
+}
+
+export const useExistsRegisterStudentInscription = (
+  idRegister: string,
+  student: Ref<Student | undefined>
+) => {
+  const registerStudent = ref<RegisterStudent | undefined>(undefined)
+
+  const { data, refetch } = useQuery({
+    enabled: false,
+    retry: 0,
+    queryKey: ['exists', 'inscription', idRegister, student],
+    queryFn: () => byRegisterIdStudent(idRegister, student.value?.id || '')
+  })
+
+  watch(data, () => {
+    if (data.value) {
+      registerStudent.value = data.value
+    }
+  })
+
+  return {
+    registerStudent,
 
     // actions
     async search() {

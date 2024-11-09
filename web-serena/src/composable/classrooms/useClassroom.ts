@@ -32,7 +32,8 @@ const updateClassroom = async (classroom: ClassroomForm) => {
 const emptyForm = (): ClassroomForm => ({
   idAcademicPeriod: '',
   idSubject: '',
-  idTeacher: ''
+  idTeacher: '',
+  name: ''
 })
 
 export const useClassroom = (id: Ref<string | undefined>) => {
@@ -62,7 +63,8 @@ export const useClassroom = (id: Ref<string | undefined>) => {
         id: data.value.id,
         idAcademicPeriod: data.value.academicPeriod.id,
         idSubject: data.value.subject.id,
-        idTeacher: data.value.teacher.id
+        idTeacher: data.value.teacher.id,
+        name: data.value.name
       }
     } else {
       classroomForm.value = emptyForm()

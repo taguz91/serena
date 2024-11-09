@@ -51,12 +51,16 @@
         >
         </NSelect>
       </NFormItem>
+
+      <NFormItem label="Nombre" required>
+        <NInput v-model:value="model.name" placeholder="M1A"> </NInput>
+      </NFormItem>
     </NForm>
   </NModal>
 </template>
 
 <script setup lang="ts">
-import { NForm, NFormItem, NIcon, NModal, NSelect, type FormInst } from 'naive-ui'
+import { NForm, NFormItem, NIcon, NInput, NModal, NSelect, type FormInst } from 'naive-ui'
 import { useVModel } from '@vueuse/core'
 import { School } from '@vicons/tabler'
 import { ref, toRef } from 'vue'
