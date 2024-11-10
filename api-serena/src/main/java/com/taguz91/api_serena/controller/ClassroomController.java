@@ -21,7 +21,10 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/classroom")
@@ -117,9 +120,17 @@ public class ClassroomController {
 
     @GetMapping("/summary/{idClassroom}")
     public ResponseEntity<List<ClassroomSummaryGlobal>> emotionSummary(
-            @PathVariable(value = "idClassroom") String idClassroom
+            @PathVariable(value = "idClassroom") String idClassroom,
+            @RequestParam Optional<String> periods
     ) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(classroomRepository.findSummary(idClassroom));
+                .body(
+                        periods.isPresent()
+                        ? classroomRepository.findSummaryByAcademicPeriod(
+                                idClassroom,
+                                new ArrayList<>(Arrays.stream(periods.get().split(",")).toList())
+                        )
+                        : classroomRepository.findSummary(idClassroom)
+                );
     }
 }

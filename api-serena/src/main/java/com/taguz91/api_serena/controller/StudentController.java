@@ -26,6 +26,8 @@ import com.taguz91.api_serena.repository.StudentRepository;
 
 import jakarta.validation.Valid;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -157,22 +159,38 @@ public class StudentController {
 
     @GetMapping("/summary/{idStudent}")
     public ResponseEntity<List<ClassroomSummaryGlobal>> summaryByStudent(
-            @PathVariable(value = "idStudent") String idStudent
+            @PathVariable(value = "idStudent") String idStudent,
+            @RequestParam Optional<String> periods
     ) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(studentRepository.findSummaryByStudent(idStudent));
+                .body(
+                        periods.isPresent()
+                        ? studentRepository.findSummaryByStudentAndAcademicPeriods(
+                                idStudent,
+                                new ArrayList<>(Arrays.stream(periods.get().split(",")).toList())
+                        )
+                        : studentRepository.findSummaryByStudent(idStudent)
+                );
     }
 
     @GetMapping("/summary/{idStudent}/subject/{idSubject}")
     public ResponseEntity<List<ClassroomSummaryGlobal>> summaryByStudentAndSubject(
             @PathVariable(value = "idStudent") String idStudent,
-            @PathVariable(value = "idSubject") String idSubject
+            @PathVariable(value = "idSubject") String idSubject,
+            @RequestParam Optional<String> periods
     ) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(studentRepository.findSummaryByStudentAndSubject(
-                        idStudent,
-                        idSubject
-                ));
+                .body(
+                        periods.isPresent()
+                        ? studentRepository.findSummaryByStudentAndSubjectAndAcademicPeriods(
+                            idStudent,
+                            idSubject,
+                            new ArrayList<>(Arrays.stream(periods.get().split(",")).toList())
+                        ) : studentRepository.findSummaryByStudentAndSubject(
+                                idStudent,
+                                idSubject
+                        )
+                );
     }
 
     @GetMapping("/subjects/{idStudent}")

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,4 +25,18 @@ public interface ClassroomRepository extends JpaRepository<Classroom, String> {
             + "group by rs.emotion"
     )
     public List<ClassroomSummaryGlobal> findSummary(@Param("idClassroom") String idClassroom);
+
+    @Query(
+            nativeQuery = true,
+            value = "select rs.emotion, count(rs.emotion) as count from registers r "
+                    + "join registers_students rs on rs.register_id = r.id "
+                    + "join classrooms c on c.id = r.classroom_id "
+                    + "where r.classroom_id = :idClassroom "
+                    + "and c.academic_period_id IN( :academicPeriods ) "
+                    + "group by rs.emotion"
+    )
+    public List<ClassroomSummaryGlobal> findSummaryByAcademicPeriod(
+            @Param("idClassroom") String idClassroom,
+            @Param("academicPeriods") Collection<String> academicPeriods
+    );
 }

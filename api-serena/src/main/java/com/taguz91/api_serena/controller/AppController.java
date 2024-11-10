@@ -3,6 +3,7 @@ package com.taguz91.api_serena.controller;
 import com.taguz91.api_serena.api.request.LoginRequest;
 import com.taguz91.api_serena.api.request.RegisterTeacherRequest;
 import com.taguz91.api_serena.api.response.MessageResponse;
+import com.taguz91.api_serena.api.response.SessionInfo;
 import com.taguz91.api_serena.models.Teacher;
 import com.taguz91.api_serena.service.contracts.LoginService;
 import com.taguz91.api_serena.service.contracts.RegisterService;
@@ -10,6 +11,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController("")
@@ -50,5 +52,13 @@ public class AppController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(teacher);
+    }
+
+    @GetMapping("/api/v1/session/info")
+    public ResponseEntity<SessionInfo> sessionInfo(
+            @AuthenticationPrincipal Teacher teacher
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(loginService.info(teacher));
     }
 }

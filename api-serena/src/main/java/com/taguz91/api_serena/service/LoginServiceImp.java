@@ -1,17 +1,19 @@
 package com.taguz91.api_serena.service;
 
+import com.taguz91.api_serena.api.exception.ResourceNotFoundException;
 import com.taguz91.api_serena.api.request.LoginRequest;
+import com.taguz91.api_serena.api.response.SessionInfo;
+import com.taguz91.api_serena.models.Classroom;
 import com.taguz91.api_serena.models.Teacher;
+import com.taguz91.api_serena.repository.ClassroomRepository;
 import com.taguz91.api_serena.repository.TeacherRepository;
 import com.taguz91.api_serena.service.contracts.JwtService;
 import com.taguz91.api_serena.service.contracts.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 
-import java.util.Optional;
+import java.util.List;
 
 @Service
 public class LoginServiceImp implements LoginService {
@@ -23,13 +25,15 @@ public class LoginServiceImp implements LoginService {
     private TeacherRepository teacherRepository;
 
     @Autowired
+    private ClassroomRepository classroomRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     public Teacher login(LoginRequest request) {
         Teacher teacher = teacherRepository.findByEmail(
                 request.getEmail()
-        ).orElseThrow(() -> new HttpClientErrorException(HttpStatus.OK, "Correo o contrasena incorrectas"));
-
+        ).orElseThrow(() -> new ResourceNotFoundException("Correo o contrasena incorrectas"));
 
         boolean isValid = passwordEncoder.matches(
                 request.getPassword(),
@@ -37,7 +41,7 @@ public class LoginServiceImp implements LoginService {
         );
 
         if (!isValid) {
-            throw new HttpClientErrorException(HttpStatus.OK, "Correo o contrasena incorrectas");
+            throw new ResourceNotFoundException("Correo o contrasena incorrectas");
         }
 
         // set the new token
@@ -45,5 +49,21 @@ public class LoginServiceImp implements LoginService {
         teacherRepository.save(teacher);
 
         return teacher;
+    }
+
+    @Override
+    public SessionInfo info(Teacher teacher) {
+        List<Classroom> classroomList = classroomRepository.findAllByTeacherAcademicPeriodActive(
+                teacher.getId()
+        );
+
+        SessionInfo sessionInfo = new SessionInfo();
+        sessionInfo.setAcademicPeriods(
+                classroomList.stream()
+                        .map((classroom -> classroom.getAcademicPeriod().getId()))
+                        .toList()
+        );
+
+        return sessionInfo;
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -84,12 +85,42 @@ public interface StudentRepository extends JpaRepository<Student, String> {
                     + "join registers_students rs on rs.register_id = r.id  "
                     + "join classrooms c on c.id = r.classroom_id "
                     + "where rs.student_id = :idStudent "
+                    + "and c.academic_period_id IN( :academicPeriods ) "
+                    + "group by rs.emotion "
+    )
+    public List<ClassroomSummaryGlobal> findSummaryByStudentAndAcademicPeriods(
+            @Param("idStudent") String idStudent,
+            @Param("academicPeriods") Collection<String> academicPeriods
+    );
+
+    @Query(
+            nativeQuery = true,
+            value = "select rs.emotion, count(rs.emotion) as count from registers r "
+                    + "join registers_students rs on rs.register_id = r.id  "
+                    + "join classrooms c on c.id = r.classroom_id "
+                    + "where rs.student_id = :idStudent "
                     + "and c.subject_id = :idSubject "
                     + "group by rs.emotion "
     )
     public List<ClassroomSummaryGlobal> findSummaryByStudentAndSubject(
             @Param("idStudent") String idStudent,
             @Param("idSubject") String idSubject
+    );
+
+    @Query(
+            nativeQuery = true,
+            value = "select rs.emotion, count(rs.emotion) as count from registers r "
+                    + "join registers_students rs on rs.register_id = r.id  "
+                    + "join classrooms c on c.id = r.classroom_id "
+                    + "where rs.student_id = :idStudent "
+                    + "and c.subject_id = :idSubject "
+                    + "and c.academic_period_id IN( :academicPeriods ) "
+                    + "group by rs.emotion "
+    )
+    public List<ClassroomSummaryGlobal> findSummaryByStudentAndSubjectAndAcademicPeriods(
+            @Param("idStudent") String idStudent,
+            @Param("idSubject") String idSubject,
+            @Param("academicPeriods") Collection<String> academicPeriods
     );
 
     @Query(

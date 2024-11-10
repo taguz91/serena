@@ -1,6 +1,5 @@
 package com.taguz91.api_serena.controller;
 
-import com.amazonaws.services.eks.model.NotFoundException;
 import com.taguz91.api_serena.api.exception.ResourceNotFoundException;
 import com.taguz91.api_serena.api.request.CreateDuplicateRegisterStudentRequest;
 import com.taguz91.api_serena.api.request.CreateRegisterStudentRequest;
