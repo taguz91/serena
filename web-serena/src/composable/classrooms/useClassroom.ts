@@ -36,14 +36,14 @@ const emptyForm = (): ClassroomForm => ({
   name: ''
 })
 
-export const useClassroom = (id: Ref<string | undefined>) => {
+export const useClassroom = (id: Ref<string | string[] | undefined>) => {
   const classroom = ref<Classroom | null>(null)
   const classroomForm = ref<ClassroomForm>(emptyForm())
 
   const queryClient = useQueryClient()
   const { isLoading, data } = useQuery({
     queryKey: ['classroom', id],
-    queryFn: () => getClassroom(id.value)
+    queryFn: () => getClassroom(id.value?.toString())
   })
 
   const updateMutation = useMutation({

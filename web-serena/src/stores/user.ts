@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 
 import { fetchWrapper } from '@/helpers/fetch_wrapper'
-import type { Teacher } from '@/interfaces'
+import type { SessionInfo, Teacher } from '@/interfaces'
 import router from '@/router'
 import { delay } from '@/utils'
 
@@ -13,6 +13,7 @@ export const useAuthStore = defineStore({
       returnUrl: null
     }) as {
       user: Teacher | null
+      sessionInfo: SessionInfo | null
       returnUrl: string | null
     },
   actions: {
@@ -20,9 +21,11 @@ export const useAuthStore = defineStore({
       await delay(1000)
 
       const localUser = localStorage.getItem('user')
+      const localInfo = localStorage.getItem('sessionInfo')
 
-      if (localUser) {
+      if (localUser && localInfo) {
         this.user = JSON.parse(localUser)
+        this.sessionInfo = JSON.parse(localInfo)
         await delay(1000)
 
         return this.user ?? undefined
@@ -36,8 +39,14 @@ export const useAuthStore = defineStore({
         })
         this.user = user
 
+        const sessionInfo = await fetchWrapper.get<Record<string, any>, SessionInfo>(
+          `/v1/session/info`
+        )
+        this.sessionInfo = sessionInfo
+
         // changes this to use more secure storage
         localStorage.setItem('user', JSON.stringify(user))
+        localStorage.setItem('sessionInfo', JSON.stringify(sessionInfo))
         router.push(this.returnUrl || '/')
       } catch (error) {
         // const message = useMessage()
@@ -52,6 +61,7 @@ export const useAuthStore = defineStore({
     },
     logout() {
       this.user = null
+      this.sessionInfo = null
       localStorage.removeItem('user')
       router.push('/')
     }

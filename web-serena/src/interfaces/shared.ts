@@ -21,3 +21,7 @@ export interface Summary {
   emotion: string
   count: number
 }
+
+export interface SessionInfo {
+  academicPeriods: string[]
+}
