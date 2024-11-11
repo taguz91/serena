@@ -28,7 +28,7 @@ public class MethodologyEmotion implements Serializable {
     private String id;
 
     @JsonManagedReference(value = "rf_methodology_emotion_emotions")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnore
     private Methodology methodology;
 

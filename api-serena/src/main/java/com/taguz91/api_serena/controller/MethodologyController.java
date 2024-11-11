@@ -9,6 +9,7 @@ import com.taguz91.api_serena.models.MethodologyEmotion;
 import com.taguz91.api_serena.repository.MethodologyEmotionRepository;
 import com.taguz91.api_serena.repository.MethodologyRepository;
 import com.taguz91.api_serena.utils.NanoCombCreator;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,7 +19,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/methodology")
@@ -110,5 +114,19 @@ public class MethodologyController {
         }).toList();
 
         methodologyEmotionRepository.saveAll(methodologyEmotions);
+    }
+
+    @GetMapping("/filter")
+    @Transactional
+    public ResponseEntity<List<Methodology>> findByEmotions(
+            @RequestParam String emotions
+    ) {
+        List<MethodologyEmotion> methodologyEmotions = methodologyEmotionRepository.findByEmotions(
+                new ArrayList<>(Arrays.stream(emotions.split(",")).toList())
+        );
+
+        return ResponseEntity.ok(
+                methodologyEmotions.stream().map(MethodologyEmotion::getMethodology).toList()
+        );
     }
 }
