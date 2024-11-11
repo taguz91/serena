@@ -26,11 +26,10 @@ import { RouterLink, RouterView } from 'vue-router'
 
 import {
   Calendar,
-  CalendarPlus,
   Certificate,
-  File,
   Home,
   LayoutBoard,
+  LayoutBoardSplit,
   ListCheck,
   School,
   User,
@@ -93,6 +92,11 @@ const menuOptions: MenuOption[] = [
     key: 'classrooms',
     label: renderLink('classrooms', 'Clases'),
     icon: renderIcon(School)
+  },
+  {
+    key: 'methodologies',
+    label: renderLink('methodologies', 'Metodologías'),
+    icon: renderIcon(LayoutBoardSplit)
   },
   {
     key: 'spacer',

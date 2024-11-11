@@ -103,6 +103,11 @@ const router = createRouter({
           name: 'classrooms',
           component: () => import('../views/admin/classrooms/ListView.vue')
         },
+        {
+          path: 'methodologies',
+          name: 'methodologies',
+          component: () => import('../views/admin/methodology/ListView.vue')
+        },
 
         // information
         {
