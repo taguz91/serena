@@ -1,34 +1,10 @@
 <template>
   <AppLayout>
     <template #side>
-      <div class="p-4">
-        <p class="font-bold mb-3">Recomendación</p>
+      <div class="p-4 mb-2 border-b" v-for="methodology in methodologies" :key="methodology.id">
+        <p class="font-bold mb-3">{{ methodology.name }}</p>
         <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident, voluptate aperiam
-          debitis aliquam tempore molestiae quidem. Quas doloremque rerum veritatis placeat ipsum
-          asperiores est accusamus. Ullam consectetur ex architecto tenetur.
-        </p>
-
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident, voluptate aperiam
-          debitis aliquam tempore molestiae quidem. Quas doloremque rerum veritatis placeat ipsum
-          asperiores est accusamus. Ullam consectetur ex architecto tenetur.
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident, voluptate aperiam
-          debitis aliquam tempore molestiae quidem. Quas doloremque rerum veritatis placeat ipsum
-          asperiores est accusamus. Ullam consectetur ex architecto tenetur.
-        </p>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident, voluptate aperiam
-          debitis aliquam tempore molestiae quidem. Quas doloremque rerum veritatis placeat ipsum
-          asperiores est accusamus. Ullam consectetur ex architecto tenetur.
-        </p>
-
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Provident, voluptate aperiam
-          debitis aliquam tempore molestiae quidem. Quas doloremque rerum veritatis placeat ipsum
-          asperiores est accusamus. Ullam consectetur ex architecto tenetur.
+          {{ methodology.summary }}
         </p>
       </div>
     </template>
@@ -62,7 +38,7 @@ import { useStudentSubjectsSummary } from '@/composable/students/useStudentSubje
 const route = useRoute()
 const id = toRef(route.params, 'id')
 
-const { summary } = useEmotionSummary(id)
+const { summary, methodologies } = useEmotionSummary(id)
 
 const { subjects } = useStudentSubjectsSummary(id)
 </script>

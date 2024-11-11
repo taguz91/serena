@@ -2,7 +2,7 @@ import { watch, ref, type Ref } from 'vue'
 import { useQuery } from '@tanstack/vue-query'
 
 import { fetchWrapper } from '@/helpers/fetch_wrapper'
-import type { Summary } from '@/interfaces'
+import type { Methodology, Summary } from '@/interfaces'
 import { useAuthStore } from '@/stores/user'
 
 const getSummary = async (id: string, academicPeriods: string) => {
@@ -13,8 +13,17 @@ const getSummary = async (id: string, academicPeriods: string) => {
   return data
 }
 
+const getMethodologies = async (emotions: string) => {
+  const data = await fetchWrapper.get<unknown, Methodology[]>(
+    `/v1/methodology/filter?emotions=${emotions}`
+  )
+
+  return data
+}
+
 export const useEmotionSummary = (id: Ref<string | string[]>) => {
   const summary = ref<Summary[]>([])
+  const methodologies = ref<Methodology[]>([])
   const { sessionInfo } = useAuthStore()
 
   const { isLoading, data } = useQuery({
@@ -22,14 +31,18 @@ export const useEmotionSummary = (id: Ref<string | string[]>) => {
     queryFn: () => getSummary(id.value.toString(), sessionInfo?.academicPeriods.join(',') || '')
   })
 
-  watch(data, () => {
+  watch(data, async () => {
     if (data.value) {
       summary.value = data.value
+      const response = await getMethodologies(data.value.map((item) => item.emotion).join(','))
+
+      methodologies.value = response
     }
   })
 
   return {
     isLoading,
-    summary
+    summary,
+    methodologies
   }
 }
