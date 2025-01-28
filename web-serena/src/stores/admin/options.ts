@@ -7,7 +7,8 @@ export const useOptionStore = defineStore('options', () => {
     'academic-period': [],
     subject: [],
     teacher: [],
-    classroom: []
+    classroom: [],
+    carrera: []
   })
 
   return {

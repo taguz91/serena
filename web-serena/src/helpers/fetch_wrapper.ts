@@ -1,5 +1,8 @@
 import { useAuthStore } from '@/stores/user'
 
+// const HOST = 'http://localhost:8181'
+const HOST = 'https://api-dev.serena-ista.click'
+
 const request = (method: 'GET' | 'POST' | 'PUT' | 'DELETE') => {
   return async <T, R>(url: string, data: T | undefined = undefined) => {
     const requestOptions: RequestInit = {
@@ -14,7 +17,7 @@ const request = (method: 'GET' | 'POST' | 'PUT' | 'DELETE') => {
       requestOptions.body = JSON.stringify(data)
     }
 
-    return fetch(`http://localhost:8181/api${url}`, requestOptions).then((response) =>
+    return fetch(`${HOST}/api${url}`, requestOptions).then((response) =>
       handleResponse<R>(response)
     )
   }
@@ -32,7 +35,7 @@ const requestFormData = (method: 'POST') => {
 
     requestOptions.body = data
 
-    return fetch(`http://localhost:8181/api${url}`, requestOptions).then((response) =>
+    return fetch(`${HOST}/api${url}`, requestOptions).then((response) =>
       handleResponseWithoutLogout<R>(response)
     )
   }

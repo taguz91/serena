@@ -167,8 +167,12 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
 
       if (status == 'error') {
         studentForm.value.identification = identification.value
-      } else {
+      } else if (student.value) {
         checkedExistInscription.value = await searchRegisterStudent()
+      } else {
+        studentForm.value.identification = identification.value
+        checkedExistInscription.value = 'error'
+        checked.value = 'error'
       }
 
       loading.value = false
