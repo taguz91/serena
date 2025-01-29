@@ -47,8 +47,6 @@ public class Teacher extends BaseEntity implements Serializable, UserDetails {
 
     private String email;
 
-
-
     @Column(name = "is_active", columnDefinition = "BOOLEAN DEFAULT  'false' ")
     private Boolean isActive;
 
