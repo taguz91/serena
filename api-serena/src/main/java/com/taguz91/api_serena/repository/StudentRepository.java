@@ -28,7 +28,7 @@ public interface StudentRepository extends JpaRepository<Student, String> {
     Optional<Student> findByIdentification(@Param("identification") String identification);
 
     @Query(
-            value = "SELECT s.id, s.identification, s.name, s.lastname, s.gender, s.reference, s.created_at, s.updated_at, s.created_by, s.updated_by, s.is_deleted "
+            value = "SELECT distinct s.id, s.identification, s.name, s.lastname, s.gender, s.reference, s.created_at, s.updated_at, s.created_by, s.updated_by, s.is_deleted "
                     + QUERY_BY_TEACHER
                     +  " ORDER BY s.name ASC LIMIT :limitParam OFFSET :offset "
                     + "\n-- #pageable\n",
