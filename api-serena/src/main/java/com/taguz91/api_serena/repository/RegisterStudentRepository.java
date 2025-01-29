@@ -1,5 +1,6 @@
 package com.taguz91.api_serena.repository;
 
+import com.taguz91.api_serena.api.response.ClassroomSummaryGlobal;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,6 +9,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import com.taguz91.api_serena.models.RegisterStudent;
 
+import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,5 +55,69 @@ public interface RegisterStudentRepository extends JpaRepository<RegisterStudent
             @Param("offset") long offset,
             @Param("limitParam") int limitParam,
             Pageable pageable
+    );
+
+    @Query(
+            nativeQuery = true,
+            value = "select rs.emotion, count(rs.emotion) as count from registers r "
+                    + "join registers_students rs on rs.register_id = r.id "
+                    + "join classrooms c on c.id = r.classroom_id "
+                    + "where c.teacher_id = :idTeacher "
+                    + "and c.academic_period_id IN( :academicPeriods ) "
+                    + "group by rs.emotion"
+    )
+    public List<ClassroomSummaryGlobal> findSummaryByTeacherAndPeriods(
+            @Param("idTeacher") String idTeacher,
+            @Param("academicPeriods") Collection<String> academicPeriods
+    );
+
+    @Query(
+            nativeQuery = true,
+            value = "select rs.emotion, count(rs.emotion) as count from registers r "
+                    + "join registers_students rs on rs.register_id = r.id "
+                    + "join classrooms c on c.id = r.classroom_id "
+                    + "where c.subject_id = :idSubject "
+                    + "and c.academic_period_id IN( :academicPeriods ) "
+                    + "group by rs.emotion"
+    )
+    public List<ClassroomSummaryGlobal> findSummaryBySubjectAndPeriods(
+            @Param("idSubject") String idSubject,
+            @Param("academicPeriods") Collection<String> academicPeriods
+    );
+
+    @Query(
+            nativeQuery = true,
+            value = "select rs.emotion, count(rs.emotion) as count from registers r "
+                    + "join registers_students rs on rs.register_id = r.id "
+                    + "join classrooms c on c.id = r.classroom_id "
+                    + "where c.subject_id = :idSubject "
+                    + "and c.academic_period_id IN( :academicPeriods ) "
+                    + "and r.created_at >= :start "
+                    + "and r.created_at <= :end "
+                    + "group by rs.emotion"
+    )
+    public List<ClassroomSummaryGlobal> findSummaryBySubjectAndPeriodsAndDates(
+            @Param("idSubject") String idSubject,
+            @Param("academicPeriods") Collection<String> academicPeriods,
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end
+    );
+
+    @Query(
+            nativeQuery = true,
+            value = "select rs.emotion, count(rs.emotion) as count from registers r "
+                    + "join registers_students rs on rs.register_id = r.id "
+                    + "join classrooms c on c.id = r.classroom_id "
+                    + "where c.teacher_id = :idTeacher "
+                    + "and c.academic_period_id IN( :academicPeriods ) "
+                    + "and r.created_at >= :start "
+                    + "and r.created_at <= :end "
+                    + "group by rs.emotion"
+    )
+    public List<ClassroomSummaryGlobal> findSummaryByTeacherAndPeriodsAndDates(
+            @Param("idTeacher") String idTeacher,
+            @Param("academicPeriods") Collection<String> academicPeriods,
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end
     );
 }

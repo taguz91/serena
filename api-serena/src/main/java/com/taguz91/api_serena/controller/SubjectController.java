@@ -2,11 +2,14 @@ package com.taguz91.api_serena.controller;
 
 import com.amazonaws.services.eks.model.NotFoundException;
 import com.taguz91.api_serena.api.request.SubjectRequest;
+import com.taguz91.api_serena.api.response.ClassroomSummaryGlobal;
 import com.taguz91.api_serena.api.response.MessageResponse;
 import com.taguz91.api_serena.api.response.OptionResponse;
 import com.taguz91.api_serena.api.response.PageResponse;
 import com.taguz91.api_serena.models.Subject;
+import com.taguz91.api_serena.repository.RegisterStudentRepository;
 import com.taguz91.api_serena.repository.SubjectRepository;
+import com.taguz91.api_serena.utils.Shared;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,6 +19,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -24,6 +30,8 @@ public class SubjectController {
 
     @Autowired
     private SubjectRepository subjectRepository;
+    @Autowired
+    private RegisterStudentRepository registerStudentRepository;
 
     @GetMapping("")
     public ResponseEntity<PageResponse<Subject>> index(
@@ -89,5 +97,36 @@ public class SubjectController {
     {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(subjectRepository.findAllOptions());
+    }
+
+    @GetMapping("/summary/{idSubject}")
+    public ResponseEntity<List<ClassroomSummaryGlobal>> summarySubject(
+            @PathVariable(value = "idSubject") String idSubject,
+            @RequestParam String periods
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(registerStudentRepository.findSummaryBySubjectAndPeriods(
+                        idSubject,
+                        new ArrayList<>(Arrays.stream(periods.split(",")).toList())
+                ));
+    }
+
+    @GetMapping("/summary/{idSubject}/{start}/{end}")
+    public ResponseEntity<List<ClassroomSummaryGlobal>> summarySubject(
+            @PathVariable(value = "idSubject") String idSubject,
+            @RequestParam String periods,
+            @PathVariable(value = "start") String start,
+            @PathVariable(value = "end") String end
+    ) {
+        LocalDateTime startDate = Shared.startDate(start);
+        LocalDateTime endDate = Shared.endDate(end);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(registerStudentRepository.findSummaryBySubjectAndPeriodsAndDates(
+                        idSubject,
+                        new ArrayList<>(Arrays.stream(periods.split(",")).toList()),
+                        startDate,
+                        endDate
+                ));
     }
 }

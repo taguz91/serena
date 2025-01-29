@@ -10,6 +10,7 @@ import com.taguz91.api_serena.models.Classroom;
 import com.taguz91.api_serena.models.Subject;
 import com.taguz91.api_serena.models.Teacher;
 import com.taguz91.api_serena.repository.ClassroomRepository;
+import com.taguz91.api_serena.utils.Shared;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -132,5 +134,24 @@ public class ClassroomController {
                         )
                         : classroomRepository.findSummary(idClassroom)
                 );
+    }
+
+    @GetMapping("/summary/{idClassroom}/{start}/{end}")
+    public ResponseEntity<List<ClassroomSummaryGlobal>> summaryClassByDates(
+            @PathVariable(value = "idClassroom") String idClassroom,
+            @RequestParam String periods,
+            @PathVariable(value = "start") String start,
+            @PathVariable(value = "end") String end
+    ) {
+        LocalDateTime startDate = Shared.startDate(start);
+        LocalDateTime endDate = Shared.endDate(end);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(classroomRepository.findSummaryByAcademicPeriodAndDates(
+                    idClassroom,
+                    new ArrayList<>(Arrays.stream(periods.split(",")).toList()),
+                    startDate,
+                    endDate
+                ));
     }
 }
