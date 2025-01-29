@@ -35,6 +35,12 @@ public interface RegisterStudentRepository extends JpaRepository<RegisterStudent
     @Query("SELECT rs FROM RegisterStudent rs WHERE rs.student.id = :idStudent")
     public List<RegisterStudent> findByIdStudent(@Param("idStudent") String idStudent);
 
+    @Query("SELECT rs FROM RegisterStudent rs WHERE rs.student.id = :idStudent AND rs.register.id = :idRegister")
+    public Optional<RegisterStudent> findByIdStudentAndIdRegister(
+            @Param("idStudent") String idStudent,
+            @Param("idRegister") String idRegister
+    );
+
     @Query(value = "SELECT rs.* FROM registers_students rs WHERE rs.student_id = :idStudent AND rs.status = 'inscription' ORDER BY created_at DESC LIMIT 1", nativeQuery = true)
     public Optional<RegisterStudent> findByLastByIdStudent(@Param("idStudent") String idStudent);
 

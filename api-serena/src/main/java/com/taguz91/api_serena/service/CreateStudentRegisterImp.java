@@ -72,7 +72,13 @@ public class CreateStudentRegisterImp implements CreateStudentRegister {
                 student == null ? this.getStudent(register, s3key) : student
         );
 
-        RegisterStudent newRegisterStudent = registerStudentRepository.save(registerStudent);
+        Optional<RegisterStudent> existRegisterStudent = registerStudentRepository.findByIdStudentAndIdRegister(
+                registerStudent.getStudent().getId(),
+                registerStudent.getRegister().getId()
+        );
+
+        RegisterStudent newRegisterStudent = existRegisterStudent
+                .orElseGet(() -> registerStudentRepository.save(registerStudent));
 
         if (!register.getStatus().equals("inscription")) {
             saveEmotionDetails(newRegisterStudent, newRegisterStudent.getEmotion());
