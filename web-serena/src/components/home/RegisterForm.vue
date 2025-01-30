@@ -1,17 +1,13 @@
 <template>
   <div class="bg-white w-full py-10 px-14 rounded-l-lg">
-    <p class="text-xl font-bold text-center mb-1">Ingresar</p>
+    <p class="text-xl font-bold text-center mb-1">Registrarse</p>
     <p class="text-slate-500 mb-6 text-center mx-2">
-      Ingresa tu correo y contraseña para continuar, si no tienes cuenta puedes crear
+      Ingresa el correo y validaremos que exista una cuenta pendiente de crear contraseña.
     </p>
 
     <NForm ref="formRef" :rules="rules" :model="model">
       <NFormItem path="email" label="Email">
         <NInput v-model:value="model.email" type="text" />
-      </NFormItem>
-
-      <NFormItem path="password" label="Contraseña">
-        <NInput v-model:value="model.password" type="password" />
       </NFormItem>
 
       <div class="flex justify-end">
@@ -26,7 +22,7 @@
       </div>
 
       <div class="flex justify-start mt-2 underline text-blue-400">
-        <RouterLink to="register"> Registrarse </RouterLink>
+        <RouterLink to="home"> Ya tengo cuenta, regresar </RouterLink>
       </div>
     </NForm>
   </div>
@@ -45,7 +41,7 @@ const formRef = ref<FormInst | null>()
 
 const model = ref({
   email: null,
-  password: null
+  password: '******'
 })
 const loading = ref(false)
 
@@ -55,11 +51,6 @@ const rules: FormRules = {
     trigger: ['blur'],
     message: 'Ingresa un correo valido',
     type: 'email'
-  },
-  password: {
-    required: true,
-    trigger: ['blur'],
-    message: 'Ingresa la contraseña'
   }
 }
 
