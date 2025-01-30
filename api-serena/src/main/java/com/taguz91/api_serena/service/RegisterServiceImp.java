@@ -13,6 +13,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -58,7 +59,7 @@ public class RegisterServiceImp implements RegisterService {
                     return List.of(new FieldError(
                             "teacher",
                             "email",
-                            "El email ya fue utiliza"
+                            "El email ya fue utilizado"
                     ));
                 }
 
@@ -74,6 +75,8 @@ public class RegisterServiceImp implements RegisterService {
         teacher.setPassword(
                 passwordEncoder.encode(teacher.getPassword())
         );
+        // to avoid change the password
+        teacher.setLastLogin(LocalDateTime.now());
 
         return teacherRepository.save(teacher);
     }

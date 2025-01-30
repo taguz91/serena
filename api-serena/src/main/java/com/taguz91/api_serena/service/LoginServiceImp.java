@@ -37,6 +37,7 @@ public class LoginServiceImp implements LoginService {
         ).orElseThrow(() -> new ResourceNotFoundException("Correo o contrasena incorrectas"));
 
         if (teacher.getPassword().equals("123")) {
+            teacher.setToken(jwtService.toToken(teacher));
             return teacher;
         }
 
