@@ -47,6 +47,12 @@ const router = createRouter({
           path: 'register/copy/:id',
           name: 'classroom-register-copy',
           component: () => import('../views/app/RegisterCopyView.vue')
+        },
+
+        {
+          path: 'history/:id',
+          name: 'history-classroom-registers',
+          component: () => import('../views/app/RegisterHistoryView.vue')
         }
       ]
     },

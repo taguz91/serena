@@ -1,7 +1,7 @@
 <template>
   <AppLayout>
     <template #side>
-      <StudentList />
+      <StudentTeacherList />
     </template>
 
     <div class="p-5 grid grid-cols-2 gap-4">
@@ -52,12 +52,12 @@ import { NButton, NCard, NDropdown, NIcon } from 'naive-ui'
 import { User, LayoutBoard, DotsVertical, Clipboard } from '@vicons/tabler'
 
 import AppLayout from '@/components/layouts/AppLayout.vue'
-import StudentList from '@/components/shared/StudentList.vue'
 import { useCurrentClassrooms } from '@/composable/classrooms/useCurrentClassrooms'
 import { userCreateRegister } from '@/composable/register/useRegister'
 import type { Classroom } from '@/interfaces'
 import type { DropdownMixedOption } from 'naive-ui/es/dropdown/src/interface'
 import { h, type Component } from 'vue'
+import StudentTeacherList from '@/components/shared/StudentTeacherList.vue'
 
 const router = useRouter()
 const { classrooms } = useCurrentClassrooms()
@@ -66,6 +66,15 @@ const { idClassroomCreating, create } = userCreateRegister()
 const goClassroom = (id: string) => {
   router.push({
     name: 'classroom-report',
+    params: {
+      id
+    }
+  })
+}
+
+const goHistory = (id: string) => {
+  router.push({
+    name: 'history-classroom-registers',
     params: {
       id
     }
@@ -102,6 +111,9 @@ const handleSelect = (classroom: Classroom, key: string | number) => {
     case 'inscription':
       createInscription(classroom)
       break
+    case 'history':
+      goHistory(classroom.id)
+      break
   }
 }
 
@@ -114,6 +126,11 @@ const options: DropdownMixedOption[] = [
   {
     label: 'Crear inscripción',
     key: 'inscription',
+    icon: renderIcon(Clipboard)
+  },
+  {
+    label: 'Ver historial',
+    key: 'history',
     icon: renderIcon(Clipboard)
   }
 ]

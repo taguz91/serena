@@ -10,9 +10,10 @@ import { RouterLink } from 'vue-router'
 import { User } from '@vicons/tabler'
 
 import { NIcon, NMenu, type MenuOption } from 'naive-ui'
-import { useStudentsTeacher } from '@/composable/students/useStudents'
 
-const { students } = useStudentsTeacher()
+import type { Student } from '@/interfaces'
+
+const props = defineProps<{ students: Student[] }>()
 
 const renderIcon = (icon: Component) => {
   return () => h(NIcon, null, { default: () => h(icon) })
@@ -35,7 +36,7 @@ const renderLink = (to: string, label: string, id: string) => {
 }
 
 const menuOptions = computed(() => {
-  return students.value.map((student): MenuOption => {
+  return props.students.map((student): MenuOption => {
     return {
       key: student.id,
       label: renderLink('student-report', student.name, student.id),
