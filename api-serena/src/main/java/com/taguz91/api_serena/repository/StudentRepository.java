@@ -43,6 +43,23 @@ public interface StudentRepository extends JpaRepository<Student, String> {
     );
 
     @Query(
+            value = "SELECT distinct s.id, s.identification, s.name, s.lastname, s.gender, s.reference, s.created_at, s.updated_at, s.created_by, s.updated_by, s.is_deleted "
+                    + " FROM public.students s "
+                    + "join registers_students rs on rs.student_id = s.id "
+                    + "join registers r on r.id  = rs.register_id "
+                    + "where r.classroom_id = :idClassroom "
+                    +  " ORDER BY s.name ",
+            countQuery = "SELECT count(*) " + " FROM public.students s "
+                    + "join registers_students rs on rs.student_id = s.id "
+                    + "join registers r on r.id  = rs.register_id "
+                    + "where r.classroom_id = :idClassroom ",
+            nativeQuery = true
+    )
+    List<Student> findByClassroom(
+            @Param("idClassroom") String idClassroom
+    );
+
+    @Query(
             value = "SELECT s.id as value, s.name as label "
                     + QUERY_BY_TEACHER
                     +  " ORDER BY s.name ASC",

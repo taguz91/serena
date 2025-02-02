@@ -20,7 +20,7 @@ public interface RegisterRepository extends JpaRepository<Register, String> {
     @Query("SELECT r FROM Register r WHERE r.classroom.id = :idClassroom AND r.status = :status")
     Optional<Register> findByIdClassroomAndStatus(@Param("idClassroom") String idClassroom, @Param("status") String status);
 
-    @Query("SELECT r FROM Register r WHERE r.classroom.id = :idClassroom AND r.status <> 'inscription'")
+    @Query("SELECT r FROM Register r WHERE r.classroom.id = :idClassroom AND r.status <> 'inscription' ORDER BY r.createdAt DESC")
     Page<Register> findAllByIdClassroom(@Param("idClassroom") String idClassroom, Pageable pageable);
 
     @Query("SELECT r FROM Register r WHERE r.classroom.id = :idClassroom AND r.status = 'inscription'")

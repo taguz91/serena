@@ -200,4 +200,12 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(studentRepository.findSubjects(idStudent));
     }
+
+    @GetMapping("/classroom/{idClassroom}")
+    public ResponseEntity<List<Student>> listByClassroom(
+            @PathVariable(value = "idClassroom") String idClassroom
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(studentRepository.findByClassroom(idClassroom));
+    }
 }
