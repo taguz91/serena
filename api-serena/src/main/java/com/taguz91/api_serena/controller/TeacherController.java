@@ -1,17 +1,17 @@
 package com.taguz91.api_serena.controller;
 
-import com.amazonaws.services.eks.model.NotFoundException;
 import com.taguz91.api_serena.api.request.TeacherRequest;
+import com.taguz91.api_serena.api.request.UpdateRequest;
 import com.taguz91.api_serena.api.response.ClassroomSummaryGlobal;
 import com.taguz91.api_serena.api.response.MessageResponse;
 import com.taguz91.api_serena.api.response.OptionResponse;
 import com.taguz91.api_serena.api.response.PageResponse;
+import com.taguz91.api_serena.models.RegisterStudent;
 import com.taguz91.api_serena.models.Teacher;
 import com.taguz91.api_serena.repository.RegisterStudentRepository;
 import com.taguz91.api_serena.repository.TeacherRepository;
 import com.taguz91.api_serena.utils.Shared;
 import jakarta.validation.Valid;
-import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,10 +19,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -35,6 +36,8 @@ public class TeacherController {
     private TeacherRepository teacherRepository;
     @Autowired
     private RegisterStudentRepository registerStudentRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping("")
     public ResponseEntity<PageResponse<Teacher>> index(
@@ -63,7 +66,7 @@ public class TeacherController {
             @Valid @RequestBody TeacherRequest request
     ) {
         Teacher teacher = teacherRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("El profesor no existe"));
+                .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND, "El profesor no existe"));
 
         teacher.setName(request.getName());
         teacher.setEmail(request.getEmail());
@@ -80,7 +83,7 @@ public class TeacherController {
             @PathVariable(value = "id") String id
     ) {
         Teacher teacher = teacherRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("El profesor no existe"));
+                .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND, "El profesor no existe"));
 
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -91,6 +94,15 @@ public class TeacherController {
     public ResponseEntity<MessageResponse> delete(
             @PathVariable(value = "id") String id
     ) {
+        List<RegisterStudent> list = registerStudentRepository.findByIdTeacher(
+                id
+        );
+
+        if (list.toArray().length > 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new MessageResponse("Ya tiene registros creados, no se permite eliminar"));
+        }
+
         teacherRepository.deleteById(id);
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -160,5 +172,40 @@ public class TeacherController {
                         startDate,
                         endDate
                 ));
+    }
+
+    @PutMapping("/toggle/activate/{idTeacher}")
+    public ResponseEntity<Teacher> toggleActivation(
+            @PathVariable(value = "idTeacher") String idTeacher
+    ) {
+        Teacher teacher = teacherRepository.findById(idTeacher)
+                .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND, "El profesor no existe"));
+
+        teacher.setIsActive(!teacher.getIsActive());
+
+        teacherRepository.save(teacher);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(teacher);
+    }
+
+    @PutMapping("/change/password/{idTeacher}")
+    public ResponseEntity<Teacher> updatePassword(
+            @PathVariable(value = "idTeacher") String idTeacher,
+            @Valid @RequestBody UpdateRequest request
+    ) {
+        Teacher teacher = teacherRepository.findById(idTeacher)
+                .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND, "El profesor no existe"));
+
+        if (request.getPassword() != null) {
+            teacher.setPassword(
+                    passwordEncoder.encode(request.getPassword())
+            );
+        }
+
+        teacherRepository.save(teacher);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(teacher);
     }
 }

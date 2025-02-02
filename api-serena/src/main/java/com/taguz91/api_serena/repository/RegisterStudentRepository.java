@@ -32,6 +32,11 @@ public interface RegisterStudentRepository extends JpaRepository<RegisterStudent
             @Param("idTeacher") String idTeacher
     );
 
+    @Query("SELECT rs FROM RegisterStudent rs WHERE rs.register.classroom.teacher.id = :idTeacher")
+    public List<RegisterStudent> findByIdTeacher(
+            @Param("idTeacher") String idTeacher
+    );
+
     @Query("SELECT rs FROM RegisterStudent rs WHERE rs.student.id = :idStudent")
     public List<RegisterStudent> findByIdStudent(@Param("idStudent") String idStudent);
 

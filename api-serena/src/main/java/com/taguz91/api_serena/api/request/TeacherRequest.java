@@ -25,7 +25,10 @@ public class TeacherRequest  implements Serializable {
     @Email
     private String  email;
 
+
     private boolean isActive = false;
+
+    private boolean isAdmin = false;
 
     public Teacher toTeacher() {
         return new Teacher()
@@ -33,6 +36,7 @@ public class TeacherRequest  implements Serializable {
                 .setName(name)
                 .setEmail(email)
                 .setIsActive(isActive)
+                .setIsAdmin(isAdmin)
                 .setPassword("123");
     }
 }
