@@ -22,12 +22,18 @@
   </NPageHeader>
 
   <FormView v-model="show" :id="currentId" @update:model-value="toggleModal" />
+
+  <FormChangePassword
+    v-model="showChangePassword"
+    :id="currentId"
+    @update:model-value="toggleModalChangePassword"
+  />
 </template>
 
 <script setup lang="ts">
 import { h, ref } from 'vue'
 
-import { LockOff, LockAccess, Pencil, Plus, Trash } from '@vicons/tabler'
+import { LockOff, LockAccess, Pencil, Plus, Trash, Lock } from '@vicons/tabler'
 import {
   NButton,
   NDataTable,
@@ -41,18 +47,25 @@ import {
 import FormView from './FormView.vue'
 import { useTeachers } from '@/composable/teachers/useTeachers'
 import type { Teacher } from '@/interfaces'
+import FormChangePassword from './FormChangePassword.vue'
 
 const show = ref(false)
+const showChangePassword = ref(false)
 const currentId = ref<string | undefined>(undefined)
 
 const showModal = () => {
   show.value = true
 }
 
-const { isLoading, teachers, metaData, currentPage, getPage, deleteTeacher } = useTeachers()
+const { isLoading, teachers, metaData, currentPage, getPage, deleteTeacher, activateTeacher } =
+  useTeachers()
 
 const toggleModal = (newShow: boolean) => {
   show.value = newShow
+}
+
+const toggleModalChangePassword = (newShow: boolean) => {
+  showChangePassword.value = newShow
 }
 
 const columns: DataTableColumns<Teacher> = [
@@ -63,6 +76,11 @@ const columns: DataTableColumns<Teacher> = [
   {
     title: 'Correo',
     key: 'email'
+  },
+  {
+    title: 'Rol',
+    key: 'isAdmin',
+    render: (row) => (row.isAdmin ? 'Administrador' : 'Docente')
   },
   {
     title: 'Acciones',
@@ -77,7 +95,7 @@ const columns: DataTableColumns<Teacher> = [
             type: 'info',
             tertiary: true,
             onClick: () => {
-              console.log('info', row)
+              activateTeacher(row.id)
             }
           },
           {
@@ -97,6 +115,20 @@ const columns: DataTableColumns<Teacher> = [
           },
           {
             icon: () => h(NIcon, null, { default: () => h(Pencil) })
+          }
+        ),
+        h(
+          NButton,
+          {
+            type: 'info',
+            tertiary: true,
+            onClick: () => {
+              currentId.value = row.id
+              showChangePassword.value = true
+            }
+          },
+          {
+            icon: () => h(NIcon, null, { default: () => h(Lock) })
           }
         ),
         h(

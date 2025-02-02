@@ -63,6 +63,7 @@ export const useAuthStore = defineStore({
       this.user = null
       this.sessionInfo = null
       localStorage.removeItem('user')
+      localStorage.removeItem('appMode')
       router.push('/')
     }
   },

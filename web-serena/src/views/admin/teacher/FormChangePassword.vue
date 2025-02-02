@@ -4,8 +4,8 @@
     :mask-closable="false"
     preset="dialog"
     class="w-[500px]"
-    title="Creación de un nuevo docente"
-    :positive-text="props.id ? 'Actualizar' : 'Crear'"
+    title="Cambiar contraseña"
+    :positive-text="'Actualizar'"
     negative-text="Cancelar"
     @positive-click="onPositiveClick"
     @negative-click="onNegativeClick"
@@ -16,19 +16,9 @@
       </NIcon>
     </template>
 
-    <SmallSpinner v-if="isLoading" />
-
-    <NForm v-else ref="formRef" class="mt-6" :model="model">
-      <NFormItem label="Nombre" required>
-        <NInput v-model:value="model.name" placeholder="Juan Perez" />
-      </NFormItem>
-
-      <NFormItem label="Correo" required>
-        <NInput v-model:value="model.email" placeholder="email@dominio.com" />
-      </NFormItem>
-
-      <NFormItem label="Administrador" required>
-        <NCheckbox v-model:checked="model.isAdmin" />
+    <NForm ref="formRef" class="mt-6" :model="model" :rules="rules">
+      <NFormItem label="Nueva contraseña" required>
+        <NInput v-model:value="model.password" placeholder="********" />
       </NFormItem>
     </NForm>
   </NModal>
@@ -37,12 +27,11 @@
 <script setup lang="ts">
 import { ref, toRef } from 'vue'
 
-import { NCheckbox, NForm, NFormItem, NIcon, NInput, NModal, type FormInst } from 'naive-ui'
+import { NForm, NFormItem, NIcon, NInput, NModal, type FormInst, type FormRules } from 'naive-ui'
 import { useVModel } from '@vueuse/core'
 import { Users } from '@vicons/tabler'
 
-import { useTeacher } from '@/composable'
-import SmallSpinner from '@/components/shared/SmallSpinner.vue'
+import { useTeachers } from '@/composable'
 
 interface Props {
   modelValue: boolean
@@ -53,18 +42,31 @@ const props = withDefaults(defineProps<Props>(), {
   id: undefined
 })
 
+const model = ref({
+  password: ''
+})
+
+const rules: FormRules = {
+  email: {
+    required: true,
+    trigger: ['blur'],
+    message: 'Ingresa un correo valido',
+    type: 'email'
+  }
+}
+
 const id = toRef(props, 'id')
 const emit = defineEmits<{
   (event: 'update:modelValue', value: boolean): void
 }>()
 
 const formRef = ref<FormInst | null>(null)
-const { isLoading, teacherForm: model, save } = useTeacher(id)
+const { updatePassword } = useTeachers()
 
 const show = useVModel(props, 'modelValue', emit)
 
 const onPositiveClick = () => {
-  save(formRef.value)
+  updatePassword(id.value!, model.value.password)
   show.value = false
   emit('update:modelValue', false)
 }

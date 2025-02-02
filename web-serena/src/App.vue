@@ -1,12 +1,14 @@
 <template>
   <NLoadingBarProvider>
     <NMessageProvider>
-      <WrapperView />
+      <NConfigProvider :locale="esAR" :date-locale="dateEnUS">
+        <WrapperView />
+      </NConfigProvider>
     </NMessageProvider>
   </NLoadingBarProvider>
 </template>
 
 <script setup lang="ts">
-import { NLoadingBarProvider, NMessageProvider } from 'naive-ui'
+import { dateEnUS, esAR, NConfigProvider, NLoadingBarProvider, NMessageProvider } from 'naive-ui'
 import WrapperView from './views/WrapperView.vue'
 </script>

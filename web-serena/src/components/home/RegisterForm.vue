@@ -22,7 +22,7 @@
       </div>
 
       <div class="flex justify-start mt-2 underline text-blue-400">
-        <RouterLink to="home"> Ya tengo cuenta, regresar </RouterLink>
+        <RouterLink to="/"> Ya tengo cuenta, regresar </RouterLink>
       </div>
     </NForm>
   </div>

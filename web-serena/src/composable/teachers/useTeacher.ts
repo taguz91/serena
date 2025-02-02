@@ -32,7 +32,8 @@ export const useTeacher = (id: Ref<string | undefined>) => {
   const teacher = ref<Teacher>()
   const teacherForm = ref<TeacherForm>({
     name: '',
-    email: ''
+    email: '',
+    isAdmin: false
   })
 
   const { isLoading, data } = useQuery({
@@ -53,12 +54,14 @@ export const useTeacher = (id: Ref<string | undefined>) => {
         teacherForm.value = {
           id: data.value.id,
           name: data.value.name,
-          email: data.value.email
+          email: data.value.email,
+          isAdmin: data.value.isAdmin ?? false
         }
       } else {
         teacherForm.value = {
           name: '',
-          email: ''
+          email: '',
+          isAdmin: false
         }
       }
     },

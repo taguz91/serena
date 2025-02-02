@@ -102,7 +102,10 @@ onMounted(() => {
   needCreatePassword.value =
     teacher.lastLogin == null || teacher.lastLogin === '' || teacher.lastLogin === undefined
 
-  if (teacher.email.includes('admin@')) {
+  const appMode = localStorage.getItem('appMode')
+
+  // only use admin panel if is admin and  has not selected app mode
+  if (teacher.isAdmin && appMode !== 'app') {
     router.push({ name: 'admin-home' })
     return
   }

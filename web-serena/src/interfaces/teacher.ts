@@ -8,6 +8,7 @@ export interface Teacher {
   name: string
   email: string
   isActive: boolean | undefined
+  isAdmin: boolean | undefined
   lastLogin: string | undefined
   token: string
 }
@@ -16,4 +17,5 @@ export interface TeacherForm {
   id?: string
   name: string
   email: string
+  isAdmin: boolean
 }

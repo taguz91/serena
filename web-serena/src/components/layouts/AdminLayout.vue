@@ -22,11 +22,12 @@
 
 <script setup lang="ts">
 import { h, type Component } from 'vue'
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView, useRouter } from 'vue-router'
 
 import {
   Calendar,
   Certificate,
+  Dashboard,
   Home,
   LayoutBoard,
   LayoutBoardSplit,
@@ -39,6 +40,8 @@ import { NIcon, NMenu, NModalProvider, type MenuOption } from 'naive-ui'
 import AppIcon from '../shared/AppIcon.vue'
 import TopNav from '../shared/TopNav.vue'
 
+const router = useRouter()
+
 const renderIcon = (icon: Component) => {
   return () => h(NIcon, null, { default: () => h(icon) })
 }
@@ -50,6 +53,21 @@ const renderLink = (to: string, label: string) => {
       {
         to: {
           name: to
+        }
+      },
+      { default: () => label }
+    )
+}
+
+const renderLinkButton = (to: string, label: string) => {
+  return () =>
+    h(
+      'button',
+      {
+        class: 'text-left w-full py-2 px-4',
+        onClick: () => {
+          localStorage.setItem('appMode', 'app')
+          router.push({ name: to })
         }
       },
       { default: () => label }
@@ -112,6 +130,16 @@ const menuOptions: MenuOption[] = [
     key: 'registers',
     label: renderLink('registers', 'Registros'),
     icon: renderIcon(ListCheck)
+  },
+  {
+    key: 'spacer',
+    label: 'App',
+    disabled: true
+  },
+  {
+    key: 'go-app',
+    label: renderLinkButton('app-home', 'Registrar asistencia'),
+    icon: renderIcon(Dashboard)
   }
   // {
   //   key: 'spacer',
