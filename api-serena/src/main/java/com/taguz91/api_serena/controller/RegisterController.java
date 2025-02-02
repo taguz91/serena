@@ -30,6 +30,7 @@ import com.taguz91.api_serena.repository.RegisterRepository;
 
 import jakarta.validation.Valid;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,15 +60,18 @@ public class RegisterController {
     public ResponseEntity<Register> create(@Valid @RequestBody RegisterRequest request) {
         Optional<Register> registerExist = registerRepository.findByIdClassroomAndStatus(
                 request.getIdClassroom(),
-                
                 request.getStatus()
         );
 
         if (registerExist.isPresent()) {
-            this.createInscription(request);
+            if (registerExist.get().getCreatedAt().plusMinutes(10).isAfter(LocalDateTime.now())) {
+                this.createInscription(request);
+                return ResponseEntity.status(HttpStatus.OK)
+                        .body(registerExist.get());
+            }
 
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(registerExist.get());
+            registerExist.get().setStatus("expired");
+            registerRepository.save(registerExist.get());
         }
 
         Register register = request.toRegister();
