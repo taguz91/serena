@@ -11,14 +11,14 @@ const byIdentification = async (identification: string) => {
   return response
 }
 
-export const useRegisterStudentInscription = (identification: Ref<string>) => {
+export const useRegisterStudentInscription = (identification: Ref<{ identification: string }>) => {
   const student = ref<Student | undefined>(undefined)
 
   const { isLoading, data, refetch } = useQuery({
     enabled: false,
     retry: 0,
     queryKey: ['student', 'identification', identification],
-    queryFn: () => byIdentification(identification.value)
+    queryFn: () => byIdentification(identification.value.identification)
   })
 
   watch(data, () => {

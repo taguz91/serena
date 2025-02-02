@@ -12,6 +12,8 @@
       <hr class="my-2" />
 
       <p class="font-bold text-lg">{{ register?.createdAt }}</p>
+
+      <NButton @click="copyLink" type="primary"> Copiar link </NButton>
     </DetailContainer>
   </AppLayout>
 </template>
@@ -24,7 +26,7 @@ import AppLayout from '@/components/layouts/AppLayout.vue'
 import StudentCheckList from '@/components/shared/StudentCheckList.vue'
 import { useRegister } from '@/composable/register/useRegister'
 import SmallSpinner from '@/components/shared/SmallSpinner.vue'
-import { NInput } from 'naive-ui'
+import { NButton, NInput } from 'naive-ui'
 import { computed } from 'vue'
 
 const route = useRoute()
@@ -42,4 +44,13 @@ const url = computed(() => {
 
   return `${window.location.origin}${href}`
 })
+
+const copyLink = () => {
+  const input = document.createElement('input')
+  input.value = url.value
+  document.body.appendChild(input)
+  input.select()
+  document.execCommand('copy')
+  document.body.removeChild(input)
+}
 </script>

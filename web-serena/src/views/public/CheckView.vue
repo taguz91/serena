@@ -8,15 +8,15 @@
       <hr class="my-2" />
 
       <div class="w-full mt-10">
-        <NForm ref="formRef" :rules="rules">
+        <NForm ref="formRef" :rules="rules" :model="model">
           <NFormItem label="Identificación/Cédula">
-            <NInput v-model:value="identification" type="text" placeholder="0100000000" />
+            <NInput v-model:value="model.identification" type="text" placeholder="0100000000" />
           </NFormItem>
         </NForm>
 
         <div class="flex justify-end">
           <NButton
-            :disabled="identification === ''"
+            :disabled="model.identification === ''"
             type="primary"
             :loading="loading || isLoadingStudent"
             @click="handleValidateButtonClick"
@@ -63,7 +63,7 @@
 
           <div class="flex justify-end">
             <NButton
-              :disabled="identification === ''"
+              :disabled="model.identification === ''"
               type="primary"
               :loading="isCreating"
               @click="handleCreateStudent"
@@ -115,7 +115,16 @@ import { useRoute, useRouter } from 'vue-router'
 import { useRegister } from '@/composable/register/useRegister'
 import SmallSpinner from '@/components/shared/SmallSpinner.vue'
 import PublicLayout from '@/components/layouts/PublicLayout.vue'
-import { NButton, NForm, type FormInst, type FormRules, NFormItem, NInput, NRadio } from 'naive-ui'
+import {
+  NButton,
+  NForm,
+  type FormInst,
+  type FormRules,
+  NFormItem,
+  NInput,
+  NRadio,
+  useMessage
+} from 'naive-ui'
 import { ref, watch } from 'vue'
 import {
   useExistsRegisterStudentInscription,
@@ -123,9 +132,11 @@ import {
 } from '@/composable/register/useRegisterStudentInscription'
 import { useRegisterStudentDuplicate } from '@/composable/register/useRegisterStudentDuplicate'
 import { useStudentInscription } from '@/composable/students/useStudentInscription'
+import { ecuadorianIdentification } from '@/utils/validators'
 
 const route = useRoute()
 const router = useRouter()
+const message = useMessage()
 const confirmation = ref(false)
 const { duplicate } = useRegisterStudentDuplicate(route.params.id.toString(), () => {
   confirmation.value = true
@@ -140,9 +151,21 @@ const {
 
 const rules: FormRules = {
   identification: {
-    required: true,
-    trigger: ['blur'],
-    message: 'Ingresa la cédula'
+    validator: (rule, value) => {
+      if (!value) {
+        return new Error('La identificación es requerida')
+      }
+
+      if (value.length < 10) {
+        return new Error('La identificación debe tener al menos 10 caracteres')
+      }
+
+      if (!ecuadorianIdentification(value)) {
+        return new Error('La identificación no es válida')
+      }
+
+      return undefined
+    }
   }
 }
 
@@ -151,10 +174,20 @@ const formStudent = ref<FormInst | null>()
 const loading = ref(false)
 const checked = ref<'error' | 'success' | 'pending' | ''>('')
 const checkedExistInscription = ref<'error' | 'success' | 'pending' | ''>('')
-const identification = ref<string>('')
+const model = ref({
+  identification: ''
+})
 
 const handleValidateButtonClick = async (e: MouseEvent) => {
   e.preventDefault()
+
+  if (!ecuadorianIdentification(model.value.identification)) {
+    message.error('La identificación no es válida')
+
+    checked.value = ''
+    confirmation.value = false
+    return
+  }
 
   formRef.value?.validate(async (errors) => {
     loading.value = true
@@ -166,11 +199,11 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
       checked.value = status
 
       if (status == 'error') {
-        studentForm.value.identification = identification.value
+        studentForm.value.identification = model.value.identification
       } else if (student.value) {
         checkedExistInscription.value = await searchRegisterStudent()
       } else {
-        studentForm.value.identification = identification.value
+        studentForm.value.identification = model.value.identification
         checkedExistInscription.value = 'error'
         checked.value = 'error'
       }
@@ -194,11 +227,7 @@ const handleChangeGender = (value: Event) => {
   studentForm.value.gender = (value.target as HTMLInputElement).value
 }
 
-const {
-  isLoading: isLoadingStudent,
-  student,
-  search
-} = useRegisterStudentInscription(identification)
+const { isLoading: isLoadingStudent, student, search } = useRegisterStudentInscription(model)
 
 watch(student, () => {
   if (student) {
