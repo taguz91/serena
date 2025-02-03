@@ -43,7 +43,8 @@
       <div class="mr-10 w-40">
         <h2 class="text-xl font-bold mb-2">Estados</h2>
         <p v-for="emotion in summary" :key="emotion.emotion">
-          <span class="font-bold text-xl">{{ emotion.count }}</span> {{ emotion.emotion }}
+          <span class="font-bold text-xl">{{ emotion.count }}</span>
+          {{ emotionLabel(emotion.emotion) }}
         </p>
       </div>
     </div>
@@ -53,6 +54,7 @@
 <script setup lang="ts">
 import { fetchWrapper } from '@/helpers/fetch_wrapper'
 import type { Register, Summary } from '@/interfaces'
+import { emotionLabel } from '@/utils/translate'
 import { CaretDown } from '@vicons/tabler'
 import { NIcon, NTag } from 'naive-ui'
 import { ref } from 'vue'

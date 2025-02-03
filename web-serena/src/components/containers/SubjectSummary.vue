@@ -41,7 +41,8 @@
       <div class="mr-10 w-40">
         <h2 class="text-xl font-bold mb-2">Estados</h2>
         <p v-for="emotion in summary" :key="emotion.emotion">
-          <span class="font-bold text-xl">{{ emotion.count }}</span> {{ emotion.emotion }}
+          <span class="font-bold text-xl">{{ emotion.count }}</span>
+          {{ emotionLabel(emotion.emotion) }}
         </p>
       </div>
     </div>
@@ -57,6 +58,7 @@ import { Chart, Pie, Tooltip } from 'vue3-charts'
 import { fetchWrapper } from '@/helpers/fetch_wrapper'
 import type { StudentSubject, Summary } from '@/interfaces'
 import { CaretDown } from '@vicons/tabler'
+import { emotionLabel } from '@/utils/translate'
 
 const props = defineProps<{
   idStudent: string
