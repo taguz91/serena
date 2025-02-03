@@ -5,6 +5,10 @@
     </div>
 
     <div>
+      <RouterLink :to="{ name: 'profile' }" class="mr-2 font-semibold underline">
+        Ver Perfil
+      </RouterLink>
+
       <NButton tertiary circle type="error">
         <template #icon>
           <NIcon @click="logout"><Logout /></NIcon>

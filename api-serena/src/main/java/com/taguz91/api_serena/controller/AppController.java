@@ -68,6 +68,14 @@ public class AppController {
                 .body(loginService.info(teacher));
     }
 
+    @GetMapping("/api/v1/session/profile")
+    public ResponseEntity<Teacher> sessionProfile(
+            @AuthenticationPrincipal Teacher teacher
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(teacher);
+    }
+
     @PutMapping("/api/v1/session/update")
     public ResponseEntity<Teacher> update(
             @AuthenticationPrincipal Teacher teacher,

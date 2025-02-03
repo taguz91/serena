@@ -18,7 +18,7 @@
 
     <NForm ref="formRef" class="mt-6" :model="model" :rules="rules">
       <NFormItem label="Nueva contraseña" required>
-        <NInput v-model:value="model.password" placeholder="********" />
+        <NInput v-model:value="model.password" placeholder="********" type="password" />
       </NFormItem>
     </NForm>
   </NModal>
