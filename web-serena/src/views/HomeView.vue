@@ -24,4 +24,16 @@
 import SinglePageLayout from '@/components/layouts/SinglePageLayout.vue'
 import LoginForm from '@/components/home/LoginForm.vue'
 import AppIcon from '@/components/shared/AppIcon.vue'
+import { useAunt } from '@/composable'
+import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+
+const { user } = useAunt()
+const router = useRouter()
+
+onMounted(() => {
+  if (user.value) {
+    router.push({ name: user.value.isAdmin ? 'admin-home' : 'app-home' })
+  }
+})
 </script>
