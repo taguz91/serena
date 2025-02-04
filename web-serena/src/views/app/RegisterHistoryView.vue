@@ -38,6 +38,7 @@ import type { Register } from '@/interfaces'
 import { Copy } from '@vicons/tabler'
 import StudentList from '@/components/shared/StudentList.vue'
 import { useStudentsClassroom } from '@/composable/students/useStudentClassroom'
+import { statusLabel } from '@/utils/translate'
 
 const route = useRoute()
 const router = useRouter()
@@ -62,7 +63,7 @@ const columns: DataTableColumns<Register> = [
         NBadge,
         {
           type: row.status == 'expired' ? 'success' : 'info',
-          value: row.status == 'expired' ? 'Expirado' : 'Activo'
+          value: statusLabel(row.status)
         },
         {}
       )
@@ -97,7 +98,7 @@ const columns: DataTableColumns<Register> = [
               document.execCommand('copy')
               document.body.removeChild(input)
 
-              message.info('Link copiado')
+              message.info('Link copiado al portapapeles')
             }
           },
           {

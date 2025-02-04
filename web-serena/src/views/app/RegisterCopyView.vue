@@ -6,14 +6,26 @@
 
     <SmallSpinner v-if="isLoading" />
 
-    <DetailContainer v-else current="Registrar">
-      <NInput :value="url" disabled />
+    <DetailContainer v-else current="Inscripción">
+      <div class="flex justify-center items-center h-[400px]">
+        <div class="text-center">
+          <h1 class="font-bold text-2xl">La inscripción se encuentra lista para ser enviada</h1>
 
-      <hr class="my-2" />
+          <p class="font-semibold text-lg">Copia el siguiente link y envíaselo a tus estudiantes</p>
 
-      <p class="font-bold text-lg">{{ register?.createdAt }}</p>
+          <BlackButton @click="copyLink" label="Copiar link" class="my-2" />
 
-      <NButton @click="copyLink" type="primary"> Copiar link </NButton>
+          <p class="font-bold text-sm">El registro fue creado el: {{ register?.createdAt }}</p>
+
+          <hr class="my-4" />
+
+          <p class="font-semibold text-lg mt-2">
+            Si el botón no funciona, puedes copiar el siguiente link de forma manual
+          </p>
+
+          <p class="">{{ url }}</p>
+        </div>
+      </div>
     </DetailContainer>
   </AppLayout>
 </template>
@@ -26,11 +38,13 @@ import AppLayout from '@/components/layouts/AppLayout.vue'
 import StudentCheckList from '@/components/shared/StudentCheckList.vue'
 import { useRegister } from '@/composable/register/useRegister'
 import SmallSpinner from '@/components/shared/SmallSpinner.vue'
-import { NButton, NInput } from 'naive-ui'
+import { useMessage } from 'naive-ui'
 import { computed } from 'vue'
+import BlackButton from '@/components/basic/BlackButton.vue'
 
 const route = useRoute()
 const router = useRouter()
+const message = useMessage()
 
 const { isLoading, register } = useRegister(route.params.id.toString())
 
@@ -52,5 +66,7 @@ const copyLink = () => {
   input.select()
   document.execCommand('copy')
   document.body.removeChild(input)
+
+  message.success('Link copiado al portapapeles')
 }
 </script>

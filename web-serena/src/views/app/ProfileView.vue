@@ -6,8 +6,10 @@
 
     <DetailContainer current="Perfil">
       <div class="flex justify-end">
-        <NButton type="info" @click="showModal"> Cambiar contraseña </NButton>
+        <BlackButton label=" Cambiar contraseña" @click="showModal" />
       </div>
+
+      <h1 class="text-xl font-bold mb-4">La cuenta fue creada el {{ session?.createdAt }}</h1>
 
       <NForm ref="formRef" class="w-[600px]">
         <NFormItem label="Nombre" required>
@@ -19,13 +21,7 @@
         </NFormItem>
 
         <div class="flex justify-end">
-          <NButton
-            :disabled="form.email === null || form.name === null"
-            type="primary"
-            @click="handleValidateButtonClick"
-          >
-            Actualizar
-          </NButton>
+          <OutlineButton label="Actualizar" @click="handleValidateButtonClick" />
         </div>
       </NForm>
     </DetailContainer>
@@ -63,22 +59,25 @@ import StudentTeacherList from '@/components/shared/StudentTeacherList.vue'
 import { useSessionProfile, useUpdateSessionProfile } from '@/composable/session/useProfile'
 import { Users } from '@vicons/tabler'
 import {
-  NButton,
   NForm,
   NFormItem,
   NIcon,
   NInput,
   NModal,
+  useMessage,
   type FormInst,
   type FormRules
 } from 'naive-ui'
 import { ref } from 'vue'
+import BlackButton from '@/components/basic/BlackButton.vue'
+import OutlineButton from '@/components/basic/OutlineButton.vue'
 
-const { form } = useSessionProfile()
+const { form, session } = useSessionProfile()
 const { update } = useUpdateSessionProfile()
 
 const formRef = ref<FormInst | null>(null)
 const show = ref(false)
+const message = useMessage()
 
 const rules: FormRules = {
   password: {
@@ -112,6 +111,7 @@ const handleValidateButtonClick = async (e: MouseEvent) => {
   formRef.value?.validate((errors) => {
     if (!errors) {
       update(form.value)
+      message.success('Perfil actualizado')
     }
   })
 }

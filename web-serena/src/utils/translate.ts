@@ -13,3 +13,14 @@ const EMOTIONS: Record<string, string> = {
 export const emotionLabel = (emotion: string) => {
   return EMOTIONS[emotion] ?? emotion
 }
+
+const STATUS: Record<string, string> = {
+  pending: 'Pendiente',
+  expired: 'Expirado',
+  active: 'Activo',
+  open: 'Activo'
+}
+
+export const statusLabel = (status: string) => {
+  return STATUS[status] ?? status
+}

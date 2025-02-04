@@ -11,14 +11,7 @@
       </NFormItem>
 
       <div class="flex justify-end">
-        <NButton
-          :disabled="model.email === null || model.password === null"
-          type="primary"
-          @click="handleValidateButtonClick"
-          :loading="loading"
-        >
-          Continuar
-        </NButton>
+        <OutlineButton label="Registrarse" @click="handleValidateButtonClick" :loading="loading" />
       </div>
 
       <div class="flex justify-start mt-2 underline text-blue-400">
@@ -31,11 +24,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import { NButton, NForm, NFormItem, NInput, type FormInst, type FormRules } from 'naive-ui'
+import { NForm, NFormItem, NInput, useMessage, type FormInst, type FormRules } from 'naive-ui'
 import { useAuthStore } from '@/stores/user'
 import { RouterLink } from 'vue-router'
+import OutlineButton from '@/components/basic/OutlineButton.vue'
 
 const authStore = useAuthStore()
+const message = useMessage()
 
 const formRef = ref<FormInst | null>()
 
@@ -57,12 +52,18 @@ const rules: FormRules = {
 const handleValidateButtonClick = async (e: MouseEvent) => {
   e.preventDefault()
 
-  formRef.value?.validate((errors) => {
+  formRef.value?.validate(async (errors) => {
     if (!errors) {
       authStore.returnUrl = '/welcome'
-      authStore.login(model.value.email!, model.value.password!)
-    } else {
-      console.log(errors)
+      const user = await authStore.login(model.value.email!, model.value.password!)
+
+      if (!user) {
+        message.error(
+          'No se encontró una cuenta con el correo ingresado, revíselo con el administrador del sitio'
+        )
+      } else {
+        message.success('Bienvenido a Serena, estamos validando tu cuenta.')
+      }
     }
   })
 }

@@ -85,6 +85,14 @@ const router = createRouter({
     {
       path: '/admin',
       name: 'admin',
+      beforeEnter: (to, from, next) => {
+        const user = JSON.parse(localStorage.getItem('user') || '{}')
+        if (user.isAdmin) {
+          next()
+        } else {
+          next({ name: user ? 'app-home' : 'home' })
+        }
+      },
       children: [
         {
           path: '',

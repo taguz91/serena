@@ -2,7 +2,7 @@
   <PublicLayout>
     <SmallSpinner v-if="isLoading" />
 
-    <div v-else class="my-10">
+    <div v-else class="my-10 flex justify-center items-center flex-col">
       <p class="font-bold text-lg">Vamos a revisar si tienes una inscripción vigente</p>
 
       <hr class="my-2" />
@@ -15,31 +15,24 @@
         </NForm>
 
         <div class="flex justify-end">
-          <NButton
-            :disabled="model.identification === ''"
-            type="primary"
+          <OutlineButton
+            label="Buscar"
             :loading="loading || isLoadingStudent"
             @click="handleValidateButtonClick"
-          >
-            Buscar
-          </NButton>
+          />
         </div>
       </div>
 
       <hr class="my-2" />
 
       <div v-if="checked === 'error'" class="flex justify-center">
-        <NForm ref="formStudent" :model="studentForm">
+        <NForm
+          ref="formStudent"
+          :model="studentForm"
+          class="grid grid-cols-2 gap-3 p-4 bg-slate-200 shadow-lg rounded-xl"
+        >
           <NFormItem path="identification" label="Identificación">
             <NInput v-model:value="studentForm.identification" type="text" disabled />
-          </NFormItem>
-
-          <NFormItem path="name" label="Nombre">
-            <NInput v-model:value="studentForm.name" type="text" placeholder="John" />
-          </NFormItem>
-
-          <NFormItem path="lastname" label="Apellido">
-            <NInput v-model:value="studentForm.lastname" type="text" placeholder="Doe" />
           </NFormItem>
 
           <NFormItem path="gender" label="Sexo">
@@ -61,15 +54,21 @@
             </NRadio>
           </NFormItem>
 
-          <div class="flex justify-end">
-            <NButton
+          <NFormItem path="name" label="Nombre">
+            <NInput v-model:value="studentForm.name" type="text" placeholder="John" />
+          </NFormItem>
+
+          <NFormItem path="lastname" label="Apellido">
+            <NInput v-model:value="studentForm.lastname" type="text" placeholder="Doe" />
+          </NFormItem>
+
+          <div class="flex justify-end col-span-2">
+            <OutlineButton
               :disabled="model.identification === ''"
-              type="primary"
+              label="Inscribirse"
               :loading="isCreating"
               @click="handleCreateStudent"
-            >
-              Inscribirse
-            </NButton>
+            />
           </div>
         </NForm>
       </div>
@@ -89,20 +88,18 @@
         </div>
 
         <div v-else class="flex justify-center gap-2">
-          <NButton
+          <OutlineButton
             v-if="checkedExistInscription === 'error'"
-            type="primary"
+            label="Confirmar inscripción"
             @click="duplicateRegister"
-          >
-            Confirmar inscripción
-          </NButton>
+          />
 
           <p v-else>
             <span class="font-semibold"> Ya tienes una inscripción vigente </span>
             {{ registerStudent?.createdAt }}
           </p>
 
-          <NButton type="primary" @click="redirectToRegister"> Actualizar fotografía </NButton>
+          <BlackButton @click="redirectToRegister" label="Actualizar fotografía" />
         </div>
       </div>
     </div>
@@ -116,7 +113,6 @@ import { useRegister } from '@/composable/register/useRegister'
 import SmallSpinner from '@/components/shared/SmallSpinner.vue'
 import PublicLayout from '@/components/layouts/PublicLayout.vue'
 import {
-  NButton,
   NForm,
   type FormInst,
   type FormRules,
@@ -133,6 +129,8 @@ import {
 import { useRegisterStudentDuplicate } from '@/composable/register/useRegisterStudentDuplicate'
 import { useStudentInscription } from '@/composable/students/useStudentInscription'
 import { ecuadorianIdentification } from '@/utils/validators'
+import OutlineButton from '@/components/basic/OutlineButton.vue'
+import BlackButton from '@/components/basic/BlackButton.vue'
 
 const route = useRoute()
 const router = useRouter()

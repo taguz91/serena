@@ -14,6 +14,7 @@ export const useFaceDetection = (
   height: number
 ) => {
   const isReady = ref(false)
+  const helpMessage = ref('')
 
   const { isLoaded, load } = useLoadFaceApi()
   const { isValid, process: processFace, reset: resetFaceState } = useFaceState(width, height)
@@ -94,10 +95,13 @@ export const useFaceDetection = (
     const drawBox = new faceapi.draw.DrawBox(box, stateManagerOutput.drawOptions)
     drawBox.draw(canvasElement.value!)
 
+    helpMessage.value = stateManagerOutput.helpMessage
+
     if (stateManagerOutput.end) {
       // upload random frame take in this 10 seconds
       console.log('Face is valid, take a photo')
       setTimeout(() => {
+        helpMessage.value = ''
         resetFaceState()
       }, 100)
     } else {
@@ -111,6 +115,7 @@ export const useFaceDetection = (
   return {
     isReady,
     isValid,
+    helpMessage,
 
     // actions
     start: load,

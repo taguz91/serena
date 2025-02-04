@@ -4,7 +4,9 @@
       <div class="flex justify-between w-full mr-6">
         <p class="text-lg">{{ register.createdAt }}</p>
 
-        <NTag :round="true" type="success">{{ register.status }}</NTag>
+        <NTag :round="true" :type="register.status === 'open' ? 'success' : 'info'">{{
+          statusLabel(register.status)
+        }}</NTag>
       </div>
 
       <div class="self-center cursor-pointer" @click="loadChart">
@@ -54,7 +56,7 @@
 <script setup lang="ts">
 import { fetchWrapper } from '@/helpers/fetch_wrapper'
 import type { Register, Summary } from '@/interfaces'
-import { emotionLabel } from '@/utils/translate'
+import { emotionLabel, statusLabel } from '@/utils/translate'
 import { CaretDown } from '@vicons/tabler'
 import { NIcon, NTag } from 'naive-ui'
 import { ref } from 'vue'

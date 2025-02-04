@@ -15,14 +15,7 @@
       </NFormItem>
 
       <div class="flex justify-end">
-        <NButton
-          :disabled="model.email === null || model.password === null"
-          type="primary"
-          @click="handleValidateButtonClick"
-          :loading="loading"
-        >
-          Continuar
-        </NButton>
+        <OutlineButton label="Ingresar" @click="handleValidateButtonClick" :loading="loading" />
       </div>
 
       <div class="flex justify-start mt-2 underline text-blue-400">
@@ -35,9 +28,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import { NButton, NForm, NFormItem, NInput, type FormInst, type FormRules } from 'naive-ui'
+import { NForm, NFormItem, NInput, type FormInst, type FormRules } from 'naive-ui'
 import { useAuthStore } from '@/stores/user'
 import { RouterLink } from 'vue-router'
+import OutlineButton from '@/components/basic/OutlineButton.vue'
 
 const authStore = useAuthStore()
 

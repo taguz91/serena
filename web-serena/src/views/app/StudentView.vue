@@ -10,6 +10,12 @@
     </template>
 
     <DetailContainer current="Estudiante">
+      <template v-if="student">
+        <h2 class="text-2xl mb-1 font-extrabold">Reporte por estudiante del periodo actual</h2>
+
+        <h4 class="text-xl">{{ student.name }}</h4>
+      </template>
+
       <GeneralChart :summary="summary" />
 
       <div class="my-4">
@@ -34,6 +40,7 @@ import SubjectSummary from '@/components/containers/SubjectSummary.vue'
 import AppLayout from '@/components/layouts/AppLayout.vue'
 import { useEmotionSummary } from '@/composable/students/useEmotionSummary'
 import { useStudentSubjectsSummary } from '@/composable/students/useStudentSubjectsSummary'
+import { useStudent } from '@/composable/students/useStudent'
 
 const route = useRoute()
 const id = toRef(route.params, 'id')
@@ -41,4 +48,6 @@ const id = toRef(route.params, 'id')
 const { summary, methodologies } = useEmotionSummary(id)
 
 const { subjects } = useStudentSubjectsSummary(id)
+
+const { student } = useStudent(id)
 </script>

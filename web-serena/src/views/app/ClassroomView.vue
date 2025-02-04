@@ -6,7 +6,7 @@
 
     <DetailContainer current="Clase">
       <div class="mb-2">
-        <h2 class="text-2xl mb-1">{{ classroom?.name }}</h2>
+        <h2 class="text-3xl mb-1 font-extrabold">{{ classroom?.name }}</h2>
         <h4 class="text-xl">{{ classroom?.academicPeriod?.name }}</h4>
         <h4 class="text-xl">
           {{ classroom?.academicPeriod?.carrera?.description }}
@@ -16,9 +16,7 @@
 
         <hr class="my-2" />
 
-        <h4 class="text-2xl mb-2">
-          {{ classroom?.teacher?.name }}
-        </h4>
+        <h4 class="text-2xl mb-2 font-semibold">Docente: {{ classroom?.teacher?.name }}</h4>
       </div>
 
       <GeneralChart :summary="summary" />

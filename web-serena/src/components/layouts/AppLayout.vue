@@ -1,17 +1,19 @@
 <template>
-  <TopNav title="Serena" />
+  <main class="bg-slate-50 min-h-screen flex justify-between">
+    <SideNav title="Serena" class="w-20" />
 
-  <main class="bg-slate-100 min-h-screen w-screen flex">
-    <div class="w-full">
-      <slot />
-    </div>
+    <main class="ml-20 flex-1 flex lg:flex-row flex-col">
+      <div class="w-full">
+        <slot />
+      </div>
 
-    <div class="w-[310px] border-l-2">
-      <slot name="side" />
-    </div>
+      <div v-if="$slots.side" class="w-full lg:w-[310px] border-l-2">
+        <slot name="side" />
+      </div>
+    </main>
   </main>
 </template>
 
 <script setup lang="ts">
-import TopNav from '../shared/TopNav.vue'
+import SideNav from '../shared/SideNav.vue'
 </script>

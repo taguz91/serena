@@ -7,8 +7,21 @@
       }"
     >
       <template v-if="isReady">
-        <h4 class="text-center font-bold mb-2">Vamos a tomarte una fotografía</h4>
-        <p>Colocate en el centro de la cámara, te tomaremos una foto en lo que parpadeas</p>
+        <h4 class="text-center font-extrabold mb-2 text-2xl">Vamos a tomarte una fotografía</h4>
+        <p v-if="showCompleteMessage" class="text-center mt-2 font-light text-lg">
+          Se completo correctamente tu registro, es momento de cambiar de estudiante
+        </p>
+
+        <p v-else class="text-center mt-2 font-light text-lg">
+          Colocate en el centro de la cámara, te tomaremos una foto en lo que parpadeas
+        </p>
+
+        <p
+          v-if="helpMessage !== ''"
+          class="text-sm text-center mt-3 bg-blue-200 text-blue-600 rounded-xl p-2 font-semibold"
+        >
+          {{ helpMessage }}
+        </p>
       </template>
 
       <template v-else>
@@ -75,8 +88,9 @@ const props = defineProps<Props>()
 
 const cameraElement = ref<HTMLVideoElement | null>(null)
 const canvasElement = ref<HTMLCanvasElement | null>(null)
+const showCompleteMessage = ref(false)
 
-const { isReady, start, isValid, process } = useFaceDetection(
+const { isReady, start, isValid, process, helpMessage } = useFaceDetection(
   cameraElement,
   canvasElement,
   props.width,
@@ -102,10 +116,12 @@ watch(isValid, async () => {
   if (isValid.value) {
     const image = await takePhoto()
     await props.savePhoto(image)
+    showCompleteMessage.value = true
     // wait 10 seconds to change the student
 
     if (props.infinite) {
       setTimeout(() => {
+        showCompleteMessage.value = false
         process()
       }, 10000)
     }

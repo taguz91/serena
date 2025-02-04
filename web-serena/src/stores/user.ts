@@ -48,6 +48,8 @@ export const useAuthStore = defineStore({
         localStorage.setItem('user', JSON.stringify(user))
         localStorage.setItem('sessionInfo', JSON.stringify(sessionInfo))
         router.push(this.returnUrl || '/')
+
+        return user
       } catch (error) {
         // const message = useMessage()
         if (error instanceof Error) {
