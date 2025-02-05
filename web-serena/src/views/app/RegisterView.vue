@@ -37,11 +37,13 @@ import StudentCheckList from '@/components/shared/StudentCheckList.vue'
 import { useRegister } from '@/composable/register/useRegister'
 import SmallSpinner from '@/components/shared/SmallSpinner.vue'
 import { useRegisterStudent } from '@/composable/register/useRegisterStudent'
+import { toRef } from 'vue'
 
 const route = useRoute()
+const id = toRef(route.params, 'id')
 const { create } = useRegisterStudent(route.params.id.toString())
 
-const { isLoading, register } = useRegister(route.params.id.toString())
+const { isLoading, register } = useRegister(id)
 
 const savePhoto = async (photo: string) => {
   create(photo)

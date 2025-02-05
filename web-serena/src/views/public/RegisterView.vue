@@ -36,11 +36,12 @@ import SmallSpinner from '@/components/shared/SmallSpinner.vue'
 import PublicLayout from '@/components/layouts/PublicLayout.vue'
 import { useRegisterStudentDuplicate } from '@/composable/register/useRegisterStudentDuplicate'
 import type { RegisterStudent } from '@/interfaces'
-import { ref } from 'vue'
+import { ref, toRef } from 'vue'
 
 const route = useRoute()
 const created = ref(false)
 const reference = ref('')
+const id = toRef(route.params, 'id')
 
 const { update } = useRegisterStudentDuplicate(
   route.params.id.toString(),
@@ -51,7 +52,7 @@ const { update } = useRegisterStudentDuplicate(
   }
 )
 
-const { isLoading, register } = useRegister(route.params.id.toString())
+const { isLoading, register } = useRegister(id)
 
 const savePhoto = async (photo: string) => {
   update(route.params.idStudent.toString(), photo)

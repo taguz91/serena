@@ -39,14 +39,15 @@ import StudentCheckList from '@/components/shared/StudentCheckList.vue'
 import { useRegister } from '@/composable/register/useRegister'
 import SmallSpinner from '@/components/shared/SmallSpinner.vue'
 import { useMessage } from 'naive-ui'
-import { computed } from 'vue'
+import { computed, toRef } from 'vue'
 import BlackButton from '@/components/basic/BlackButton.vue'
 
 const route = useRoute()
 const router = useRouter()
 const message = useMessage()
+const id = toRef(route.params, 'id')
 
-const { isLoading, register } = useRegister(route.params.id.toString())
+const { isLoading, register } = useRegister(id)
 
 const url = computed(() => {
   const href = router.resolve({

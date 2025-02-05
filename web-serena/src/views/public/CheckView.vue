@@ -121,7 +121,7 @@ import {
   NRadio,
   useMessage
 } from 'naive-ui'
-import { ref, watch } from 'vue'
+import { ref, toRef, watch } from 'vue'
 import {
   useExistsRegisterStudentInscription,
   useRegisterStudentInscription
@@ -136,11 +136,12 @@ const route = useRoute()
 const router = useRouter()
 const message = useMessage()
 const confirmation = ref(false)
+const id = toRef(route.params, 'id')
 const { duplicate } = useRegisterStudentDuplicate(route.params.id.toString(), () => {
   confirmation.value = true
 })
 
-const { isLoading } = useRegister(route.params.id.toString())
+const { isLoading } = useRegister(id)
 const {
   isCreating,
   save: saveStudent,
