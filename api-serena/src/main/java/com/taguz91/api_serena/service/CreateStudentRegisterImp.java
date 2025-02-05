@@ -32,7 +32,7 @@ public class CreateStudentRegisterImp implements CreateStudentRegister {
     // to test now whe can select a random emotion
     // this is going to  be used from aws lambda
     //HAPPY | SAD | ANGRY | CONFUSED | DISGUSTED | SURPRISED | CALM | UNKNOWN | FEAR
-    final List<String> emotions = List.of("HAPPY", "SAD", "ANGRY", "CONFUSED", "DISGUSTED", "SURPRISED", "CALM", "UNKNOWN", "FEAR");
+    final static List<String> emotions = List.of("HAPPY", "SAD", "ANGRY", "CONFUSED", "DISGUSTED", "SURPRISED", "CALM", "UNKNOWN", "FEAR");
 
     @Autowired
     private FileStoreService fileStoreService;
@@ -87,7 +87,7 @@ public class CreateStudentRegisterImp implements CreateStudentRegister {
         return newRegisterStudent;
     }
 
-    private String getEmotion() {
+    public static String getEmotion() {
         int rnd = new Random().nextInt(emotions.size());
 
         return emotions.get(rnd);
