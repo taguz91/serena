@@ -21,8 +21,10 @@ import {
   type DataTableColumns
 } from 'naive-ui'
 import { h } from 'vue'
+import { useRouter } from 'vue-router'
 
 const { students, metaData, currentPage, isLoading, getPage } = useStudentsAll()
+const router = useRouter()
 
 const columns: DataTableColumns<Subject> = [
   {
@@ -42,7 +44,10 @@ const columns: DataTableColumns<Subject> = [
             type: 'info',
             tertiary: true,
             onClick: () => {
-              console.log('Edit', row)
+              router.push({
+                name: 'students-report',
+                params: { id: row.id }
+              })
             }
           },
           {

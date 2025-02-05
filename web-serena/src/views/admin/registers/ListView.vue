@@ -21,6 +21,9 @@ import {
   type DataTableColumns
 } from 'naive-ui'
 import { h } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const { currentPage, isLoading, getPage, metaData, registers } = useRegisterAll()
 
@@ -50,7 +53,10 @@ const columns: DataTableColumns<Register> = [
             type: 'info',
             tertiary: true,
             onClick: () => {
-              console.log('Edit', row)
+              router.push({
+                name: 'registers-report',
+                params: { id: row.id }
+              })
             }
           },
           {

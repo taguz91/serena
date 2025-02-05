@@ -1,7 +1,6 @@
 import { fetchWrapper } from '@/helpers/fetch_wrapper'
 import type { StudentSubject } from '@/interfaces'
 import { useStudentSubjectSummary } from '@/stores/app/student-subject-summary'
-import { useAuthStore } from '@/stores/user'
 import { useQuery } from '@tanstack/vue-query'
 import { storeToRefs } from 'pinia'
 import { watch, type Ref } from 'vue'
@@ -14,15 +13,17 @@ const getSubjects = async (id: string, academicPeriods: string) => {
   return data
 }
 
-export const useStudentSubjectsSummary = (id: Ref<string | string[]>) => {
+export const useStudentSubjectsSummary = (
+  id: Ref<string | string[]>,
+  idAcademicPeriods: Ref<string[]>
+) => {
   const store = useStudentSubjectSummary()
-  const { sessionInfo } = useAuthStore()
 
   const { subjects } = storeToRefs(store)
 
   const { isLoading, data } = useQuery({
-    queryKey: ['student-subjects?id=', id],
-    queryFn: () => getSubjects(id.value.toString(), sessionInfo?.academicPeriods.join(',') || '')
+    queryKey: ['student-subjects?id=', id, idAcademicPeriods],
+    queryFn: () => getSubjects(id.value.toString(), idAcademicPeriods.value.join(',') || '')
   })
 
   watch(data, () => {

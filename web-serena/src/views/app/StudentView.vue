@@ -22,6 +22,7 @@
         <SubjectSummary
           v-for="studentSubject in subjects"
           :student-subject="studentSubject"
+          :id-academic-periods="sessionInfo?.academicPeriods || []"
           :id-student="id.toString()"
           :key="studentSubject.id"
         />
@@ -41,13 +42,15 @@ import AppLayout from '@/components/layouts/AppLayout.vue'
 import { useEmotionSummary } from '@/composable/students/useEmotionSummary'
 import { useStudentSubjectsSummary } from '@/composable/students/useStudentSubjectsSummary'
 import { useStudent } from '@/composable/students/useStudent'
+import { useAuthStore } from '@/stores/user'
 
 const route = useRoute()
 const id = toRef(route.params, 'id')
+const { sessionInfo } = useAuthStore()
 
-const { summary, methodologies } = useEmotionSummary(id)
+const { summary, methodologies } = useEmotionSummary(id, toRef(sessionInfo?.academicPeriods || []))
 
-const { subjects } = useStudentSubjectsSummary(id)
+const { subjects } = useStudentSubjectsSummary(id, toRef(sessionInfo?.academicPeriods || []))
 
 const { student } = useStudent(id)
 </script>

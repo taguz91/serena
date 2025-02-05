@@ -3,7 +3,6 @@ import { useQuery } from '@tanstack/vue-query'
 
 import { fetchWrapper } from '@/helpers/fetch_wrapper'
 import type { Methodology, Summary } from '@/interfaces'
-import { useAuthStore } from '@/stores/user'
 
 const getSummary = async (id: string, academicPeriods: string) => {
   const data = await fetchWrapper.get<unknown, Summary[]>(
@@ -21,14 +20,13 @@ const getMethodologies = async (emotions: string) => {
   return data
 }
 
-export const useEmotionSummary = (id: Ref<string | string[]>) => {
+export const useEmotionSummary = (id: Ref<string | string[]>, idAcademicPeriods: Ref<string[]>) => {
   const summary = ref<Summary[]>([])
   const methodologies = ref<Methodology[]>([])
-  const { sessionInfo } = useAuthStore()
 
   const { isLoading, data } = useQuery({
-    queryKey: ['emotion-summary?id=', id],
-    queryFn: () => getSummary(id.value.toString(), sessionInfo?.academicPeriods.join(',') || '')
+    queryKey: ['emotion-summary?id=', id, idAcademicPeriods],
+    queryFn: () => getSummary(id.value.toString(), idAcademicPeriods.value.join(',') || '')
   })
 
   watch(data, async () => {

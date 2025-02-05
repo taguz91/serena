@@ -63,6 +63,7 @@ import { emotionLabel } from '@/utils/translate'
 const props = defineProps<{
   idStudent: string
   studentSubject: StudentSubject
+  idAcademicPeriods: string[]
 }>()
 
 const hidden = ref(true)
@@ -76,7 +77,7 @@ const loadChart = async () => {
   hidden.value = !hidden.value
 
   const data = await fetchWrapper.get<unknown, Summary[]>(
-    `/v1/student/summary/${props.idStudent}/subject/${props.studentSubject.id}`
+    `/v1/student/summary/${props.idStudent}/subject/${props.studentSubject.id}?periods=${props.idAcademicPeriods.join(',')}`
   )
 
   summary.value = data

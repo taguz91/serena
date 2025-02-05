@@ -2,7 +2,7 @@ import { fetchWrapper } from '@/helpers/fetch_wrapper'
 import type { Register, RegisterForm } from '@/interfaces'
 import { useMutation, useQuery } from '@tanstack/vue-query'
 import { useMessage } from 'naive-ui'
-import { ref, watch } from 'vue'
+import { ref, watch, type Ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const getRegister = async (id: string) => {
@@ -17,12 +17,12 @@ const createRegister = async (register: RegisterForm) => {
   return data
 }
 
-export const useRegister = (id: string) => {
+export const useRegister = (id: Ref<string | string[]>) => {
   const register = ref<Register | undefined>(undefined)
 
   const { isLoading, data } = useQuery({
     queryKey: ['register', id],
-    queryFn: () => getRegister(id)
+    queryFn: () => getRegister(id.value.toString())
   })
 
   watch(data, () => {
