@@ -28,7 +28,7 @@ const updateTeacher = async (data: TeacherForm) => {
   return record
 }
 
-export const useTeacher = (id: Ref<string | undefined>) => {
+export const useTeacher = (id: Ref<string | string[] | undefined>) => {
   const teacher = ref<Teacher>()
   const teacherForm = ref<TeacherForm>({
     name: '',
@@ -38,7 +38,7 @@ export const useTeacher = (id: Ref<string | undefined>) => {
 
   const { isLoading, data } = useQuery({
     queryKey: ['teacher', id],
-    queryFn: () => getTeacher(id.value)
+    queryFn: () => getTeacher(id.value?.toString())
   })
 
   const queryClient = useQueryClient()
@@ -101,6 +101,15 @@ export const useTeacher = (id: Ref<string | undefined>) => {
       queries.forEach((query) => {
         query.fetch()
       })
+
+      teacherForm.value = {
+        name: '',
+        email: '',
+        isAdmin: false
+      }
+
+      saveMutation.reset()
+      updateMutation.reset()
     }
   })
 

@@ -1,4 +1,4 @@
-import { ref, watch, type Ref } from 'vue'
+import { watch, ref, type Ref } from 'vue'
 import { useQuery } from '@tanstack/vue-query'
 
 import { fetchWrapper } from '@/helpers/fetch_wrapper'
@@ -6,7 +6,7 @@ import type { Summary } from '@/interfaces'
 
 const getSummary = async (id: string, academicPeriods: string) => {
   const data = await fetchWrapper.get<unknown, Summary[]>(
-    `/v1/classroom/summary/${id}?periods=${academicPeriods}`
+    `/v1/teacher/summary/${id}?periods=${academicPeriods}`
   )
 
   return data
@@ -19,24 +19,24 @@ const getSummaryByDate = async (
   end: string
 ) => {
   const data = await fetchWrapper.get<unknown, Summary[]>(
-    `/v1/classroom/summary/${id}/${start}/${end}?periods=${academicPeriods}`
+    `/v1/teacher/summary/${id}/${start}/${end}?periods=${academicPeriods}`
   )
 
   return data
 }
 
-export const useClassroomSummary = (
+export const useEmotionSummaryTeacher = (
   id: Ref<string | string[]>,
   idAcademicPeriods: Ref<string[]>
 ) => {
   const summary = ref<Summary[]>([])
 
   const { isLoading, data, refetch } = useQuery({
-    queryKey: ['classroom-summary?id=', id, idAcademicPeriods],
-    queryFn: () => getSummary(id.value.toString(), idAcademicPeriods.value.join(','))
+    queryKey: ['emotion-summary?id=', id, idAcademicPeriods],
+    queryFn: () => getSummary(id.value.toString(), idAcademicPeriods.value.join(',') || '')
   })
 
-  watch(data, () => {
+  watch(data, async () => {
     if (data.value) {
       summary.value = data.value
     }

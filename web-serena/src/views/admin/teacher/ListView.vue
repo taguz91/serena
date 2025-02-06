@@ -33,7 +33,7 @@
 <script setup lang="ts">
 import { h, ref } from 'vue'
 
-import { LockOff, LockAccess, Pencil, Plus, Trash, Lock } from '@vicons/tabler'
+import { LockOff, LockAccess, Pencil, Plus, Trash, Lock, Eye } from '@vicons/tabler'
 import {
   NButton,
   NDataTable,
@@ -48,10 +48,12 @@ import FormView from './FormView.vue'
 import { useTeachers } from '@/composable/teachers/useTeachers'
 import type { Teacher } from '@/interfaces'
 import FormChangePassword from './FormChangePassword.vue'
+import { useRouter } from 'vue-router'
 
 const show = ref(false)
 const showChangePassword = ref(false)
 const currentId = ref<string | undefined>(undefined)
+const router = useRouter()
 
 const showModal = () => {
   show.value = true
@@ -100,7 +102,7 @@ const columns: DataTableColumns<Teacher> = [
           },
           {
             icon: () =>
-              h(NIcon, null, { default: () => (row.isActive ? h(LockOff) : h(LockAccess)) })
+              h(NIcon, null, { default: () => (row.isActive ? h(LockAccess) : h(LockOff)) })
           }
         ),
         h(
@@ -129,6 +131,22 @@ const columns: DataTableColumns<Teacher> = [
           },
           {
             icon: () => h(NIcon, null, { default: () => h(Lock) })
+          }
+        ),
+        h(
+          NButton,
+          {
+            type: 'info',
+            tertiary: true,
+            onClick: () => {
+              router.push({
+                name: 'teachers-report',
+                params: { id: row.id }
+              })
+            }
+          },
+          {
+            icon: () => h(NIcon, null, { default: () => h(Eye) })
           }
         ),
         h(

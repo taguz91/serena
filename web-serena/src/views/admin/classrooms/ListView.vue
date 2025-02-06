@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { Pencil, Plus, Trash } from '@vicons/tabler'
+import { Eye, Pencil, Plus, Trash } from '@vicons/tabler'
 import {
   NButton,
   NDataTable,
@@ -43,9 +43,11 @@ import { h, ref } from 'vue'
 import FormView from './FormView.vue'
 import type { Classroom } from '@/interfaces'
 import { useClassrooms } from '@/composable/classrooms/useClassrooms'
+import { useRouter } from 'vue-router'
 
 const show = ref(false)
 const currentId = ref<string | undefined>(undefined)
+const router = useRouter()
 
 const showModal = () => {
   show.value = true
@@ -89,6 +91,23 @@ const columns: DataTableColumns<Classroom> = [
           },
           {
             icon: () => h(NIcon, null, { default: () => h(Pencil) })
+          }
+        ),
+
+        h(
+          NButton,
+          {
+            type: 'info',
+            tertiary: true,
+            onClick: () => {
+              router.push({
+                name: 'classrooms-report',
+                params: { id: row.id }
+              })
+            }
+          },
+          {
+            icon: () => h(NIcon, null, { default: () => h(Eye) })
           }
         ),
         h(

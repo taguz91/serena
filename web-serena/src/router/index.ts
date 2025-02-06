@@ -118,6 +118,11 @@ const router = createRouter({
           component: () => import('../views/admin/teacher/ListView.vue')
         },
         {
+          path: 'teachers/report/:id',
+          name: 'teachers-report',
+          component: () => import('../views/admin/teacher/ReportView.vue')
+        },
+        {
           path: 'subjects',
           name: 'subjects',
           component: () => import('../views/admin/subject/ListView.vue')
@@ -126,6 +131,11 @@ const router = createRouter({
           path: 'classrooms',
           name: 'classrooms',
           component: () => import('../views/admin/classrooms/ListView.vue')
+        },
+        {
+          path: 'classrooms/report/:id',
+          name: 'classrooms-report',
+          component: () => import('../views/admin/classrooms/ReportView.vue')
         },
         {
           path: 'methodologies',
