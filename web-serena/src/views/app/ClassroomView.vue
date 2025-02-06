@@ -52,14 +52,16 @@ import SummaryItem from '@/components/containers/SummaryItem.vue'
 import GeneralChart from '@/components/chart/GeneralChart.vue'
 import { useClassroom } from '@/composable/classrooms/useClassroom'
 import StudentTeacherList from '@/components/shared/StudentTeacherList.vue'
+import { useAuthStore } from '@/stores/user'
 
 const route = useRoute()
 
 const id = toRef(route.params, 'id')
+const { sessionInfo } = useAuthStore()
 
 const { classroom } = useClassroom(id)
 
-const { summary } = useClassroomSummary(id)
+const { summary } = useClassroomSummary(id, toRef(sessionInfo?.academicPeriods ?? []))
 
 const { metaData, currentPage, getPage, registers } = useRegistersClassroom(id)
 </script>
