@@ -195,10 +195,20 @@ public class StudentController {
 
     @GetMapping("/subjects/{idStudent}")
     public ResponseEntity<List<StudentSubject>> listSubjects(
-            @PathVariable(value = "idStudent") String idStudent
+            @PathVariable(value = "idStudent") String idStudent,
+            @RequestParam Optional<String> periods
     ) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(studentRepository.findSubjects(idStudent));
+                .body(
+                        periods.isPresent()
+                            ? studentRepository.findSubjectsAndAcademicPeriods(
+                                idStudent,
+                                new ArrayList<>(Arrays.stream(periods.get().split(",")).toList())
+                            )
+                            : studentRepository.findSubjects(
+                                idStudent
+                            )
+                );
     }
 
     @GetMapping("/classroom/{idClassroom}")
