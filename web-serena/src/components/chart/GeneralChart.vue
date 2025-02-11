@@ -3,7 +3,7 @@ import { Pie } from 'vue-chartjs'
 import GraphContainer from '../containers/GraphContainer.vue'
 import { emotionColor, emotionLabel } from '@/utils/translate'
 import type { ChartData } from 'chart.js'
-import { onMounted, ref } from 'vue'
+import { onMounted, onUpdated, ref } from 'vue'
 import type { Summary } from '@/interfaces'
 import { loadChartConfig, pieOptions } from '@/helpers/loadChartConfig'
 
@@ -17,6 +17,20 @@ const dataset = ref<ChartData<'pie'> | undefined>()
 
 onMounted(async () => {
   await loadChartConfig()
+
+  prepareData()
+})
+
+onUpdated(async () => {
+  prepareData()
+})
+
+const prepareData = () => {
+  if (props.summary.length === 0) {
+    dataset.value = undefined
+    return
+  }
+
   const summary = [...props.summary].sort((a, b) => b.count - a.count)
 
   dataset.value = {
@@ -29,7 +43,7 @@ onMounted(async () => {
       }
     ]
   }
-})
+}
 </script>
 
 <template>
