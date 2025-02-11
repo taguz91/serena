@@ -4,4 +4,6 @@ public interface StudentSubject {
     String getId();
 
     String getName();
+
+    String getTeacher();
 }

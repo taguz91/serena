@@ -1,6 +1,12 @@
 <template>
   <aside class="fixed top-0 left-0 w-24 h-screen bg-black p-5">
     <div class="flex flex-col h-full justify-center items-center">
+      <div>
+        <RouterLink :to="{ name: 'credits' }">
+          <img src="/images/logo-bg-black.png" alt="logo" class="w-28 h-11" />
+        </RouterLink>
+      </div>
+
       <nav class="flex-1 flex flex-col justify-between">
         <ul class="my-auto space-y-4">
           <li>

@@ -7,6 +7,7 @@ import com.taguz91.api_serena.api.response.MessageResponse;
 import com.taguz91.api_serena.api.response.SessionInfo;
 import com.taguz91.api_serena.models.Teacher;
 import com.taguz91.api_serena.repository.TeacherRepository;
+import com.taguz91.api_serena.service.contracts.DownloadImageService;
 import com.taguz91.api_serena.service.contracts.LoginService;
 import com.taguz91.api_serena.service.contracts.RegisterService;
 import jakarta.validation.Valid;
@@ -29,6 +30,8 @@ public class AppController {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private TeacherRepository teacherRepository;
+    @Autowired
+    private DownloadImageService downloadImageService;
 
     @GetMapping("/")
     public ResponseEntity<MessageResponse> index() {
@@ -72,6 +75,13 @@ public class AppController {
     public ResponseEntity<Teacher> sessionProfile(
             @AuthenticationPrincipal Teacher teacher
     ) {
+
+        if (teacher.getPhoto() != null) {
+            teacher.setPhoto(
+                    downloadImageService.url(teacher.getPhoto())
+            );
+        }
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(teacher);
     }

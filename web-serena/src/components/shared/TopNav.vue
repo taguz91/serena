@@ -1,5 +1,5 @@
 <template>
-  <header class="bg-blue-300 py-5 px-10 flex justify-between border-b-2">
+  <header class="bg-black text-white py-5 px-10 flex justify-between border-b-2">
     <div>
       <h1 class="font-bold text-2xl">{{ title }}</h1>
     </div>
@@ -9,7 +9,7 @@
         Ver Perfil
       </RouterLink>
 
-      <NButton tertiary circle type="error">
+      <NButton type="error">
         <template #icon>
           <NIcon @click="logout"><Logout /></NIcon>
         </template>

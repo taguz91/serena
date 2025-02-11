@@ -16,38 +16,9 @@
       </div>
     </div>
 
-    <div :hidden="hidden" :class="hidden ? '' : 'flex justify-between p-5 mx-14'">
+    <div :hidden="hidden" :class="hidden ? '' : ' p-5 mx-14'">
       <div class="w-full">
-        <Chart
-          direction="circular"
-          :size="{ width: 300, height: 300 }"
-          :config="{ controlHover: false }"
-          :data="summary"
-        >
-          <template #layers>
-            <Pie
-              :data-keys="['emotion', 'count']"
-              :pie-style="{ innerRadius: 100, padAngle: 0.01 }"
-            />
-          </template>
-
-          <template #widgets>
-            <Tooltip
-              :config="{
-                emotion: { label: 'Estado' },
-                count: { label: 'Total' }
-              }"
-            />
-          </template>
-        </Chart>
-      </div>
-
-      <div class="mr-10 w-40">
-        <h2 class="text-xl font-bold mb-2">Estados</h2>
-        <p v-for="emotion in summary" :key="emotion.emotion">
-          <span class="font-bold text-xl">{{ emotion.count }}</span>
-          {{ emotionLabel(emotion.emotion) }}
-        </p>
+        <Pie v-if="dataset" :data="dataset" :options="pieOptions" />
       </div>
     </div>
   </div>
@@ -56,11 +27,12 @@
 <script setup lang="ts">
 import { fetchWrapper } from '@/helpers/fetch_wrapper'
 import type { Register, Summary } from '@/interfaces'
-import { emotionLabel, statusLabel } from '@/utils/translate'
 import { CaretDown } from '@vicons/tabler'
 import { NIcon, NTag } from 'naive-ui'
 import { ref } from 'vue'
-import { Chart, Pie, Tooltip } from 'vue3-charts'
+import { emotionColor, emotionLabel, statusLabel } from '@/utils/translate'
+import type { ChartData } from 'chart.js'
+import { loadChartConfig, pieOptions } from '@/helpers/loadChartConfig'
 
 const props = defineProps<{
   register: Register
@@ -68,8 +40,10 @@ const props = defineProps<{
 
 const hidden = ref(true)
 const summary = ref<Summary[]>([])
+const dataset = ref<ChartData<'pie'> | undefined>()
 
 const loadChart = async () => {
+  await loadChartConfig()
   if (!hidden.value) {
     hidden.value = true
     return
@@ -80,6 +54,17 @@ const loadChart = async () => {
     `/v1/register/summary/${props.register.id}`
   )
 
-  summary.value = data
+  summary.value = data.sort((a, b) => b.count - a.count)
+
+  dataset.value = {
+    labels: summary.value.map((s) => `${s.count} - ${emotionLabel(s.emotion)}`),
+    datasets: [
+      {
+        label: 'Estudiantes',
+        backgroundColor: summary.value.map((s) => emotionColor(s.emotion)),
+        data: summary.value.map((s) => s.count)
+      }
+    ]
+  }
 }
 </script>

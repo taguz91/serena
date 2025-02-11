@@ -16,7 +16,7 @@ const updateSession = (request: ProfileForm) => {
 }
 
 export const useSessionProfile = () => {
-  const { isLoading, data } = useQuery({
+  const { isLoading, data, refetch } = useQuery({
     queryKey: ['session', 'profile'],
     queryFn: () => getSession()
   })
@@ -35,6 +35,7 @@ export const useSessionProfile = () => {
   return {
     isLoading,
     form,
+    refetch,
     session: data
   }
 }

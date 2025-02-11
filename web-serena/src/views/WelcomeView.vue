@@ -105,7 +105,7 @@ onMounted(() => {
   const appMode = localStorage.getItem('appMode')
 
   // only use admin panel if is admin and  has not selected app mode
-  if (teacher.isAdmin && appMode !== 'app') {
+  if (!needCreatePassword.value && teacher.isAdmin && appMode !== 'app') {
     router.push({ name: 'admin-home' })
     return
   }

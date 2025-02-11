@@ -32,4 +32,5 @@ export interface StudentForm {
 export interface StudentSubject {
   id: string
   name: string
+  teacher: string
 }

@@ -1,49 +1,56 @@
 <script setup lang="ts">
-import { Chart, Pie, Tooltip } from 'vue3-charts'
+import { Pie } from 'vue-chartjs'
 import GraphContainer from '../containers/GraphContainer.vue'
-import { emotionLabel } from '@/utils/translate'
+import { emotionColor, emotionLabel } from '@/utils/translate'
+import type { ChartData } from 'chart.js'
+import { onMounted, onUpdated, ref } from 'vue'
+import type { Summary } from '@/interfaces'
+import { loadChartConfig, pieOptions } from '@/helpers/loadChartConfig'
 
 interface Props {
-  summary: any
+  summary: Summary[]
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
+
+const dataset = ref<ChartData<'pie'> | undefined>()
+
+onMounted(async () => {
+  await loadChartConfig()
+
+  prepareData()
+})
+
+onUpdated(async () => {
+  prepareData()
+})
+
+const prepareData = () => {
+  if (props.summary.length === 0) {
+    dataset.value = undefined
+    return
+  }
+
+  const summary = [...props.summary].sort((a, b) => b.count - a.count)
+
+  dataset.value = {
+    labels: summary.map((s) => `${s.count} - ${emotionLabel(s.emotion)}`),
+    datasets: [
+      {
+        label: 'Estudiantes',
+        backgroundColor: summary.map((s) => emotionColor(s.emotion)),
+        data: summary.map((s) => s.count)
+      }
+    ]
+  }
+}
 </script>
 
 <template>
   <GraphContainer title="Resumen general">
-    <div class="flex justify-between p-5 mx-24">
-      <div class="w-full">
-        <Chart
-          direction="circular"
-          :size="{ width: 400, height: 400 }"
-          :config="{ controlHover: false }"
-          :data="summary"
-        >
-          <template #layers>
-            <Pie
-              :data-keys="['emotion', 'count']"
-              :pie-style="{ innerRadius: 100, padAngle: 0.01 }"
-            />
-          </template>
-
-          <template #widgets>
-            <Tooltip
-              :config="{
-                emotion: { label: 'Estado' },
-                count: { label: 'Total' }
-              }"
-            />
-          </template>
-        </Chart>
-      </div>
-
-      <div class="mr-10 w-40">
-        <h2 class="text-xl font-bold mb-2">Estados</h2>
-        <p v-for="emotion in summary" :key="emotion.emotion">
-          <span class="font-bold text-xl">{{ emotion.count }}</span>
-          {{ emotionLabel(emotion.emotion) }}
-        </p>
+    <div class="p-5 mx-24">
+      <div class="w-full h-96">
+        <Pie v-if="dataset" :data="dataset" :options="pieOptions" />
       </div>
     </div>
   </GraphContainer>

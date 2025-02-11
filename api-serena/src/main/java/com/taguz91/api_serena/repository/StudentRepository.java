@@ -142,14 +142,31 @@ public interface StudentRepository extends JpaRepository<Student, String> {
 
     @Query(
             nativeQuery = true,
-            value = "select s.id, s.\"name\" from registers r "
+            value = "select s.id, s.\"name\", t.\"name\" as \"teacher\" from registers r "
                 + "join registers_students rs on rs.register_id = r.id "
                 + "join classrooms c on c.id = r.classroom_id "
+                + "join teachers t on t.id = c.teacher_id "
                 + "join subjects s on s.id = c.subject_id "
                 + "where rs.student_id = :idStudent "
-                + "group by s.id "
+                + "group by s.id, t.name "
     )
     public List<StudentSubject> findSubjects(
             @Param("idStudent") String idStudent
+    );
+
+    @Query(
+            nativeQuery = true,
+            value = "select s.id, s.\"name\", t.\"name\" as \"teacher\" from registers r "
+                    + "join registers_students rs on rs.register_id = r.id "
+                    + "join classrooms c on c.id = r.classroom_id "
+                    + "join teachers t on t.id = c.teacher_id "
+                    + "join subjects s on s.id = c.subject_id "
+                    + "where rs.student_id = :idStudent "
+                    + "and c.academic_period_id IN( :academicPeriods ) "
+                    + "group by s.id, t.name "
+    )
+    public List<StudentSubject> findSubjectsAndAcademicPeriods(
+            @Param("idStudent") String idStudent,
+            @Param("academicPeriods") Collection<String> academicPeriods
     );
 }
