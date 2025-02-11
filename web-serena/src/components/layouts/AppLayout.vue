@@ -1,9 +1,9 @@
 <template>
-  <main class="bg-slate-50 min-h-screen flex justify-between">
+  <main class="bg-slate-50 min-h-screen flex justify-between w-screen">
     <SideNav title="Serena" class="w-20" />
 
-    <main class="ml-20 flex-1 flex lg:flex-row flex-col">
-      <div class="w-full">
+    <main class="ml-20 flex-1 flex lg:flex-row flex-col w-fit">
+      <div class="flex-1">
         <slot />
       </div>
 
