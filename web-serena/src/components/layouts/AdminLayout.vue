@@ -1,6 +1,6 @@
 <template>
   <div class="h-screen w-screen flex">
-    <aside class="w-[280px] bg-blue-100">
+    <aside class="w-[280px]">
       <div class="flex justify-center my-6">
         <AppIcon />
       </div>
@@ -12,7 +12,7 @@
       <TopNav title="Dashboard" />
 
       <NModalProvider>
-        <div class="py-10 px-14">
+        <div class="py-10 px-14 bg-slate-50 min-h-full">
           <RouterView />
         </div>
       </NModalProvider>

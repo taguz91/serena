@@ -66,6 +66,11 @@ const router = createRouter({
       name: 'public',
       children: [
         {
+          path: 'credits',
+          name: 'credits',
+          component: () => import('../views/public/CreditsDev.vue')
+        },
+        {
           path: 'check/:id',
           name: 'public-register-check',
           component: () => import('../views/public/CheckView.vue')
