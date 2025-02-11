@@ -5,6 +5,7 @@ export interface Teacher {
   updatedBy: string | undefined
   id: string
   reference: string | undefined
+  photo?: string
   name: string
   email: string
   isActive: boolean | undefined

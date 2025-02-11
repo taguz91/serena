@@ -9,6 +9,14 @@
         <BlackButton label=" Cambiar contraseña" @click="showModal" />
       </div>
 
+      <div v-if="session?.photo" class="flex justify-start p-4">
+        <img :src="session.photo" alt="Foto de perfil" class="w-48 h-48 rounded-full mt-4 block" />
+      </div>
+
+      <NUpload action="/v1/teacher/change/photo" :custom-request="customRequest">
+        <NButton> Subir foto </NButton>
+      </NUpload>
+
       <h1 class="text-xl font-bold mb-4">La cuenta fue creada el {{ session?.createdAt }}</h1>
 
       <NForm ref="formRef" class="w-[600px]">
@@ -59,20 +67,24 @@ import StudentTeacherList from '@/components/shared/StudentTeacherList.vue'
 import { useSessionProfile, useUpdateSessionProfile } from '@/composable/session/useProfile'
 import { Users } from '@vicons/tabler'
 import {
+  NButton,
   NForm,
   NFormItem,
   NIcon,
   NInput,
   NModal,
+  NUpload,
   useMessage,
   type FormInst,
-  type FormRules
+  type FormRules,
+  type UploadCustomRequestOptions
 } from 'naive-ui'
 import { ref } from 'vue'
 import BlackButton from '@/components/basic/BlackButton.vue'
 import OutlineButton from '@/components/basic/OutlineButton.vue'
+import { fetchWrapper } from '@/helpers/fetch_wrapper'
 
-const { form, session } = useSessionProfile()
+const { form, session, refetch } = useSessionProfile()
 const { update } = useUpdateSessionProfile()
 
 const formRef = ref<FormInst | null>(null)
@@ -85,6 +97,29 @@ const rules: FormRules = {
     trigger: ['blur'],
     message: 'Ingresa una contraseña'
   }
+}
+
+const customRequest = ({
+  file,
+  action,
+  onFinish,
+  onError,
+  onProgress
+}: UploadCustomRequestOptions) => {
+  const formData = new FormData()
+  formData.append('file', file.file as File)
+  fetchWrapper
+    .postFile(action || '/v1/teacher/change/photo', formData)
+    .then(() => {
+      onFinish()
+      refetch()
+    })
+    .catch((error) => {
+      message.success(error.message)
+      onError()
+    })
+
+  onProgress({ percent: 100 })
 }
 
 const onPositiveClick = () => {

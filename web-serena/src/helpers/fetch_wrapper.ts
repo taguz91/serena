@@ -1,7 +1,7 @@
 import { useAuthStore } from '@/stores/user'
 
-const HOST = 'http://localhost:8181'
-// const HOST = 'https://api-dev.serena-ista.click'
+export const HOST = 'http://localhost:8181'
+// export const HOST = 'https://api-dev.serena-ista.click'
 
 const request = (method: 'GET' | 'POST' | 'PUT' | 'DELETE') => {
   return async <T, R>(url: string, data: T | undefined = undefined) => {
@@ -28,8 +28,9 @@ const requestFormData = (method: 'POST') => {
     const requestOptions: RequestInit = {
       method,
       headers: {
-        ...authHeader(),
-        'Content-Type': 'multipart/form-data'
+        ...authHeader()
+        // is auto added by browser
+        // 'Content-Type': 'multipart/form-data'
       }
     }
 
