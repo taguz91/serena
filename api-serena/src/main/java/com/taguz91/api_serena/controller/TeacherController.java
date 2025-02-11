@@ -1,5 +1,6 @@
 package com.taguz91.api_serena.controller;
 
+import com.taguz91.api_serena.api.aws.BucketName;
 import com.taguz91.api_serena.api.request.TeacherRequest;
 import com.taguz91.api_serena.api.request.UpdateRequest;
 import com.taguz91.api_serena.api.response.ClassroomSummaryGlobal;
@@ -10,19 +11,25 @@ import com.taguz91.api_serena.models.RegisterStudent;
 import com.taguz91.api_serena.models.Teacher;
 import com.taguz91.api_serena.repository.RegisterStudentRepository;
 import com.taguz91.api_serena.repository.TeacherRepository;
+import com.taguz91.api_serena.service.contracts.DownloadImageService;
+import com.taguz91.api_serena.service.contracts.FileStoreService;
 import com.taguz91.api_serena.utils.Shared;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,6 +45,10 @@ public class TeacherController {
     private RegisterStudentRepository registerStudentRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private FileStoreService fileStoreService;
+    @Autowired
+    private DownloadImageService downloadImageService;
 
     @GetMapping("")
     public ResponseEntity<PageResponse<Teacher>> index(
@@ -208,5 +219,52 @@ public class TeacherController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(teacher);
+    }
+
+    @PostMapping(
+            value = "/change/photo",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<Teacher> updatePhoto(
+            @AuthenticationPrincipal Teacher teacher,
+            @Valid @RequestParam("file") MultipartFile photo
+    ) {
+        fileStoreService.setPrefixFolder(
+                "teacher-photos/" + teacher.getId() + "/"
+        );
+        String s3key = fileStoreService.save(photo, BucketName.SYNC_FILES);
+
+        teacher.setPhoto(s3key);
+        Teacher updated = teacherRepository.save(teacher);
+
+        updated.setPhoto(
+                downloadImageService.url(teacher.getPhoto())
+        );
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(updated);
+    }
+
+    @GetMapping("/photo")
+    public ResponseEntity<byte[]> photo(
+            @AuthenticationPrincipal Teacher teacher
+    ) throws IOException {
+        if (teacher.getPhoto() == null) {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new byte[4096]);
+        }
+
+        byte[] bytes = downloadImageService.download(teacher.getPhoto());
+        String[] paths = teacher.getPhoto().split("/");
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        httpHeaders.setContentLength(bytes.length);
+        httpHeaders.setContentDispositionFormData("attachment", paths[paths.length - 1]);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .headers(httpHeaders)
+                .body(bytes);
     }
 }

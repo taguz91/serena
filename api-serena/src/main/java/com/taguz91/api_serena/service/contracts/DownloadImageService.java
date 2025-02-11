@@ -4,4 +4,6 @@ import java.io.IOException;
 
 public interface DownloadImageService {
     public byte[] download(String key) throws IOException;
+
+    public String url(String key);
 }
