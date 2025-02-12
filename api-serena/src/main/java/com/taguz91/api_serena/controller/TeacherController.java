@@ -1,6 +1,8 @@
 package com.taguz91.api_serena.controller;
 
 import com.taguz91.api_serena.api.aws.BucketName;
+import com.taguz91.api_serena.api.criteria.TeacherSpecificationCriteria;
+import com.taguz91.api_serena.api.criteria.builder.TeacherSpecificationBuilder;
 import com.taguz91.api_serena.api.request.TeacherRequest;
 import com.taguz91.api_serena.api.request.UpdateRequest;
 import com.taguz91.api_serena.api.response.ClassroomSummaryGlobal;
@@ -19,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -34,6 +37,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("api/v1/teacher")
@@ -53,10 +58,20 @@ public class TeacherController {
     @GetMapping("")
     public ResponseEntity<PageResponse<Teacher>> index(
             @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "20") int size
+            @RequestParam(value = "size", defaultValue = "20") int size,
+            @RequestParam(value = "search", defaultValue = "") String search
     ) {
+        TeacherSpecificationBuilder builder = new TeacherSpecificationBuilder();
+        Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");
+        Matcher matcher = pattern.matcher(search + ",");
+        while (matcher.find()) {
+            builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
+        }
+
+        Specification<Teacher> spec = builder.build();
+
         Pageable pageable = PageRequest.of(page, size);
-        Page<Teacher> teachers = teacherRepository.findAll(pageable);
+        Page<Teacher> teachers = teacherRepository.findAll(spec, pageable);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new PageResponse<Teacher>(teachers));
