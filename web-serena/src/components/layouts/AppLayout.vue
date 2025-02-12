@@ -3,7 +3,7 @@
     <SideNav title="Serena" class="w-20" />
 
     <main class="ml-20 flex-1 flex lg:flex-row flex-col">
-      <div class="w-full">
+      <div class="flex-1">
         <slot />
       </div>
 

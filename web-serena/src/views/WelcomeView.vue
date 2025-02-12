@@ -110,7 +110,7 @@ onMounted(() => {
     return
   }
 
-  if (teacher.isActive) {
+  if (!needCreatePassword.value && teacher.isActive) {
     router.push({ name: 'app-home' })
     return
   }
