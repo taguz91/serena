@@ -17,6 +17,8 @@
     </div>
 
     <div :hidden="hidden" :class="hidden ? '' : ' p-5 mx-14'">
+      <p class="text-xl font-semibold">Total de estados: {{ totalSummary }}</p>
+
       <div class="w-full">
         <Pie v-if="dataset" :data="dataset" :options="pieOptions" />
       </div>
@@ -41,6 +43,7 @@ const props = defineProps<{
 const hidden = ref(true)
 const summary = ref<Summary[]>([])
 const dataset = ref<ChartData<'pie'> | undefined>()
+const totalSummary = ref(0)
 
 const loadChart = async () => {
   await loadChartConfig()
@@ -55,12 +58,16 @@ const loadChart = async () => {
   )
 
   summary.value = data.sort((a, b) => b.count - a.count)
+  const total = data.reduce((acc, s) => acc + s.count, 0)
+  totalSummary.value = total
 
   dataset.value = {
-    labels: summary.value.map((s) => `${s.count} - ${emotionLabel(s.emotion)}`),
+    labels: summary.value.map(
+      (s) => `${((s.count * 100) / total).toFixed(2)}% ${s.count} - ${emotionLabel(s.emotion)}`
+    ),
     datasets: [
       {
-        label: 'Estudiantes',
+        label: 'Estados',
         backgroundColor: summary.value.map((s) => emotionColor(s.emotion)),
         data: summary.value.map((s) => s.count)
       }

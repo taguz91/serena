@@ -1,7 +1,7 @@
 import { useAuthStore } from '@/stores/user'
 
-// export const HOST = 'http://localhost:8181'
-export const HOST = 'https://api-dev.serena-ista.click'
+export const HOST = 'http://localhost:8181'
+// export const HOST = 'https://api-dev.serena-ista.click'
 
 const request = (method: 'GET' | 'POST' | 'PUT' | 'DELETE') => {
   return async <T, R>(url: string, data: T | undefined = undefined) => {
