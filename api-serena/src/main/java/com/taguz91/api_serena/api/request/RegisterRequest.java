@@ -2,9 +2,7 @@ package com.taguz91.api_serena.api.request;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import com.taguz91.api_serena.models.Classroom;
 import com.taguz91.api_serena.models.Register;
@@ -28,12 +26,6 @@ public class RegisterRequest implements Serializable {
     private String idClassroom;
 
     private String topic;
-
-    public RegisterRequest() {
-        LocalDate date = LocalDate.now();
-        DateTimeFormatter dateFormat = DateTimeFormatter.ISO_DATE_TIME;
-        this.topic = "Clase " + date.format(dateFormat);
-    }
 
     public Register toRegister() {
         return new Register()
