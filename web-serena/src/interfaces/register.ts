@@ -9,6 +9,7 @@ export interface Register {
   updatedBy?: string
   id: string
   date: string
+  topic: string
   status: StatusRegister
   classroom: Classroom
 }
@@ -17,6 +18,7 @@ export interface RegisterForm {
   id?: string
   status: StatusRegister
   idClassroom: string
+  topic: string
 }
 
 export interface RegisterStudentForm {

@@ -39,7 +39,7 @@ const menuOptions = computed(() => {
   return props.students.map((student): MenuOption => {
     return {
       key: student.id,
-      label: renderLink('student-report', student.name, student.id),
+      label: renderLink('student-report', `${student.lastname} ${student.name}`, student.id),
       icon: renderIcon(User),
       props: {
         class: 'hover:bg-blue-200'

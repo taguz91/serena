@@ -17,6 +17,7 @@ export interface Student {
   id: string
   identification: string
   name: string
+  lastname: string
   gender: string
   reference: any
 }

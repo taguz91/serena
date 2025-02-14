@@ -2,7 +2,10 @@
   <div class="mb-2 w-full shadow-md p-2 rounded-md">
     <div class="flex items-center justify-between">
       <div class="flex justify-between w-full mr-6">
-        <p class="text-lg">{{ register.createdAt }}</p>
+        <p class="text-lg">
+          {{ register.topic }} -
+          {{ register.createdAt }}
+        </p>
 
         <NTag :round="true" :type="register.status === 'open' ? 'success' : 'info'">{{
           statusLabel(register.status)
@@ -19,7 +22,7 @@
     <div :hidden="hidden" :class="hidden ? '' : ' p-5 mx-14'">
       <p class="text-xl font-semibold">Total de estados: {{ totalSummary }}</p>
 
-      <div class="w-full">
+      <div class="w-full mt-4">
         <Pie v-if="dataset" :data="dataset" :options="pieOptions" />
       </div>
     </div>
@@ -35,6 +38,7 @@ import { ref } from 'vue'
 import { emotionColor, emotionLabel, statusLabel } from '@/utils/translate'
 import type { ChartData } from 'chart.js'
 import { loadChartConfig, pieOptions } from '@/helpers/loadChartConfig'
+import { Pie } from 'vue-chartjs'
 
 const props = defineProps<{
   register: Register
@@ -60,6 +64,10 @@ const loadChart = async () => {
   summary.value = data.sort((a, b) => b.count - a.count)
   const total = data.reduce((acc, s) => acc + s.count, 0)
   totalSummary.value = total
+
+  if (total === 0) {
+    return
+  }
 
   dataset.value = {
     labels: summary.value.map(
