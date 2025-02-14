@@ -21,3 +21,9 @@ export interface ClassroomForm {
   idSubject: string
   name: string
 }
+
+export interface TopicCache {
+  topic: string
+  time: number
+  idClassroom: string
+}

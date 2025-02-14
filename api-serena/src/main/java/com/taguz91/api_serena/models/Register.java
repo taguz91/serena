@@ -36,6 +36,9 @@ public class Register extends BaseEntity implements Serializable {
 
     private String status;
 
+    @Column(nullable = true)
+    private String topic;
+
     @JsonManagedReference(value = "rf_register_classroom")
     @ManyToOne(fetch = FetchType.LAZY)
     private Classroom classroom;

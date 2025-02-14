@@ -1,16 +1,22 @@
 package com.taguz91.api_serena.controller;
 
 import com.amazonaws.services.eks.model.NotFoundException;
+import com.taguz91.api_serena.api.criteria.CriteriaHelper;
+import com.taguz91.api_serena.api.criteria.builder.CarreraSpecificationBuilder;
+import com.taguz91.api_serena.api.criteria.builder.TeacherSpecificationBuilder;
 import com.taguz91.api_serena.api.request.CarreraRequest;
 import com.taguz91.api_serena.api.response.MessageResponse;
 import com.taguz91.api_serena.api.response.OptionResponse;
 import com.taguz91.api_serena.api.response.PageResponse;
 import com.taguz91.api_serena.models.Carrera;
+import com.taguz91.api_serena.models.Teacher;
 import com.taguz91.api_serena.repository.CarreraRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,10 +36,15 @@ public class CarreraController {
     @GetMapping("")
     public ResponseEntity<PageResponse<Carrera>> index(
             @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "20") int size
+            @RequestParam(value = "size", defaultValue = "20") int size,
+            @RequestParam(value = "search", defaultValue = "") String search
     ) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Carrera> carreras = carreraRepository.findAll(pageable);
+        CriteriaHelper<Carrera> criteriaHelper = new CriteriaHelper<>(
+                new CarreraSpecificationBuilder()
+        );
+        Specification<Carrera> spec = criteriaHelper.build(search);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("description"));
+        Page<Carrera> carreras = carreraRepository.findAll(spec, pageable);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new PageResponse<>(carreras));

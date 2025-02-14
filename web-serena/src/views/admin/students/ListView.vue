@@ -28,6 +28,10 @@ const router = useRouter()
 
 const columns: DataTableColumns<Subject> = [
   {
+    title: 'Apellido',
+    key: 'lastname'
+  },
+  {
     title: 'Nombre',
     key: 'name'
   },

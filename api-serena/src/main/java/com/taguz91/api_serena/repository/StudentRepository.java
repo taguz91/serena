@@ -7,6 +7,7 @@ import com.taguz91.api_serena.models.Student;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface StudentRepository extends JpaRepository<Student, String> {
+public interface StudentRepository extends JpaRepository<Student, String>, JpaSpecificationExecutor<Student> {
 
     static final String QUERY_BY_TEACHER = " FROM public.students s "
             + "join registers_students rs on rs.student_id = s.id "
@@ -30,7 +31,7 @@ public interface StudentRepository extends JpaRepository<Student, String> {
     @Query(
             value = "SELECT distinct s.id, s.identification, s.name, s.lastname, s.gender, s.reference, s.created_at, s.updated_at, s.created_by, s.updated_by, s.is_deleted "
                     + QUERY_BY_TEACHER
-                    +  " ORDER BY s.name ASC LIMIT :limitParam OFFSET :offset "
+                    +  " ORDER BY s.lastname, s.name ASC LIMIT :limitParam OFFSET :offset "
                     + "\n-- #pageable\n",
             countQuery = "SELECT count(*) " + QUERY_BY_TEACHER,
             nativeQuery = true

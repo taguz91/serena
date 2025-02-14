@@ -25,11 +25,14 @@ public class RegisterRequest implements Serializable {
     @NotNull
     private String idClassroom;
 
+    private String topic;
+
     public Register toRegister() {
         return new Register()
                 .setId(new NanoCombCreator().create().toString())
                 .setDate(LocalDateTime.now())
                 .setStatus(status)
+                .setTopic(topic != null ? topic : "Clase")
                 .setClassroom(
                         (new Classroom()).setId(idClassroom)
                 );

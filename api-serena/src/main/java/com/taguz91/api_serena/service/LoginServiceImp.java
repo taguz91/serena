@@ -1,6 +1,7 @@
 package com.taguz91.api_serena.service;
 
 import com.taguz91.api_serena.api.exception.ResourceNotFoundException;
+import com.taguz91.api_serena.api.request.LoginEmailRequest;
 import com.taguz91.api_serena.api.request.LoginRequest;
 import com.taguz91.api_serena.api.response.SessionInfo;
 import com.taguz91.api_serena.models.Classroom;
@@ -54,6 +55,17 @@ public class LoginServiceImp implements LoginService {
         teacher.setToken(jwtService.toToken(teacher));
         teacher.setLastLogin(LocalDateTime.now());
         teacherRepository.save(teacher);
+
+        return teacher;
+    }
+
+    public Teacher loginByEmail(LoginEmailRequest request) {
+        Teacher teacher = teacherRepository.findByEmail(
+                request.getEmail()
+        ).orElseThrow(() -> new ResourceNotFoundException("Correo o contrasena incorrectas"));
+
+        // set the new token
+        teacher.setToken(jwtService.toToken(teacher));
 
         return teacher;
     }

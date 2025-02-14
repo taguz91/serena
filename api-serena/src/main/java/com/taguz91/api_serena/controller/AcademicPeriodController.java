@@ -1,6 +1,8 @@
 package com.taguz91.api_serena.controller;
 
 import com.amazonaws.services.eks.model.NotFoundException;
+import com.taguz91.api_serena.api.criteria.CriteriaHelper;
+import com.taguz91.api_serena.api.criteria.builder.AcademicPeriodSpecificationBuilder;
 import com.taguz91.api_serena.api.request.AcademicPeriodRequest;
 import com.taguz91.api_serena.api.response.MessageResponse;
 import com.taguz91.api_serena.api.response.OptionResponse;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,10 +33,19 @@ public class AcademicPeriodController {
     @GetMapping("")
     public ResponseEntity<PageResponse<AcademicPeriod>> index(
             @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "20") int size
+            @RequestParam(value = "size", defaultValue = "20") int size,
+            @RequestParam(value = "search", defaultValue = "") String search
     ) {
+        CriteriaHelper<AcademicPeriod> criteriaHelper = new CriteriaHelper<>(
+                new AcademicPeriodSpecificationBuilder()
+        );
+
+        Specification<AcademicPeriod> spec = criteriaHelper.build(search);
         Pageable pageable = PageRequest.of(page, size);
-        Page<AcademicPeriod> academicPeriods = academicPeriodRepository.findAll(pageable);
+        Page<AcademicPeriod> academicPeriods = academicPeriodRepository.findAll(
+                spec,
+                pageable
+        );
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new PageResponse<>(academicPeriods));
