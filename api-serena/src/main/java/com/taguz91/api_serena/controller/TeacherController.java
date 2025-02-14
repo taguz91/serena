@@ -3,6 +3,7 @@ package com.taguz91.api_serena.controller;
 import com.taguz91.api_serena.api.aws.BucketName;
 import com.taguz91.api_serena.api.criteria.CriteriaHelper;
 import com.taguz91.api_serena.api.criteria.builder.TeacherSpecificationBuilder;
+import com.taguz91.api_serena.api.request.LoginEmailRequest;
 import com.taguz91.api_serena.api.request.TeacherRequest;
 import com.taguz91.api_serena.api.request.UpdateRequest;
 import com.taguz91.api_serena.api.response.ClassroomSummaryGlobal;
@@ -15,12 +16,14 @@ import com.taguz91.api_serena.repository.RegisterStudentRepository;
 import com.taguz91.api_serena.repository.TeacherRepository;
 import com.taguz91.api_serena.service.contracts.DownloadImageService;
 import com.taguz91.api_serena.service.contracts.FileStoreService;
+import com.taguz91.api_serena.service.contracts.LoginService;
 import com.taguz91.api_serena.utils.Shared;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -52,6 +55,8 @@ public class TeacherController {
     private FileStoreService fileStoreService;
     @Autowired
     private DownloadImageService downloadImageService;
+    @Autowired
+    private LoginService loginService;
 
     @GetMapping("")
     public ResponseEntity<PageResponse<Teacher>> index(
@@ -64,7 +69,8 @@ public class TeacherController {
         );
         Specification<Teacher> spec = criteriaHelper.build(search);
 
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("name"));
+
         Page<Teacher> teachers = teacherRepository.findAll(spec, pageable);
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -275,5 +281,14 @@ public class TeacherController {
         return ResponseEntity.status(HttpStatus.OK)
                 .headers(httpHeaders)
                 .body(bytes);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Teacher> loginByEmail(@Valid @RequestBody LoginEmailRequest request)
+    {
+        Teacher teacher =  loginService.loginByEmail(request);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(teacher);
     }
 }

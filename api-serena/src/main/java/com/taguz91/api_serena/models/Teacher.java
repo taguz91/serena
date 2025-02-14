@@ -65,6 +65,9 @@ public class Teacher extends BaseEntity implements Serializable, UserDetails {
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT  'false'")
     private Boolean isAdmin;
 
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT  'false'")
+    private Boolean isRoot;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "teacher")
     @JsonIgnore
     private List<Classroom> classrooms;

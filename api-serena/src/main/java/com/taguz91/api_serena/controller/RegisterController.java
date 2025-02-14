@@ -1,6 +1,5 @@
 package com.taguz91.api_serena.controller;
 
-import com.amazonaws.services.xray.model.Http;
 import com.taguz91.api_serena.api.response.ClassroomSummaryGlobal;
 import com.taguz91.api_serena.models.Inscription;
 import com.taguz91.api_serena.repository.InscriptionRepository;
@@ -9,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -49,7 +49,7 @@ public class RegisterController {
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "20") int size
     ) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         Page<Register> registers = registerRepository.findAll(pageable);
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -66,6 +66,14 @@ public class RegisterController {
         if (registerExist.isPresent()) {
             if (registerExist.get().getCreatedAt().plusMinutes(10).isAfter(LocalDateTime.now())) {
                 this.createInscription(request);
+
+                Register exist = registerExist.get();
+                if (request.getTopic() != null) {
+                    exist.setTopic(request.getTopic());
+
+                    registerRepository.save(exist);
+                }
+
                 return ResponseEntity.status(HttpStatus.OK)
                         .body(registerExist.get());
             }
@@ -75,6 +83,7 @@ public class RegisterController {
         }
 
         Register register = request.toRegister();
+        register.setTopic("Inscription");
         Register saved = registerRepository.save(register);
 
         this.createInscription(request);
@@ -140,7 +149,7 @@ public class RegisterController {
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "20") int size
     )  {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
 
         Page<Register> registers = registerRepository.findAllByIdClassroom(idClassroom, pageable);
 

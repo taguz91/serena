@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +43,7 @@ public class CarreraController {
                 new CarreraSpecificationBuilder()
         );
         Specification<Carrera> spec = criteriaHelper.build(search);
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("description"));
         Page<Carrera> carreras = carreraRepository.findAll(spec, pageable);
 
         return ResponseEntity.status(HttpStatus.OK)

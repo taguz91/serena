@@ -1,5 +1,6 @@
 package com.taguz91.api_serena.controller;
 
+import com.taguz91.api_serena.api.request.LoginEmailRequest;
 import com.taguz91.api_serena.api.request.LoginRequest;
 import com.taguz91.api_serena.api.request.UpdateRequest;
 import com.taguz91.api_serena.api.request.RegisterTeacherRequest;
