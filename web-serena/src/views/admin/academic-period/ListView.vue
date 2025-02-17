@@ -17,6 +17,8 @@
       </NSpace>
     </template>
 
+    <SearchInput @search="getSearch" />
+
     <NDataTable :columns="columns" :loading="isLoading" :data="academicPeriods" />
 
     <div class="mt-2 flex justify-end">
@@ -43,6 +45,7 @@ import { h, ref } from 'vue'
 import FormView from './FormView.vue'
 import type { AcademicPeriod } from '@/interfaces'
 import { useAcademicPeriods } from '@/composable/academicPeriods/useAcademicPeriods'
+import SearchInput from '@/components/basic/SearchInput.vue'
 
 const show = ref(false)
 const currentId = ref<string | undefined>(undefined)
@@ -51,8 +54,15 @@ const showModal = () => {
   show.value = true
 }
 
-const { isLoading, academicPeriods, metaData, currentPage, getPage, deleteAcademicPeriod } =
-  useAcademicPeriods()
+const {
+  isLoading,
+  academicPeriods,
+  metaData,
+  currentPage,
+  getPage,
+  deleteAcademicPeriod,
+  getSearch
+} = useAcademicPeriods()
 
 const toggleModal = (newShow: boolean) => {
   show.value = newShow

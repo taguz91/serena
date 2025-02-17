@@ -8,6 +8,7 @@ import { defaultMeta } from '@/utils'
 export const useSubjectStore = defineStore('subject', () => {
   const metaData = ref<Meta>(defaultMeta())
   const currentPage = ref(1)
+  const search = ref<string | undefined>()
 
   const subjects = ref<Subject[]>([])
 
@@ -15,6 +16,7 @@ export const useSubjectStore = defineStore('subject', () => {
     metaData,
     currentPage,
     subjects,
+    search,
 
     // actions
 
@@ -30,6 +32,9 @@ export const useSubjectStore = defineStore('subject', () => {
       }
 
       currentPage.value = page
+    },
+    setSearch(newSearch: string | undefined) {
+      search.value = newSearch
     }
   }
 })

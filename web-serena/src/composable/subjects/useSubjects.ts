@@ -5,8 +5,15 @@ import { useMutation, useQuery } from '@tanstack/vue-query'
 import { storeToRefs } from 'pinia'
 import { computed, watch } from 'vue'
 
-const getSubjects = async (page: number) => {
-  const data = await fetchWrapper.get<unknown, Paginate<Subject>>(`/v1/subject?page=${page}`)
+const getSubjects = async (page: number, search: string | undefined) => {
+  let data
+  if (search && search.length > 0) {
+    data = await fetchWrapper.get<unknown, Paginate<Subject>>(
+      `/v1/subject?page=${page}&search=name:${search}`
+    )
+  } else {
+    data = await fetchWrapper.get<unknown, Paginate<Subject>>(`/v1/subject?page=${page}`)
+  }
 
   return data
 }
@@ -18,11 +25,11 @@ const deleteSubject = async (id: string) => {
 export const useSubjects = () => {
   const store = useSubjectStore()
 
-  const { currentPage, metaData, subjects } = storeToRefs(store)
+  const { currentPage, metaData, subjects, search } = storeToRefs(store)
 
   const { isLoading, data, refetch } = useQuery({
-    queryKey: ['subjects?page=', currentPage],
-    queryFn: () => getSubjects(currentPage.value - 1)
+    queryKey: ['subjects?page=', currentPage, search],
+    queryFn: () => getSubjects(currentPage.value - 1, search.value)
   })
 
   watch(data, () => {
@@ -55,6 +62,9 @@ export const useSubjects = () => {
     },
     getPage(page: number) {
       store.setPage(page)
+    },
+    getSearch(search: string | undefined) {
+      store.setSearch(search)
     }
   }
 }

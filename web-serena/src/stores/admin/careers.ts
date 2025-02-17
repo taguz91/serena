@@ -7,6 +7,7 @@ import { defaultMeta } from '@/utils'
 export const useCareersStore = defineStore('careers', () => {
   const metaData = ref<Meta>(defaultMeta())
   const currentPage = ref(1)
+  const search = ref<string | undefined>()
 
   const careers = ref<Career[]>([])
 
@@ -14,6 +15,7 @@ export const useCareersStore = defineStore('careers', () => {
     metaData,
     careers,
     currentPage,
+    search,
 
     setCareers(newCareers: Career[]) {
       careers.value = newCareers
@@ -30,6 +32,10 @@ export const useCareersStore = defineStore('careers', () => {
       }
 
       currentPage.value = page
+    },
+
+    setSearch(newSearch: string | undefined) {
+      search.value = newSearch
     }
   }
 })

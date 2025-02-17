@@ -14,6 +14,8 @@
       </NSpace>
     </template>
 
+    <SearchInput @search="getSearch" />
+
     <NDataTable :columns="columns" :data="subjects" :loading="isLoading" />
 
     <div class="mt-2 flex justify-end">
@@ -43,6 +45,7 @@ import { h, ref } from 'vue'
 import FormView from './FormView.vue'
 import type { Subject } from '@/interfaces'
 import { useSubjects } from '@/composable/subjects/useSubjects'
+import SearchInput from '@/components/basic/SearchInput.vue'
 
 const show = ref(false)
 const currentId = ref<string | undefined>(undefined)
@@ -51,7 +54,8 @@ const showModal = () => {
   show.value = true
 }
 
-const { subjects, isLoading, currentPage, metaData, deleteSubject, getPage } = useSubjects()
+const { subjects, isLoading, currentPage, metaData, deleteSubject, getPage, getSearch } =
+  useSubjects()
 
 const columns: DataTableColumns<Subject> = [
   {

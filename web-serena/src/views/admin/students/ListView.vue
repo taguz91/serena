@@ -1,5 +1,7 @@
 <template>
   <NPageHeader title="Estudiantes" subtitle="Revisar todos los estudiantes">
+    <SearchInput @search="getSearch" />
+
     <NDataTable :columns="columns" :data="students" :loading="isLoading" />
 
     <div class="mt-2 flex justify-end">
@@ -9,6 +11,7 @@
 </template>
 
 <script setup lang="ts">
+import SearchInput from '@/components/basic/SearchInput.vue'
 import { useStudentsAll } from '@/composable/students/useAdminStudents'
 import type { Subject } from '@/interfaces'
 import { Eye } from '@vicons/tabler'
@@ -23,10 +26,14 @@ import {
 import { h } from 'vue'
 import { useRouter } from 'vue-router'
 
-const { students, metaData, currentPage, isLoading, getPage } = useStudentsAll()
+const { students, metaData, currentPage, isLoading, getPage, getSearch } = useStudentsAll()
 const router = useRouter()
 
 const columns: DataTableColumns<Subject> = [
+  {
+    title: 'Identificación',
+    key: 'identification'
+  },
   {
     title: 'Apellido',
     key: 'lastname'

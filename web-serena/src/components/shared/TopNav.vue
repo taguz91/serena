@@ -9,9 +9,9 @@
         Ver Perfil
       </RouterLink>
 
-      <NButton type="error">
+      <NButton type="error" @click="logout">
         <template #icon>
-          <NIcon @click="logout"><Logout /></NIcon>
+          <NIcon><Logout /></NIcon>
         </template>
       </NButton>
     </div>

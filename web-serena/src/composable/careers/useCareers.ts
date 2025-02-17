@@ -6,8 +6,15 @@ import { storeToRefs } from 'pinia'
 import { watch } from 'vue'
 import { computed } from 'vue'
 
-const getCareers = async (page: number) => {
-  const data = await fetchWrapper.get<unknown, Paginate<Career>>(`/v1/carrera?page=${page}`)
+const getCareers = async (page: number, search: string | undefined) => {
+  let data
+  if (search && search.length > 0) {
+    data = await fetchWrapper.get<unknown, Paginate<Career>>(
+      `/v1/carrera?page=${page}&search=description:${search}`
+    )
+  } else {
+    data = await fetchWrapper.get<unknown, Paginate<Career>>(`/v1/carrera?page=${page}`)
+  }
 
   return data
 }
@@ -19,11 +26,11 @@ const deleteCareer = async (id: string) => {
 export const useCareers = () => {
   const store = useCareersStore()
 
-  const { metaData, careers, currentPage } = storeToRefs(store)
+  const { metaData, careers, currentPage, search } = storeToRefs(store)
 
   const { isLoading, data, refetch } = useQuery({
-    queryKey: ['careers?page=', currentPage],
-    queryFn: () => getCareers(currentPage.value - 1)
+    queryKey: ['careers?page=', currentPage, search],
+    queryFn: () => getCareers(currentPage.value - 1, search.value)
   })
 
   const mutationDelete = useMutation({
@@ -56,6 +63,9 @@ export const useCareers = () => {
     },
     deleteCareer(id: string) {
       mutationDelete.mutate(id)
+    },
+    getSearch(search: string | undefined) {
+      store.setSearch(search)
     }
   }
 }
