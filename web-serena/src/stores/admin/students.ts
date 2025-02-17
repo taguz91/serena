@@ -6,6 +6,7 @@ import { ref } from 'vue'
 export const useAdminStudentStore = defineStore('admin-students', () => {
   const metaData = ref<Meta>(defaultMeta())
   const currentPage = ref(1)
+  const search = ref<string | undefined>()
 
   const students = ref<Student[]>([])
 
@@ -13,6 +14,7 @@ export const useAdminStudentStore = defineStore('admin-students', () => {
     students,
     metaData,
     currentPage,
+    search,
     // actions
 
     setStudents(newStudents: Student[]) {
@@ -27,6 +29,9 @@ export const useAdminStudentStore = defineStore('admin-students', () => {
       }
 
       currentPage.value = page
+    },
+    setSearch(newSearch: string | undefined) {
+      search.value = newSearch
     }
   }
 })

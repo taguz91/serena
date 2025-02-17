@@ -11,6 +11,7 @@
     <DetailContainer v-else current="Registrar">
       <p class="font-bold text-sm">Registro creado el: {{ register?.createdAt }}</p>
       <p class="font-semibold text-2xl">{{ register?.classroom.subject.name }}</p>
+      <p class="text-slate-400 text-xl">{{ register?.topic }}</p>
       <p class="text-slate-400 text-xl">{{ register?.classroom.academicPeriod.name }}</p>
 
       <hr class="my-2" />

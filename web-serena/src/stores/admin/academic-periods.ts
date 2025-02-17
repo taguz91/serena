@@ -7,6 +7,7 @@ import { defaultMeta } from '@/utils'
 export const useAcademicPeriodsStore = defineStore('academicPeriods', () => {
   const metaData = ref<Meta>(defaultMeta())
   const currentPage = ref(1)
+  const search = ref<string | undefined>()
 
   const academicPeriods = ref<AcademicPeriod[]>([])
 
@@ -14,6 +15,7 @@ export const useAcademicPeriodsStore = defineStore('academicPeriods', () => {
     metaData,
     academicPeriods,
     currentPage,
+    search,
 
     // actions
     setAcademicPeriods(newAcademicPeriods: AcademicPeriod[]) {
@@ -32,6 +34,9 @@ export const useAcademicPeriodsStore = defineStore('academicPeriods', () => {
       }
 
       currentPage.value = page
+    },
+    setSearch(newSearch: string | undefined) {
+      search.value = newSearch
     }
   }
 })

@@ -12,8 +12,18 @@ interface ChangePasswordProps {
   password: string
 }
 
-const getTeachers = async (page: number): Promise<Paginate<Teacher>> => {
-  const data = await fetchWrapper.get<unknown, Paginate<Teacher>>(`/v1/teacher?page=${page}`)
+const getTeachers = async (
+  page: number,
+  search: string | undefined
+): Promise<Paginate<Teacher>> => {
+  let data
+  if (search && search.length > 0) {
+    data = await fetchWrapper.get<unknown, Paginate<Teacher>>(
+      `/v1/teacher?page=${page}&search=email:${search},name:${search}`
+    )
+  } else {
+    data = await fetchWrapper.get<unknown, Paginate<Teacher>>(`/v1/teacher?page=${page}`)
+  }
 
   return data
 }
@@ -34,7 +44,7 @@ const changePasswordApi = async (request: ChangePasswordProps) => {
 
 export const useTeachers = () => {
   const store = useTeachersStore()
-  const { metaData, teachers, currentPage } = storeToRefs(store)
+  const { metaData, teachers, currentPage, search } = storeToRefs(store)
 
   const mutationDelete = useMutation({
     mutationFn: deleteTeacher
@@ -49,8 +59,8 @@ export const useTeachers = () => {
   })
 
   const { isLoading, data, refetch } = useQuery({
-    queryKey: ['teachers?page=', currentPage],
-    queryFn: () => getTeachers(currentPage.value - 1)
+    queryKey: ['teachers?page=', currentPage, search],
+    queryFn: () => getTeachers(currentPage.value - 1, search.value)
   })
 
   watch(data, (newData) => {
@@ -99,6 +109,9 @@ export const useTeachers = () => {
     },
     updatePassword: (id: string, password: string) => {
       changePassword.mutate({ id, password })
+    },
+    getSearch(search: string | undefined) {
+      store.setSearch(search)
     }
   }
 }

@@ -14,6 +14,8 @@
       </NSpace>
     </template>
 
+    <SearchInput @search="getSearch" />
+
     <NDataTable :columns="columns" :data="teachers" :loading="isLoading" />
 
     <div class="mt-2 flex justify-end">
@@ -49,6 +51,7 @@ import { useTeachers } from '@/composable/teachers/useTeachers'
 import type { Teacher } from '@/interfaces'
 import FormChangePassword from './FormChangePassword.vue'
 import { useRouter } from 'vue-router'
+import SearchInput from '@/components/basic/SearchInput.vue'
 
 const show = ref(false)
 const showChangePassword = ref(false)
@@ -59,8 +62,16 @@ const showModal = () => {
   show.value = true
 }
 
-const { isLoading, teachers, metaData, currentPage, getPage, deleteTeacher, activateTeacher } =
-  useTeachers()
+const {
+  isLoading,
+  teachers,
+  metaData,
+  currentPage,
+  getPage,
+  deleteTeacher,
+  activateTeacher,
+  getSearch
+} = useTeachers()
 
 const toggleModal = (newShow: boolean) => {
   show.value = newShow

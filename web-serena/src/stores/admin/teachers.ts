@@ -8,6 +8,7 @@ import { defaultMeta } from '@/utils'
 export const useTeachersStore = defineStore('teachers', () => {
   const metaData = ref<Meta>(defaultMeta())
   const currentPage = ref(1)
+  const search = ref<string | undefined>()
 
   const teachers = ref<Teacher[]>([])
 
@@ -16,6 +17,7 @@ export const useTeachersStore = defineStore('teachers', () => {
     metaData,
     teachers,
     currentPage,
+    search,
 
     // actions
     setTeachers(newTeachers: Teacher[]) {
@@ -34,6 +36,9 @@ export const useTeachersStore = defineStore('teachers', () => {
       }
 
       currentPage.value = page
+    },
+    setSearch(newSearch: string | undefined) {
+      search.value = newSearch
     }
   }
 })
