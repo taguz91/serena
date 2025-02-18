@@ -2,7 +2,7 @@
   <PublicLayout>
     <SmallSpinner v-if="isLoading" />
 
-    <div v-else class="my-10">
+    <div v-else class="my-10 px-10 min-h-screen">
       <p class="font-bold text-lg">{{ register?.createdAt }}</p>
       <p class="font-semibold">{{ register?.classroom.subject.name }}</p>
       <p class="text-sm text-slate-400">{{ register?.classroom.academicPeriod.name }}</p>

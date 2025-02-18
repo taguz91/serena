@@ -17,6 +17,13 @@
         </p>
 
         <p
+          v-if="confirmText"
+          class="text-sm text-center mt-3 bg-green-200 text-green-600 rounded-xl p-2 font-semibold"
+        >
+          {{ confirmText }}
+        </p>
+
+        <p
           v-if="helpMessage !== ''"
           class="text-sm text-center mt-3 bg-blue-200 text-blue-600 rounded-xl p-2 font-semibold"
         >
@@ -82,6 +89,7 @@ interface Props {
   shouldRotate: boolean
   infinite: boolean
   savePhoto: (photo: string) => Promise<void>
+  confirmText?: string
 }
 
 const props = defineProps<Props>()

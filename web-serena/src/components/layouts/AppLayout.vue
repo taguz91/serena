@@ -4,7 +4,7 @@
 
     <main class="ml-20 flex-1 flex lg:flex-row flex-col w-fit">
       <div class="flex-1 flex flex-col">
-        <div class="flex-1 overflow-y-auto">
+        <div class="flex-1">
           <slot />
         </div>
 
