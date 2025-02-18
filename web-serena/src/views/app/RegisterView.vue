@@ -1,14 +1,12 @@
 <template>
   <AppLayout>
     <template #side>
-      <div class="h-[500px] lg:h-[0px]"></div>
-
       <StudentCheckList :id-register="route.params.id.toString()" />
     </template>
 
     <SmallSpinner v-if="isLoading" />
 
-    <DetailContainer v-else current="Registrar">
+    <DetailContainer v-else current="Registrar" class="min-h-screen mb-28">
       <p class="font-bold text-sm">Registro creado el: {{ register?.createdAt }}</p>
       <p class="font-semibold text-2xl">{{ register?.classroom.subject.name }}</p>
       <p class="text-slate-400 text-xl">{{ register?.topic }}</p>
@@ -21,7 +19,7 @@
       </p>
 
       <div class="w-full h-full mt-10">
-        <MainCamera :save-photo="savePhoto" infinite />
+        <MainCamera :save-photo="savePhoto" infinite :confirm-text="confirmText" />
       </div>
     </DetailContainer>
   </AppLayout>
@@ -38,13 +36,26 @@ import StudentCheckList from '@/components/shared/StudentCheckList.vue'
 import { useRegister } from '@/composable/register/useRegister'
 import SmallSpinner from '@/components/shared/SmallSpinner.vue'
 import { useRegisterStudent } from '@/composable/register/useRegisterStudent'
-import { toRef } from 'vue'
+import { watch, ref, toRef } from 'vue'
+import { emotionLabel } from '@/utils/translate'
 
 const route = useRoute()
 const id = toRef(route.params, 'id')
-const { create } = useRegisterStudent(route.params.id.toString())
+const { create, register: registerStudent } = useRegisterStudent(route.params.id.toString())
 
 const { isLoading, register } = useRegister(id)
+
+const confirmText = ref<undefined | string>()
+
+watch(registerStudent, (value) => {
+  if (value) {
+    confirmText.value = `¡Listo! Usted esta ${emotionLabel(value.emotion)}`
+
+    setTimeout(() => {
+      confirmText.value = undefined
+    }, 10000)
+  }
+})
 
 const savePhoto = async (photo: string) => {
   create(photo)

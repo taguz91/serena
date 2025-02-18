@@ -3,8 +3,12 @@
     <SideNav title="Serena" class="w-20" />
 
     <main class="ml-20 flex-1 flex lg:flex-row flex-col w-fit">
-      <div class="flex-1">
-        <slot />
+      <div class="flex-1 flex flex-col">
+        <div class="flex-1">
+          <slot />
+        </div>
+
+        <FooterSimple />
       </div>
 
       <div v-if="$slots.side" class="w-full lg:w-[310px] border-l-2">
@@ -16,4 +20,5 @@
 
 <script setup lang="ts">
 import SideNav from '../shared/SideNav.vue'
+import FooterSimple from '../shared/FooterSimple.vue'
 </script>

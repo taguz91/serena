@@ -14,6 +14,7 @@
     :height="videoHeight"
     :shouldRotate="shouldRotate"
     :save-photo="savePhoto"
+    :confirm-text="confirmText"
   />
 
   <div v-else>
@@ -27,6 +28,7 @@ import CameraCanvas from './CameraCanvas.vue'
 
 defineProps<{
   savePhoto: (photo: string) => Promise<void>
+  confirmText?: string
   infinite: boolean
 }>()
 

@@ -15,7 +15,7 @@
       </p>
 
       <p v-else class="text-sm text-slate-400 w-4/5 text-center my-2">
-        Tu cuenta esta siendo validada, cuando un administrados verifique tus datos podrás continuar
+        Tu cuenta esta siendo validada, cuando un administrador verifique tus datos podrás continuar
         al sistema.
       </p>
 
