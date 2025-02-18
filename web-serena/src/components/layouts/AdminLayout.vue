@@ -15,6 +15,8 @@
         <div class="py-10 px-14 bg-slate-50 min-h-full">
           <RouterView />
         </div>
+
+        <FooterSimple />
       </NModalProvider>
     </main>
   </div>
@@ -39,6 +41,7 @@ import {
 import { NIcon, NMenu, NModalProvider, type MenuOption } from 'naive-ui'
 import AppIcon from '../shared/AppIcon.vue'
 import TopNav from '../shared/TopNav.vue'
+import FooterSimple from '../shared/FooterSimple.vue'
 
 const router = useRouter()
 

@@ -43,6 +43,7 @@ import {
   NPageHeader,
   NPagination,
   NSpace,
+  NTooltip,
   type DataTableColumns
 } from 'naive-ui'
 
@@ -103,74 +104,124 @@ const columns: DataTableColumns<Teacher> = [
     render: (row) => {
       return [
         h(
-          NButton,
+          NTooltip,
           {
-            type: 'info',
-            tertiary: true,
-            onClick: () => {
-              activateTeacher(row.id)
-            }
+            trigger: 'hover'
           },
           {
-            icon: () =>
-              h(NIcon, null, { default: () => (row.isActive ? h(LockAccess) : h(LockOff)) })
+            default: () => (row.isActive ? 'Desactivar' : 'Activar'),
+            trigger: () =>
+              h(
+                NButton,
+                {
+                  type: 'info',
+                  tertiary: true,
+                  onClick: () => {
+                    activateTeacher(row.id)
+                  }
+                },
+                {
+                  icon: () =>
+                    h(NIcon, null, { default: () => (row.isActive ? h(LockAccess) : h(LockOff)) })
+                }
+              )
           }
         ),
         h(
-          NButton,
+          NTooltip,
           {
-            type: 'info',
-            tertiary: true,
-            onClick: () => {
-              currentId.value = row.id
-              showModal()
-            }
+            trigger: 'hover'
           },
           {
-            icon: () => h(NIcon, null, { default: () => h(Pencil) })
+            default: () => 'Editar',
+            trigger: () =>
+              h(
+                NButton,
+                {
+                  type: 'info',
+                  tertiary: true,
+                  onClick: () => {
+                    currentId.value = row.id
+                    showModal()
+                  }
+                },
+                {
+                  icon: () => h(NIcon, null, { default: () => h(Pencil) })
+                }
+              )
           }
         ),
         h(
-          NButton,
+          NTooltip,
           {
-            type: 'info',
-            tertiary: true,
-            onClick: () => {
-              currentId.value = row.id
-              showChangePassword.value = true
-            }
+            trigger: 'hover'
           },
           {
-            icon: () => h(NIcon, null, { default: () => h(Lock) })
+            default: () => 'Cambiar contraseña',
+            trigger: () =>
+              h(
+                NButton,
+                {
+                  type: 'info',
+                  tertiary: true,
+                  onClick: () => {
+                    currentId.value = row.id
+                    showChangePassword.value = true
+                  }
+                },
+                {
+                  icon: () => h(NIcon, null, { default: () => h(Lock) })
+                }
+              )
           }
         ),
         h(
-          NButton,
+          NTooltip,
           {
-            type: 'info',
-            tertiary: true,
-            onClick: () => {
-              router.push({
-                name: 'teachers-report',
-                params: { id: row.id }
-              })
-            }
+            trigger: 'hover'
           },
           {
-            icon: () => h(NIcon, null, { default: () => h(Eye) })
+            default: () => 'Ver reporte',
+            trigger: () =>
+              h(
+                NButton,
+                {
+                  type: 'info',
+                  tertiary: true,
+                  onClick: () => {
+                    router.push({
+                      name: 'teachers-report',
+                      params: { id: row.id }
+                    })
+                  }
+                },
+                {
+                  icon: () => h(NIcon, null, { default: () => h(Eye) })
+                }
+              )
           }
         ),
         h(
-          NButton,
+          NTooltip,
           {
-            type: 'error',
-            tertiary: true,
-            onClick: () => {
-              deleteTeacher(row.id)
-            }
+            trigger: 'hover'
           },
           {
-            icon: () => h(NIcon, null, { default: () => h(Trash) })
+            default: () => 'Eliminar',
+            trigger: () =>
+              h(
+                NButton,
+                {
+                  type: 'error',
+                  tertiary: true,
+                  onClick: () => {
+                    deleteTeacher(row.id)
+                  }
+                },
+                {
+                  icon: () => h(NIcon, null, { default: () => h(Trash) })
+                }
+              )
           }
         )
       ]
