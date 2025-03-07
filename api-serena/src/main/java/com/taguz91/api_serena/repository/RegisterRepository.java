@@ -14,6 +14,10 @@ import java.util.Optional;
 
 @Repository
 public interface RegisterRepository extends JpaRepository<Register, String> {
+
+    @Query("SELECT r FROM Register r WHERE r.topic like %:criteria% or r.classroom.name like %:criteria% or r.classroom.academicPeriod.name like %:criteria% or r.classroom.teacher.name like %:criteria% or r.classroom.teacher.email like %:criteria% or r.classroom.subject.name like %:criteria%")
+    Page<Register> findAllPageable(@Param("criteria") String criteria, Pageable pageable);
+
     @Query("SELECT r FROM Register r WHERE r.classroom.id = :idClassroom AND r.status = 'open'")
     Optional<Register> findByIdClassroom(@Param("idClassroom") String idClassroom);
 

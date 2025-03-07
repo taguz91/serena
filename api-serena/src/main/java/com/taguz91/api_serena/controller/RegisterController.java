@@ -47,10 +47,13 @@ public class RegisterController {
     @GetMapping("")
     public ResponseEntity<PageResponse<Register>> index(
             @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "20") int size
+            @RequestParam(value = "size", defaultValue = "20") int size,
+            @RequestParam(value = "search", defaultValue = "") String search
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        Page<Register> registers = registerRepository.findAll(pageable);
+        Page<Register> registers = search.isEmpty()
+                ? registerRepository.findAll(pageable)
+                : registerRepository.findAllPageable(search, pageable);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new PageResponse<>(registers));
