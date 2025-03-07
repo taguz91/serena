@@ -1,7 +1,7 @@
 <template>
   <div class="mb-2 flex justify-end">
     <div class="w-[300px]">
-      <NInput placeholder="Buscar" v-model:value="search" @update-value="onSearch" />
+      <NInput placeholder="Buscar" v-model:value="searchInput" @update-value="onSearch" />
     </div>
   </div>
 </template>
@@ -11,11 +11,14 @@ import { useDebounceFn } from '@vueuse/core'
 import { NInput } from 'naive-ui'
 import { ref } from 'vue'
 
-const search = ref<string | undefined>(undefined)
+const props = defineProps<{
+  search: string | undefined
+}>()
+
+const searchInput = ref<string | undefined>(props.search)
 
 const onSearch = useDebounceFn(() => {
-  console.log('search', search.value)
-  emit('search', search.value)
+  emit('search', searchInput.value)
 }, 1000)
 
 const emit = defineEmits<{

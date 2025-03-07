@@ -1,7 +1,16 @@
 <template>
   <AppLayout>
     <template #side>
-      <StudentTeacherList />
+      <h3 class="text-xl px-4 pt-4">Se recomienda el uso de las siguientes metodologías:</h3>
+
+      <div class="p-4 mb-4 border-b" v-for="methodology in methodologies" :key="methodology.id">
+        <p class="font-bold mb-3">{{ methodology.name }}</p>
+        <p>
+          {{ methodology.summary }}
+        </p>
+      </div>
+
+      <StudentList :students="students" />
     </template>
 
     <DetailContainer current="Clase">
@@ -39,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import { toRef } from 'vue'
+import { computed, toRef, type ComputedRef } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { NPagination } from 'naive-ui'
@@ -51,8 +60,10 @@ import { useRegistersClassroom } from '@/composable/classrooms/useRegistersClass
 import SummaryItem from '@/components/containers/SummaryItem.vue'
 import GeneralChart from '@/components/chart/GeneralChart.vue'
 import { useClassroom } from '@/composable/classrooms/useClassroom'
-import StudentTeacherList from '@/components/shared/StudentTeacherList.vue'
 import { useAuthStore } from '@/stores/user'
+import { useStudentsClassroom } from '@/composable/students/useStudentClassroom'
+import { useMethodologyFilter } from '@/composable/methodology/useMethodologyFilter'
+import StudentList from '@/components/shared/StudentList.vue'
 
 const route = useRoute()
 
@@ -60,8 +71,26 @@ const id = toRef(route.params, 'id')
 const { sessionInfo } = useAuthStore()
 
 const { classroom } = useClassroom(id)
+const { students } = useStudentsClassroom(id)
 
 const { summary } = useClassroomSummary(id, toRef(sessionInfo?.academicPeriods ?? []))
 
+const emotions: ComputedRef<string> = computed(() => {
+  const items = summary?.value ?? []
+
+  // sort by great number
+  items.sort((a, b) => b.count - a.count)
+
+  const emotions = items.map((item) => item.emotion)
+
+  if (emotions.length >= 2) {
+    return [emotions[0], emotions[1]].join(',')
+  }
+
+  return emotions[0] ?? ''
+})
+
 const { metaData, currentPage, getPage, registers } = useRegistersClassroom(id)
+
+const { methodologies } = useMethodologyFilter(emotions)
 </script>

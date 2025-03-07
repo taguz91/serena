@@ -5,8 +5,15 @@ import { useMutation, useQuery } from '@tanstack/vue-query'
 import { storeToRefs } from 'pinia'
 import { computed, watch } from 'vue'
 
-const getClassrooms = async (page: number) => {
-  const data = await fetchWrapper.get<unknown, Paginate<Classroom>>(`/v1/classroom?page=${page}`)
+const getClassrooms = async (page: number, search: string | undefined) => {
+  let data
+  if (search && search.length > 0) {
+    data = await fetchWrapper.get<unknown, Paginate<Classroom>>(
+      `/v1/classroom?page=${page}&search=${search}`
+    )
+  } else {
+    data = await fetchWrapper.get<unknown, Paginate<Classroom>>(`/v1/classroom?page=${page}`)
+  }
 
   return data
 }
@@ -18,11 +25,11 @@ const deleteClassroom = async (id: string) => {
 export const useClassrooms = () => {
   const store = useClassroomsStore()
 
-  const { currentPage, classrooms, metaData } = storeToRefs(store)
+  const { currentPage, classrooms, metaData, search } = storeToRefs(store)
 
   const { isLoading, data, refetch } = useQuery({
-    queryKey: ['classrooms?page=', currentPage],
-    queryFn: () => getClassrooms(currentPage.value - 1)
+    queryKey: ['classrooms?page=', currentPage, search],
+    queryFn: () => getClassrooms(currentPage.value - 1, search.value)
   })
 
   const mutationDelete = useMutation({
@@ -46,6 +53,7 @@ export const useClassrooms = () => {
     isLoading,
     classrooms,
     currentPage,
+    search,
     metaData: computed(() => metaData.value),
 
     // actions
@@ -54,6 +62,9 @@ export const useClassrooms = () => {
     },
     deleteClassroom(id: string) {
       mutationDelete.mutate(id)
+    },
+    getSearch(search: string | undefined) {
+      store.setSearch(search)
     }
   }
 }

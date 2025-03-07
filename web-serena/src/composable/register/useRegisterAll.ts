@@ -6,19 +6,27 @@ import { useQuery } from '@tanstack/vue-query'
 import { storeToRefs } from 'pinia'
 import { watch } from 'vue'
 
-const getRegisters = async (page: number) => {
-  const data = await fetchWrapper.get<unknown, Paginate<Register>>(`/v1/register?page=${page}`)
+const getRegisters = async (page: number, search: string | undefined) => {
+  let data
+
+  if (search && search.length > 0) {
+    data = await fetchWrapper.get<unknown, Paginate<Register>>(
+      `/v1/register?page=${page}&search=${search}`
+    )
+  } else {
+    data = await fetchWrapper.get<unknown, Paginate<Register>>(`/v1/register?page=${page}`)
+  }
 
   return data
 }
 
 export const useRegisterAll = () => {
   const store = useAdminRegisterStore()
-  const { currentPage, registers, metaData } = storeToRefs(store)
+  const { currentPage, registers, metaData, search } = storeToRefs(store)
 
   const { isLoading, data } = useQuery({
-    queryKey: ['registers?page=', currentPage],
-    queryFn: () => getRegisters(currentPage.value - 1)
+    queryKey: ['registers?page=', currentPage, search],
+    queryFn: () => getRegisters(currentPage.value - 1, search.value)
   })
 
   watch(data, () => {
@@ -33,9 +41,13 @@ export const useRegisterAll = () => {
     metaData,
     currentPage,
     registers,
+    search,
 
     getPage(page: number) {
       store.setPage(page)
+    },
+    getSearch(search: string | undefined) {
+      store.setSearch(search)
     }
   }
 }

@@ -94,6 +94,7 @@ export const useTeachers = () => {
     isLoading,
     metaData: computed(() => metaData.value),
     teachers,
+    search,
 
     currentPage,
 

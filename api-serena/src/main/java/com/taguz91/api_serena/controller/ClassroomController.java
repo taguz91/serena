@@ -39,10 +39,13 @@ public class ClassroomController {
     @GetMapping("")
     public ResponseEntity<PageResponse<Classroom>> index(
             @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "20") int size
+            @RequestParam(value = "size", defaultValue = "20") int size,
+            @RequestParam(value = "search", defaultValue = "") String search
     ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("name"));
-        Page<Classroom> classrooms = classroomRepository.findAll(pageable);
+        Page<Classroom> classrooms = search.isEmpty()
+                ? classroomRepository.findAll(pageable)
+                : classroomRepository.findAllPageable(search, pageable);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new PageResponse<>(classrooms));

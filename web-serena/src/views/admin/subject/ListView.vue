@@ -14,7 +14,7 @@
       </NSpace>
     </template>
 
-    <SearchInput @search="getSearch" />
+    <SearchInput :search="search" @search="getSearch" />
 
     <NDataTable :columns="columns" :data="subjects" :loading="isLoading" />
 
@@ -54,7 +54,7 @@ const showModal = () => {
   show.value = true
 }
 
-const { subjects, isLoading, currentPage, metaData, deleteSubject, getPage, getSearch } =
+const { subjects, isLoading, currentPage, metaData, deleteSubject, getPage, getSearch, search } =
   useSubjects()
 
 const columns: DataTableColumns<Subject> = [

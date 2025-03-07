@@ -6,6 +6,7 @@ import { ref } from 'vue'
 export const useAdminRegisterStore = defineStore('admin-registers', () => {
   const metaData = ref<Meta>(defaultMeta())
   const currentPage = ref(1)
+  const search = ref<string | undefined>()
 
   const registers = ref<Register[]>([])
 
@@ -13,6 +14,7 @@ export const useAdminRegisterStore = defineStore('admin-registers', () => {
     registers,
     metaData,
     currentPage,
+    search,
     // actions
 
     setRegisters(newStudents: Register[]) {
@@ -27,6 +29,9 @@ export const useAdminRegisterStore = defineStore('admin-registers', () => {
       }
 
       currentPage.value = page
+    },
+    setSearch(newSearch: string | undefined) {
+      search.value = newSearch
     }
   }
 })

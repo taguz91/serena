@@ -1,6 +1,6 @@
 <template>
   <NPageHeader title="Estudiantes" subtitle="Revisar todos los estudiantes">
-    <SearchInput @search="getSearch" />
+    <SearchInput :search="search" @search="getSearch" />
 
     <NDataTable :columns="columns" :data="students" :loading="isLoading" />
 
@@ -26,7 +26,7 @@ import {
 import { h } from 'vue'
 import { useRouter } from 'vue-router'
 
-const { students, metaData, currentPage, isLoading, getPage, getSearch } = useStudentsAll()
+const { students, metaData, currentPage, isLoading, getPage, getSearch, search } = useStudentsAll()
 const router = useRouter()
 
 const columns: DataTableColumns<Subject> = [

@@ -17,7 +17,7 @@
       </NSpace>
     </template>
 
-    <SearchInput @search="getSearch" />
+    <SearchInput :search="search" @search="getSearch" />
 
     <NDataTable :columns="columns" :loading="isLoading" :data="academicPeriods" />
 
@@ -61,7 +61,8 @@ const {
   currentPage,
   getPage,
   deleteAcademicPeriod,
-  getSearch
+  getSearch,
+  search
 } = useAcademicPeriods()
 
 const toggleModal = (newShow: boolean) => {

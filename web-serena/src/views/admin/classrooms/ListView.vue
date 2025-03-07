@@ -14,6 +14,8 @@
       </NSpace>
     </template>
 
+    <SearchInput :search="search" @search="getSearch" />
+
     <NDataTable :columns="columns" :data="classrooms" :loading="isLoading" />
 
     <div class="mt-2 flex justify-end">
@@ -44,6 +46,7 @@ import FormView from './FormView.vue'
 import type { Classroom } from '@/interfaces'
 import { useClassrooms } from '@/composable/classrooms/useClassrooms'
 import { useRouter } from 'vue-router'
+import SearchInput from '@/components/basic/SearchInput.vue'
 
 const show = ref(false)
 const currentId = ref<string | undefined>(undefined)
@@ -53,7 +56,16 @@ const showModal = () => {
   show.value = true
 }
 
-const { classrooms, metaData, currentPage, isLoading, getPage, deleteClassroom } = useClassrooms()
+const {
+  classrooms,
+  metaData,
+  currentPage,
+  isLoading,
+  getPage,
+  deleteClassroom,
+  getSearch,
+  search
+} = useClassrooms()
 
 const columns: DataTableColumns<Classroom> = [
   {

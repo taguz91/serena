@@ -40,6 +40,7 @@ export const useStudentsAll = () => {
     metaData,
     currentPage,
     students,
+    search,
 
     getPage(page: number) {
       store.setPage(page)
