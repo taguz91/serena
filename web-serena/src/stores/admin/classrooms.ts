@@ -6,6 +6,7 @@ import { ref } from 'vue'
 export const useClassroomsStore = defineStore('classrooms', () => {
   const metaData = ref(defaultMeta())
   const currentPage = ref(1)
+  const search = ref<string | undefined>()
 
   const classrooms = ref<Classroom[]>([])
 
@@ -13,6 +14,7 @@ export const useClassroomsStore = defineStore('classrooms', () => {
     metaData,
     currentPage,
     classrooms,
+    search,
 
     // actions
 
@@ -26,6 +28,9 @@ export const useClassroomsStore = defineStore('classrooms', () => {
       }
 
       currentPage.value = page
+    },
+    setSearch(newSearch: string | undefined) {
+      search.value = newSearch
     }
   }
 })

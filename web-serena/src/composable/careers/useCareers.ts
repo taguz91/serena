@@ -56,6 +56,7 @@ export const useCareers = () => {
     metaData: computed(() => metaData.value),
     careers,
     currentPage,
+    search,
 
     // actions
     getPage(page: number) {

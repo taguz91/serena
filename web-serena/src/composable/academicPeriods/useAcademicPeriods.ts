@@ -57,6 +57,7 @@ export const useAcademicPeriods = () => {
     metaData: computed(() => metaData.value),
     academicPeriods,
     currentPage,
+    search,
 
     // actions
     getPage(page: number) {

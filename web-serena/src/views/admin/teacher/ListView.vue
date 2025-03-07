@@ -14,7 +14,7 @@
       </NSpace>
     </template>
 
-    <SearchInput @search="getSearch" />
+    <SearchInput :search="search" @search="getSearch" />
 
     <NDataTable :columns="columns" :data="teachers" :loading="isLoading" />
 
@@ -71,7 +71,8 @@ const {
   getPage,
   deleteTeacher,
   activateTeacher,
-  getSearch
+  getSearch,
+  search
 } = useTeachers()
 
 const toggleModal = (newShow: boolean) => {

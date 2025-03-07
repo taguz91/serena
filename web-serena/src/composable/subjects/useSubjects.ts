@@ -55,6 +55,7 @@ export const useSubjects = () => {
     currentPage,
     subjects,
     metaData: computed(() => metaData.value),
+    search,
 
     // actions
     deleteSubject(id: string) {

@@ -1,5 +1,7 @@
 <template>
   <NPageHeader title="Registros" subtitle="Revisar todos los registros creados">
+    <SearchInput :search="search" @search="getSearch" />
+
     <NDataTable :columns="columns" :data="registers" :loading="isLoading" />
 
     <div class="mt-2 flex justify-end">
@@ -9,6 +11,7 @@
 </template>
 
 <script setup lang="ts">
+import SearchInput from '@/components/basic/SearchInput.vue'
 import { useRegisterAll } from '@/composable/register/useRegisterAll'
 import type { Register } from '@/interfaces'
 import { Eye } from '@vicons/tabler'
@@ -25,7 +28,7 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-const { currentPage, isLoading, getPage, metaData, registers } = useRegisterAll()
+const { currentPage, isLoading, getPage, metaData, registers, getSearch, search } = useRegisterAll()
 
 const columns: DataTableColumns<Register> = [
   {
